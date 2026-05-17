@@ -1,0 +1,175 @@
+-- Tabela de Jogadores (UC01, UC02, UC03)
+CREATE TABLE jogador (
+    id SERIAL PRIMARY KEY,
+    nome VARCHAR(100) NOT NULL,
+    email VARCHAR(255) UNIQUE NOT NULL,
+    senha_hash VARCHAR(255) NOT NULL,
+    nome_exibicao VARCHAR(50) DEFAULT 'Treinador Iniciante',
+    saldo DECIMAL(10,2) DEFAULT 0.00 CHECK (saldo >= 0),
+    tentativas_login INTEGER DEFAULT 0,
+    bloqueado_ate TIMESTAMP,
+    token_sessao VARCHAR(500),
+    data_cadastro TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    ultimo_login TIMESTAMP,
+    ativo BOOLEAN DEFAULT TRUE
+);
+
+-- Índice para busca por email (login)
+CREATE INDEX idx_jogador_email ON jogador(email);
+CREATE INDEX idx_jogador_token ON jogador(token_sessao);
+
+-- Tabela de Itens da Loja (UC07, UC08, UC09)
+CREATE TABLE item (
+    id SERIAL PRIMARY KEY,
+    nome VARCHAR(100) NOT NULL,
+    descricao TEXT,
+    preco DECIMAL(10,2) NOT NULL CHECK (preco > 0),
+    multiplicador DECIMAL(5,2) NOT NULL DEFAULT 1.00,
+    tipo VARCHAR(50) NOT NULL, -- 'cafe', 'placa_video', 'cadeira', etc.
+    raridade VARCHAR(20) DEFAULT 'comum', -- 'comum', 'raro', 'mitico'
+    vendivel BOOLEAN DEFAULT TRUE,
+    data_criacao TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    ativo BOOLEAN DEFAULT TRUE
+);
+
+-- Índice para listagem da loja
+CREATE INDEX idx_item_ativo ON item(ativo);
+
+-- Tabela de Inventário (UC10, UC11, UC12)
+CREATE TABLE inventario (
+    id SERIAL PRIMARY KEY,
+    jogador_id INTEGER NOT NULL REFERENCES jogador(id) ON DELETE CASCADE,
+    item_id INTEGER NOT NULL REFERENCES item(id) ON DELETE RESTRICT,
+    data_compra TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    ativo BOOLEAN DEFAULT TRUE,
+    UNIQUE(jogador_id, item_id) -- Evita duplicatas do mesmo item
+);
+
+-- Índices para consultas do inventário
+CREATE INDEX idx_inventario_jogador ON inventario(jogador_id);
+CREATE INDEX idx_inventario_item ON inventario(item_id);
+
+-- Tabela de Pokémon do Time (UC13, UC14, UC15)
+CREATE TABLE pokemon_time (
+    id SERIAL PRIMARY KEY,
+    jogador_id INTEGER NOT NULL REFERENCES jogador(id) ON DELETE CASCADE,
+    pokemon_api_id INTEGER NOT NULL CHECK (pokemon_api_id BETWEEN 1 AND 1025),
+    nome_pokemon VARCHAR(100) NOT NULL,
+    sprite_url VARCHAR(500),
+    apelido VARCHAR(50),
+    data_obtido TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    ativo BOOLEAN DEFAULT TRUE
+);
+
+-- Índice para consulta do time
+CREATE INDEX idx_pokemon_jogador ON pokemon_time(jogador_id);
+
+-- Tabela de Transações/Histórico (UC04, UC05, UC06, UC10, UC12)
+CREATE TABLE transacao (
+    id SERIAL PRIMARY KEY,
+    jogador_id INTEGER NOT NULL REFERENCES jogador(id) ON DELETE CASCADE,
+    tipo VARCHAR(30) NOT NULL, -- 'ganho_aula', 'compra_item', 'venda_item', 'sorteio_pokemon', 'reset'
+    valor DECIMAL(10,2) NOT NULL,
+    descricao TEXT,
+    data_transacao TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+-- Índice para histórico
+CREATE INDEX idx_transacao_jogador ON transacao(jogador_id);
+CREATE INDEX idx_transacao_data ON transacao(data_transacao);
+
+-- Tabela de Configurações do Jogo (UC06)
+CREATE TABLE config_game (
+    id SERIAL PRIMARY KEY,
+    jogador_id INTEGER NOT NULL REFERENCES jogador(id) ON DELETE CASCADE,
+    config_key VARCHAR(50) NOT NULL,
+    config_value TEXT,
+    UNIQUE(jogador_id, config_key)
+);
+
+-- Tabela de Log de Autenticação (UC02 - segurança)
+CREATE TABLE log_autenticacao (
+    id SERIAL PRIMARY KEY,
+    jogador_id INTEGER REFERENCES jogador(id) ON DELETE SET NULL,
+    email_tentativa VARCHAR(255),
+    ip_address VARCHAR(45),
+    sucesso BOOLEAN NOT NULL,
+    data_tentativa TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+-- Função para calcular bônus do jogador (UC04)
+CREATE OR REPLACE FUNCTION calcular_bonus_total(p_jogador_id INTEGER)
+RETURNS DECIMAL AS $$
+DECLARE
+    bonus_total DECIMAL;
+BEGIN
+    SELECT COALESCE(SUM(i.multiplicador), 1.00)
+    INTO bonus_total
+    FROM inventario inv
+    JOIN item i ON inv.item_id = i.id
+    WHERE inv.jogador_id = p_jogador_id AND inv.ativo = TRUE;
+    
+    RETURN bonus_total;
+END;
+$$ LANGUAGE plpgsql;
+
+-- Trigger para atualizar último login (UC02)
+CREATE OR REPLACE FUNCTION atualizar_ultimo_login()
+RETURNS TRIGGER AS $$
+BEGIN
+    NEW.ultimo_login = CURRENT_TIMESTAMP;
+    RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE TRIGGER trigger_ultimo_login
+    BEFORE UPDATE ON jogador
+    FOR EACH ROW
+    WHEN (OLD.token_sessao IS DISTINCT FROM NEW.token_sessao)
+    EXECUTE FUNCTION atualizar_ultimo_login();
+
+-- Trigger para log de transações (UC04, UC10, UC12, UC13)
+CREATE OR REPLACE FUNCTION log_transacao()
+RETURNS TRIGGER AS $$
+BEGIN
+    INSERT INTO transacao (jogador_id, tipo, valor, descricao)
+    VALUES (
+        NEW.jogador_id,
+        TG_ARGV[0],
+        NEW.valor_transacao,
+        TG_ARGV[1]
+    );
+    RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+-- UC04: Dar Aula (ganho base * bônus)
+UPDATE jogador 
+SET saldo = saldo + (10.00 * calcular_bonus_total($1))
+WHERE id = $1
+RETURNING saldo;
+
+-- UC08: Listar itens da loja
+SELECT id, nome, descricao, preco, multiplicador, tipo, raridade
+FROM item 
+WHERE ativo = TRUE 
+ORDER BY tipo, raridade;
+
+-- UC10: Comprar item (transacional)
+BEGIN;
+    -- Verifica saldo
+    SELECT saldo FROM jogador WHERE id = $1 FOR UPDATE;
+    
+    -- Deduz saldo e adiciona ao inventário
+    UPDATE jogador SET saldo = saldo - (SELECT preco FROM item WHERE id = $2)
+    WHERE id = $1 AND saldo >= (SELECT preco FROM item WHERE id = $2);
+    
+    -- Se afetou linha, saldo era suficiente
+    INSERT INTO inventario (jogador_id, item_id) VALUES ($1, $2);
+COMMIT;
+
+-- UC14: Visualizar time Pokémon
+SELECT p.id, p.pokemon_api_id, p.nome_pokemon, p.sprite_url, p.apelido
+FROM pokemon_time p
+WHERE p.jogador_id = $1 AND p.ativo = TRUE
+ORDER BY p.data_obtido;
