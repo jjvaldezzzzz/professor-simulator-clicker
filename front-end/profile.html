@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Professor Clicker - Perfil</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <div class="flash-container">
+        <div class="top-nav">
+            <a href="game.html" class="btn-retro">Dar Aula</a>
+            <a href="shop.html" class="btn-retro">Loja</a>
+            <a href="inventory.html" class="btn-retro">Mochila</a>
+            <a href="pokemon.html" class="btn-retro">Time Pokemon</a>
+            <a href="profile.html" class="btn-retro">Perfil</a>
+            <button class="btn-retro btn-danger" type="button" onclick="sair()">Sair</button>
+            <div class="saldo">Moedas: <span id="saldo-display">--</span></div>
+        </div>
+
+        <div class="content">
+            <div class="panel">
+                <h2>Perfil do Jogador</h2>
+                <p><strong>Nome de exibicao:</strong> <span id="nome-exibicao-atual">--</span></p>
+                <p><strong>Nome de cadastro:</strong> <span id="nome-cadastro">--</span></p>
+                <p><strong>Email:</strong> <span id="email-display">--</span></p>
+            </div>
+
+            <div class="panel">
+                <h2>Atualizar nome de exibicao</h2>
+                <input type="text" id="nome-exibicao" placeholder="Ex: Mestre do Postgres" maxlength="50">
+                <span id="erro-nome-exibicao" class="error-text"></span>
+                <p class="panel-note">Use apenas letras, numeros e espacos. Maximo de 50 caracteres.</p>
+                <button type="button" class="btn-retro btn-primary" onclick="atualizarPerfil()">Salvar</button>
+                <p id="mensagem" class="message"></p>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/api.js"></script>
+    <script>
+        verificarAutenticacao();
+        atualizarSaldoNaTela(getSaldo());
+
+        const jogadorId = getJogadorId();
+        const inputNome = document.getElementById('nome-exibicao');
+        const erroNome = document.getElementById('erro-nome-exibicao');
+        const mensagem = document.getElementById('mensagem');
+
+        function sair() {
+            limparSessao();
+            window.location.href = 'index.html';
+        }
+
+        function setMensagem(texto, tipo) {
+            mensagem.className = `message ${tipo || ''}`;
+            mensagem.innerText = texto || '';
+        }
+
+        function limparErros() {
+            inputNome.classList.remove('input-invalid');
+            erroNome.innerText = '';
+            setMensagem('', '');
+        }
+
+        function mostrarErro(texto) {
+            inputNome.classList.add('input-invalid');
+            erroNome.innerText = texto;
+        }
+
+        function validarNomeExibicao(nome) {
+            const re = /^[A-Za-z0-9 ]+$/;
+            return re.test(nome);
+        }
+
+        async function carregarPerfil() {
+            const data = await carregarJogador();
+            if (data && data.nome_exibicao) {
+                if (!inputNome.value) {
+                    inputNome.value = data.nome_exibicao;
+                }
+            }
+        }
+
+        async function atualizarPerfil() {
+            limparErros();
+            const nomeExibicao = (inputNome.value || '').trim();
+
+            if (!nomeExibicao) {
+                mostrarErro('O nome de exibicao e obrigatorio.');
+                return;
+            }
+
+            if (nomeExibicao.length > 50) {
+                mostrarErro('Nome de exibicao deve ter no maximo 50 caracteres.');
+                return;
+            }
+
+            if (!validarNomeExibicao(nomeExibicao)) {
+                mostrarErro('Nome de exibicao contem caracteres invalidos.');
+                return;
+            }
+
+            try {
+                const data = await apiFetch(`/jogadores/${jogadorId}/perfil`, {
+                    method: 'PUT',
+                    body: { nome_exibicao: nomeExibicao }
+                });
+
+                const novoNome = data.novo_nome_exibicao || nomeExibicao;
+                const nomeAtualEl = document.getElementById('nome-exibicao-atual');
+                if (nomeAtualEl) {
+                    nomeAtualEl.innerText = novoNome;
+                }
+
+                inputNome.value = novoNome;
+                setMensagem(data.mensagem || 'Perfil atualizado com sucesso!', 'success');
+            } catch (error) {
+                if (error.status === 400 || error.status === 422) {
+                    mostrarErro(error.message || 'Nome de exibicao invalido.');
+                    return;
+                }
+                setMensagem(error.message || 'Erro ao atualizar perfil.', 'error');
+            }
+        }
+
+        inputNome.addEventListener('input', () => {
+            if (inputNome.classList.contains('input-invalid')) {
+                inputNome.classList.remove('input-invalid');
+                erroNome.innerText = '';
+            }
+        });
+
+        carregarPerfil();
+    </script>
+</body>
+</html>

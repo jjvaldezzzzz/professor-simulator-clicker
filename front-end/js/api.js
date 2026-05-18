@@ -91,6 +91,21 @@ async function carregarJogador() {
             setSaldo(data.saldo);
             atualizarSaldoNaTela(data.saldo);
         }
+
+        const nomeExibicaoEl = document.getElementById("nome-exibicao-atual");
+        if (nomeExibicaoEl) {
+            nomeExibicaoEl.innerText = data.nome_exibicao || data.nome || "--";
+        }
+
+        const nomeCadastroEl = document.getElementById("nome-cadastro");
+        if (nomeCadastroEl) {
+            nomeCadastroEl.innerText = data.nome || "--";
+        }
+
+        const emailEl = document.getElementById("email-display");
+        if (emailEl) {
+            emailEl.innerText = data.email || "--";
+        }
         return data;
     } catch (error) {
         console.error("Falha ao carregar jogador:", error);

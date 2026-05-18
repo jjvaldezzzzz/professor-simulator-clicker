@@ -1,3 +1,4 @@
+import re
 from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy import text
 from sqlalchemy.orm import Session
@@ -5,6 +6,8 @@ from app.database import get_db
 from app import schemas
 
 router = APIRouter(prefix="/jogadores", tags=["Gestão de Jogadores"])
+
+DISPLAY_NAME_REGEX = re.compile(r"^[A-Za-z0-9 ]+$")
 
 @router.post("/", status_code=status.HTTP_201_CREATED)
 def cadastrar_jogador(jogador: schemas.JogadorCreate, db: Session = Depends(get_db)):
@@ -78,6 +81,17 @@ def obter_jogador(jogador_id: int, db: Session = Depends(get_db)):
 @router.put("/{jogador_id}/perfil")
 def atualizar_perfil(jogador_id: int, perfil: schemas.JogadorUpdate, db: Session = Depends(get_db)):
     """UC03: Atualizar Perfil (Nome de Exibição)"""
+
+    nome_exibicao = perfil.nome_exibicao.strip() if perfil.nome_exibicao else ""
+    if not nome_exibicao:
+        raise HTTPException(status_code=400, detail="Nome de exibicao e obrigatorio.")
+    if len(nome_exibicao) > 50:
+        raise HTTPException(status_code=400, detail="Nome de exibicao deve ter no maximo 50 caracteres.")
+    if not DISPLAY_NAME_REGEX.match(nome_exibicao):
+        raise HTTPException(
+            status_code=400,
+            detail="Nome de exibicao contem caracteres invalidos. Use apenas letras, numeros e espacos."
+        )
     
     query = text("""
         UPDATE jogador 
@@ -86,7 +100,7 @@ def atualizar_perfil(jogador_id: int, perfil: schemas.JogadorUpdate, db: Session
         RETURNING id, nome_exibicao
     """)
     
-    resultado = db.execute(query, {"nome_exibicao": perfil.nome_exibicao, "id": jogador_id}).fetchone()
+    resultado = db.execute(query, {"nome_exibicao": nome_exibicao, "id": jogador_id}).fetchone()
     db.commit()
 
     if not resultado:
