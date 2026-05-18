@@ -25,8 +25,6 @@
 
 ## 🚀 Quick Start
 
-### Opção 1: Usando Docker (Recomendado) 🐳
-
 #### Pré-requisitos
 - Docker e Docker Compose instalados
 
@@ -44,63 +42,6 @@ docker-compose up -d
 # - API Docs: http://localhost:8000/docs
 # - Postgres: localhost:5433 (user: postgres, pass: suasenha)
 ```
-
-### Opção 2: Instalação Local 🖥️
-
-#### Pré-requisitos
-- Python 3.9+
-- PostgreSQL 15+
-- pip (gerenciador de pacotes Python)
-
-#### Passos
-
-**1. Clone o repositório:**
-```bash
-git clone https://github.com/jjvaldezzzzz/professor-simulator-clicker.git
-cd professor-simulator-clicker
-```
-
-**2. Crie um ambiente virtual:**
-```bash
-# Windows
-python -m venv venv
-venv\Scripts\activate
-
-# Linux/Mac
-python3 -m venv venv
-source venv/bin/activate
-```
-
-**3. Instale as dependências:**
-```bash
-pip install -r requirements.txt
-```
-
-**4. Configure o banco de dados:**
-```bash
-# Crie um banco chamado 'isaac_db' no PostgreSQL
-# Ou execute os scripts SQL em scripts/
-
-psql -U postgres -d isaac_db -f scripts/init.sql
-psql -U postgres -d isaac_db -f scripts/seed.sql
-```
-
-**5. Configure as variáveis de ambiente:**
-```bash
-# Crie um arquivo .env na raiz (opcional)
-DATABASE_URL=postgresql://postgres:suasenha@localhost:5432/isaac_db
-API_PORT=8000
-API_HOST=0.0.0.0
-```
-
-**6. Inicie o servidor:**
-```bash
-uvicorn app.main:app --reload --host 0.0.0.0 --port 8000
-```
-
-**7. Abra no navegador:**
-- Interface: http://localhost:8000
-- API Docs: http://localhost:8000/docs
 
 ---
 
