@@ -1,0 +1,16 @@
+version: '3.8'
+
+services:
+  postgres_db:
+    image: postgres:15-alpine
+    container_name: isaac_postgres
+    restart: always
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: suasenha
+      POSTGRES_DB: isaac_db
+    ports:
+      - "5433:5432"
+    volumes:
+      # Esse volume mágico pega o seu init.sql e roda sozinho quando o banco nascer!
+      - ./scripts/init.sql:/docker-entrypoint-initdb.d/init.sql
