@@ -37,12 +37,13 @@ def cadastrar_jogador(jogador: schemas.JogadorCreate, db: Session = Depends(get_
 
 @router.post("/login")
 def autenticar_jogador(credenciais: schemas.JogadorLogin, db: Session = Depends(get_db)):
-    """UC02: Autenticar Jogador"""
+    """UC02: Autenticar Jogador (Incluindo verificação de Admin)"""
     
-    query = text("SELECT id, senha_hash FROM jogador WHERE email = :email AND ativo = TRUE")
+    # 1. Adicionamos 'is_admin' no SELECT para capturar o privilégio do usuário
+    query = text("SELECT id, senha_hash, is_admin FROM jogador WHERE email = :email AND ativo = TRUE")
     jogador = db.execute(query, {"email": credenciais.email}).fetchone()
 
-    # Validação simples para o escopo atual
+    # Validação de credenciais
     if not jogador or jogador.senha_hash != credenciais.senha:
         raise HTTPException(status_code=401, detail="Credenciais inválidas.")
 
@@ -50,7 +51,13 @@ def autenticar_jogador(credenciais: schemas.JogadorLogin, db: Session = Depends(
     db.execute(text("UPDATE jogador SET ultimo_login = CURRENT_TIMESTAMP WHERE id = :id"), {"id": jogador.id})
     db.commit()
 
-    return {"mensagem": "Login bem-sucedido", "jogador_id": jogador.id, "token": "token-simulado-123"}
+    # 2. Retornamos o 'is_admin' junto com os dados de sucesso do login
+    return {
+        "mensagem": "Login bem-sucedido", 
+        "jogador_id": jogador.id, 
+        "is_admin": jogador.is_admin,  # True para o admin, False para jogadores comuns
+        "token": "token-simulado-123"
+    }
 
 @router.get("/{jogador_id}")
 def obter_jogador(jogador_id: int, db: Session = Depends(get_db)):

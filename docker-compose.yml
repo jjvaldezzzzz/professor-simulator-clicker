@@ -12,5 +12,5 @@ services:
     ports:
       - "5433:5432"
     volumes:
-      # Esse volume mágico pega o seu init.sql e roda sozinho quando o banco nascer!
-      - ./scripts/init.sql:/docker-entrypoint-initdb.d/init.sql
+      # Agora ele pega a pasta toda! Tudo que for .sql vai rodar.
+      - ./scripts:/docker-entrypoint-initdb.d

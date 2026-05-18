@@ -1,5 +1,5 @@
 -- Tabela de Jogadores (UC01, UC02, UC03)
-CREATE TABLE jogador (
+CREATE TABLE IF NOT EXISTS jogador (
     id SERIAL PRIMARY KEY,
     nome VARCHAR(100) NOT NULL,
     email VARCHAR(255) UNIQUE NOT NULL,
@@ -9,6 +9,7 @@ CREATE TABLE jogador (
     tentativas_login INTEGER DEFAULT 0,
     bloqueado_ate TIMESTAMP,
     token_sessao VARCHAR(500),
+    is_admin BOOLEAN DEFAULT FALSE, -- ⬅️ NOVA COLUNA PARA O ADMIN
     data_cadastro TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     ultimo_login TIMESTAMP,
     ativo BOOLEAN DEFAULT TRUE
