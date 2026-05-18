@@ -58,10 +58,10 @@ pip install -r requirements.txt
 docker-compose up -d
 ```
 
-# 3. Pronto! Acesse:
-# - Interface: http://localhost:8000
-# - API Docs: http://localhost:8000/docs
-# - Postgres: localhost:5433 (user: postgres, pass: suasenha)
+**5. Pronto! Acesse:**
+ - Interface: http://localhost:8000
+ - API Docs: http://localhost:8000/docs
+ - Postgres: localhost:5433 (user: postgres, pass: suasenha)
 
 
 ---
