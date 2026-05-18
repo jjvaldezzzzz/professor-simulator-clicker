@@ -29,19 +29,40 @@
 - Docker e Docker Compose instalados
 
 #### Passos
-```bash
+
 # 1. Clonar o repositório
+```bash
 git clone https://github.com/jjvaldezzzzz/professor-simulator-clicker.git
 cd professor-simulator-clicker
+```
 
-# 2. Iniciar os serviços com Docker Compose
+**2. Crie um ambiente virtual:**
+```bash
+# Windows
+python -m venv venv
+venv\Scripts\activate
+
+# Linux/Mac
+python3 -m venv venv
+source venv/bin/activate
+```
+
+**3. Instale as dependências:**
+```bash
+pip install -r requirements.txt
+```
+
+
+# 4. Iniciar os serviços com Docker Compose
+```bash
 docker-compose up -d
+```
 
 # 3. Pronto! Acesse:
 # - Interface: http://localhost:8000
 # - API Docs: http://localhost:8000/docs
 # - Postgres: localhost:5433 (user: postgres, pass: suasenha)
-```
+
 
 ---
 
