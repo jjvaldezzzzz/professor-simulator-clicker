@@ -30,7 +30,7 @@
 
 #### Passos
 
-# 1. Clonar o repositório
+**1. Clonar o repositório:**
 ```bash
 git clone https://github.com/jjvaldezzzzz/professor-simulator-clicker.git
 cd professor-simulator-clicker
@@ -53,7 +53,7 @@ pip install -r requirements.txt
 ```
 
 
-# 4. Iniciar os serviços com Docker Compose
+**4. Iniciar os serviços com Docker Compose:**
 ```bash
 docker-compose up -d
 ```
