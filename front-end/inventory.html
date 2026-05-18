@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Professor Clicker - Mochila</title>
+	<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+	<div class="flash-container">
+		<div class="top-nav">
+			<a href="game.html" class="btn-retro">Dar Aula</a>
+			<a href="shop.html" class="btn-retro">Loja</a>
+			<a href="inventory.html" class="btn-retro">Mochila</a>
+			<a href="pokemon.html" class="btn-retro">Time Pokemon</a>
+			<button class="btn-retro btn-danger" type="button" onclick="sair()">Sair</button>
+			<div class="saldo">Moedas: <span id="saldo-display">--</span></div>
+		</div>
+
+		<div class="content">
+			<div class="panel">
+				<h2>Meus Equipamentos</h2>
+				<p class="panel-note">Itens ativos no inventario do jogador.</p>
+				<br>
+				<table id="tabela-inventario">
+					<tr>
+						<th>Item</th>
+						<th>Multiplicador</th>
+						<th>Comprado em</th>
+					</tr>
+				</table>
+			</div>
+		</div>
+	</div>
+
+	<script src="js/api.js"></script>
+	<script>
+		verificarAutenticacao();
+		atualizarSaldoNaTela(getSaldo());
+		carregarJogador();
+
+		const jogadorId = getJogadorId();
+		const tabela = document.getElementById('tabela-inventario');
+
+		function sair() {
+			limparSessao();
+			window.location.href = 'index.html';
+		}
+
+		function criarLinhaVazia() {
+			const row = document.createElement('tr');
+			const cell = document.createElement('td');
+			cell.colSpan = 3;
+			cell.className = 'table-empty';
+			cell.innerText = 'Nenhum item encontrado.';
+			row.appendChild(cell);
+			tabela.appendChild(row);
+		}
+
+		async function carregarInventario() {
+			tabela.innerHTML = `
+				<tr>
+					<th>Item</th>
+					<th>Multiplicador</th>
+					<th>Comprado em</th>
+				</tr>
+			`;
+
+			try {
+				const itens = await apiFetch(`/inventario/${jogadorId}`);
+				if (!itens.length) {
+					criarLinhaVazia();
+					return;
+				}
+
+				itens.forEach(item => {
+					const row = document.createElement('tr');
+
+					const nomeCell = document.createElement('td');
+					nomeCell.innerText = item.nome;
+
+					const multCell = document.createElement('td');
+					multCell.innerText = item.multiplicador;
+
+					const dataCell = document.createElement('td');
+					const data = item.data_compra ? new Date(item.data_compra) : null;
+					dataCell.innerText = data ? data.toLocaleString('pt-BR') : '-';
+
+					row.appendChild(nomeCell);
+					row.appendChild(multCell);
+					row.appendChild(dataCell);
+					tabela.appendChild(row);
+				});
+			} catch (error) {
+				criarLinhaVazia();
+			}
+		}
+
+		carregarInventario();
+	</script>
+</body>
+</html>

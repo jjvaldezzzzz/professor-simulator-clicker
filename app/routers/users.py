@@ -52,6 +52,22 @@ def autenticar_jogador(credenciais: schemas.JogadorLogin, db: Session = Depends(
 
     return {"mensagem": "Login bem-sucedido", "jogador_id": jogador.id, "token": "token-simulado-123"}
 
+@router.get("/{jogador_id}")
+def obter_jogador(jogador_id: int, db: Session = Depends(get_db)):
+    """Retorna dados basicos do jogador para o front-end"""
+
+    query = text("""
+        SELECT id, nome, nome_exibicao, email, saldo
+        FROM jogador
+        WHERE id = :id AND ativo = TRUE
+    """)
+    jogador = db.execute(query, {"id": jogador_id}).fetchone()
+
+    if not jogador:
+        raise HTTPException(status_code=404, detail="Jogador nao encontrado.")
+
+    return dict(jogador._mapping)
+
 @router.put("/{jogador_id}/perfil")
 def atualizar_perfil(jogador_id: int, perfil: schemas.JogadorUpdate, db: Session = Depends(get_db)):
     """UC03: Atualizar Perfil (Nome de Exibição)"""

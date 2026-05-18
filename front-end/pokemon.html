@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Professor Clicker - Pokemon</title>
+	<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+	<div class="flash-container">
+		<div class="top-nav">
+			<a href="game.html" class="btn-retro">Dar Aula</a>
+			<a href="shop.html" class="btn-retro">Loja</a>
+			<a href="inventory.html" class="btn-retro">Mochila</a>
+			<a href="pokemon.html" class="btn-retro">Time Pokemon</a>
+			<button class="btn-retro btn-danger" type="button" onclick="sair()">Sair</button>
+			<div class="saldo">Moedas: <span id="saldo-display">--</span></div>
+		</div>
+
+		<div class="content">
+			<div class="panel" style="text-align: center; background: #FFFFAA;">
+				<h2>Gacha - PokeAPI</h2>
+				<p>Custa 100 moedas para sortear um Pokemon aleatorio.</p>
+				<button class="btn-retro btn-primary" type="button" style="padding: 15px; font-size: 18px; margin-top: 10px;" onclick="sortearPokemon()">Sortear Pokemon</button>
+				<p id="mensagem" class="message"></p>
+			</div>
+
+			<div class="panel">
+				<h2>Seu Time</h2>
+				<ul id="lista-time" class="list-compact"></ul>
+			</div>
+		</div>
+	</div>
+
+	<script src="js/api.js"></script>
+	<script>
+		verificarAutenticacao();
+		atualizarSaldoNaTela(getSaldo());
+		carregarJogador();
+
+		const jogadorId = getJogadorId();
+		const listaTime = document.getElementById('lista-time');
+		const mensagem = document.getElementById('mensagem');
+
+		function sair() {
+			limparSessao();
+			window.location.href = 'index.html';
+		}
+
+		function setMensagem(texto, tipo) {
+			mensagem.className = `message ${tipo || ''}`;
+			mensagem.innerText = texto || '';
+		}
+
+		function criarItemVazio() {
+			const item = document.createElement('li');
+			item.className = 'list-item';
+			item.innerText = 'Nenhum Pokemon no time ainda.';
+			listaTime.appendChild(item);
+		}
+
+		async function carregarTime() {
+			listaTime.innerHTML = '';
+			try {
+				const time = await apiFetch(`/pokemon/${jogadorId}`);
+				if (!time.length) {
+					criarItemVazio();
+					return;
+				}
+
+				time.forEach(poke => {
+					const item = document.createElement('li');
+					item.className = 'list-item';
+
+					if (poke.sprite_url) {
+						const img = document.createElement('img');
+						img.src = poke.sprite_url;
+						img.alt = poke.nome_pokemon;
+						item.appendChild(img);
+					}
+
+					const texto = document.createElement('span');
+					texto.innerText = `#${poke.pokemon_api_id} ${poke.nome_pokemon}`;
+					item.appendChild(texto);
+
+					listaTime.appendChild(item);
+				});
+			} catch (error) {
+				criarItemVazio();
+			}
+		}
+
+		async function sortearPokemon() {
+			setMensagem('', '');
+			try {
+				const data = await apiFetch(`/pokemon/gacha/${jogadorId}`, { method: 'POST' });
+				setMensagem(data.mensagem || 'Pokemon capturado!', 'success');
+				await carregarTime();
+				await carregarJogador();
+			} catch (error) {
+				setMensagem(error.message || 'Erro ao sortear Pokemon.', 'error');
+			}
+		}
+
+		carregarTime();
+	</script>
+</body>
+</html>

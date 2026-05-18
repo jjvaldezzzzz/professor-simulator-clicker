@@ -1,0 +1,219 @@
+/* Reset */
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+	background-color: #222;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	min-height: 100vh;
+	font-family: 'Verdana', 'Comic Sans MS', sans-serif;
+}
+
+/* Container 16:9 simulando tela retro */
+.flash-container {
+	width: 960px;
+	height: 540px;
+	background: #4DB8FF;
+	border: 6px solid #888;
+	box-shadow: 0 0 20px black;
+	position: relative;
+	display: flex;
+	flex-direction: column;
+	overflow: hidden;
+}
+
+.auth-screen {
+	justify-content: center;
+	align-items: center;
+	background: #000080;
+}
+
+.auth-panel {
+	width: 420px;
+	text-align: center;
+}
+
+/* Barra de navegacao */
+.top-nav {
+	background: #C0C0C0;
+	border-bottom: 4px outset #FFF;
+	padding: 8px;
+	display: flex;
+	gap: 10px;
+	align-items: center;
+	flex-wrap: wrap;
+}
+
+.top-nav .saldo {
+	margin-left: auto;
+	font-weight: bold;
+	color: #000;
+	background: #FFF;
+	padding: 2px 8px;
+	border: 2px inset #FFF;
+}
+
+/* Botoes retro */
+.btn-retro {
+	background: #E0E0E0;
+	border: 3px outset #FFF;
+	padding: 6px 12px;
+	font-weight: bold;
+	text-decoration: none;
+	color: black;
+	cursor: pointer;
+	font-size: 14px;
+}
+
+.btn-retro:active {
+	border-style: inset;
+	background: #D0D0D0;
+}
+
+.btn-primary { background: #FF9900; border-color: #FFCC66; }
+.btn-danger { background: #FF4444; border-color: #FF8888; color: white; }
+.btn-success { background: #44FF44; border-color: #88FF88; }
+
+/* Area principal */
+.content {
+	flex: 1;
+	padding: 15px;
+	overflow-y: auto;
+	position: relative;
+}
+
+/* Paineis estilo janela */
+.panel {
+	background: #FFF;
+	border: 3px outset #FFF;
+	padding: 15px;
+	margin-bottom: 15px;
+}
+
+.panel h1, .panel h2 {
+	margin-bottom: 10px;
+}
+
+/* Tabela */
+table {
+	width: 100%;
+	border-collapse: collapse;
+	background: white;
+}
+
+th, td {
+	border: 1px solid #000;
+	padding: 8px;
+	text-align: left;
+}
+
+th { background: #C0C0C0; }
+
+.table-empty {
+	text-align: center;
+	color: #555;
+}
+
+/* Botao de clicker */
+.clicker-btn {
+	width: 200px;
+	height: 200px;
+	border-radius: 50%;
+	background: #FF0000;
+	border: 10px outset #FF6666;
+	font-size: 24px;
+	font-weight: bold;
+	color: white;
+	cursor: pointer;
+	margin: 40px auto;
+	display: block;
+	text-shadow: 2px 2px #000;
+}
+
+.clicker-btn:active {
+	border-style: inset;
+	transform: scale(0.95);
+}
+
+.clicker-btn:disabled {
+	opacity: 0.7;
+	cursor: not-allowed;
+}
+
+/* Formularios */
+input {
+	border: 2px inset #FFF;
+	padding: 6px;
+	margin-bottom: 6px;
+	width: 100%;
+}
+
+.input-invalid {
+	border: 2px solid #C0392B;
+	background: #FDEDEC;
+}
+
+.error-text {
+	color: #C0392B;
+	font-size: 12px;
+	min-height: 14px;
+	display: block;
+	margin-bottom: 6px;
+}
+
+.message {
+	margin-top: 10px;
+	font-weight: bold;
+}
+
+.message.success { color: #1E7E1E; }
+.message.error { color: #C0392B; }
+
+.subtitle {
+	color: #E0E0E0;
+	margin-bottom: 15px;
+}
+
+.list-compact {
+	list-style: none;
+	padding-left: 0;
+}
+
+.list-item {
+	border: 2px solid #000;
+	padding: 10px;
+	margin-bottom: 6px;
+	display: flex;
+	gap: 10px;
+	align-items: center;
+	background: #EEE;
+}
+
+.list-item img {
+	width: 48px;
+	height: 48px;
+	image-rendering: pixelated;
+}
+
+.panel-note {
+	font-size: 12px;
+	color: #333;
+}
+
+@media (max-width: 980px) {
+	body { align-items: flex-start; }
+
+	.flash-container {
+		width: 100%;
+		height: auto;
+		min-height: 100vh;
+		border-width: 0;
+		box-shadow: none;
+	}
+
+	.top-nav { justify-content: center; }
+	.top-nav .saldo { margin-left: 0; }
+
+	.auth-panel { width: 90%; }
+}

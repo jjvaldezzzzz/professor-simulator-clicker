@@ -3,67 +3,67 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Isaac Clicker - Dar Aula</title>
-    <style>
-        body { font-family: 'Segoe UI', Tahoma, sans-serif; background-color: #2c3e50; color: white; text-align: center; padding-top: 50px; }
-        .painel { background: #34495e; display: inline-block; padding: 40px; border-radius: 15px; box-shadow: 0 10px 20px rgba(0,0,0,0.3); }
-        .saldo-box { font-size: 24px; margin-bottom: 30px; background: #2ecc71; padding: 10px 20px; border-radius: 8px; font-weight: bold; }
-        .btn-aula { background-color: #e67e22; border: none; border-radius: 50%; width: 150px; height: 150px; font-size: 20px; color: white; font-weight: bold; cursor: pointer; transition: transform 0.1s; box-shadow: 0 8px 0 #d35400; }
-        .btn-aula:active { transform: translateY(8px); box-shadow: none; }
-        nav { margin-top: 30px; }
-        nav a { color: #ecf0f1; text-decoration: none; margin: 0 15px; padding: 5px 10px; background: #2980b9; border-radius: 5px; }
-    </style>
+    <title>Professor Clicker - Aula</title>
+    <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
+    <div class="flash-container">
+        <div class="top-nav">
+            <a href="game.html" class="btn-retro">Dar Aula</a>
+            <a href="shop.html" class="btn-retro">Loja</a>
+            <a href="inventory.html" class="btn-retro">Mochila</a>
+            <a href="pokemon.html" class="btn-retro">Time Pokemon</a>
+            <button class="btn-retro btn-danger" type="button" onclick="sair()">Sair</button>
+            <div class="saldo">Moedas: <span id="saldo-display">--</span></div>
+        </div>
 
-<div class="painel">
-    <h2>Sala de Aula</h2>
-    <div class="saldo-box">Moedas de Café: <span id="saldo-texto">0.00</span> ☕</div>
-    
-    <button class="btn-aula" onclick="clicarDarAula()">DAR AULA!</button>
-    <p id="aviso" style="color: #f1c40f; margin-top: 15px;"></p>
+        <div class="content">
+            <div class="panel" style="text-align: center;">
+                <h2>Nivel: <span id="nivel-display">--</span></h2>
+                <p>Progresso da Aula: <progress id="progresso-display" value="0" max="100"></progress></p>
+                <p class="panel-note">Nivel e progresso ainda nao estao conectados ao servidor.</p>
+            </div>
 
-    <nav>
-        <a href="shop.html">🛒 Ir para a Loja</a>
-        <a href="pokemon.html">🐾 Meu Time</a>
-        <a href="#" onclick="sair()" style="background: #c0392b;">Sair</a>
-    </nav>
-</div>
+            <button id="btn-aula" class="clicker-btn" onclick="darAula()">DAR AULA!</button>
+            <p id="mensagem" class="message"></p>
+        </div>
+    </div>
 
-<script src="js/api.js"></script>
-<script>
-    verificarAutenticacao();
-    const jogadorId = getJogadorId();
+    <script src="js/api.js"></script>
+    <script>
+        verificarAutenticacao();
+        atualizarSaldoNaTela(getSaldo());
+        carregarJogador();
 
-    async function clicarDarAula() {
-        const btn = document.querySelector('.btn-aula');
-        btn.disabled = true; // Previne duplo clique rápido
-        
-        try {
-            const response = await fetch(`${BASE_URL}/jogo/${jogadorId}/dar-aula`, {
-                method: 'POST'
-            });
-            const data = await response.json();
-            
-            if (response.ok) {
-                // Atualiza o DOM com o novo saldo retornado pelo Python
-                document.getElementById('saldo-texto').innerText = data.novo_saldo.toFixed(2);
-                document.getElementById('aviso').innerText = `+${data.ganho} moedas!`;
-                setTimeout(() => document.getElementById('aviso').innerText = "", 1000);
-            } else {
-                alert("Erro ao dar aula: " + data.detail);
+        const jogadorId = getJogadorId();
+
+        async function darAula() {
+            const btn = document.getElementById('btn-aula');
+            btn.disabled = true;
+
+            const msg = document.getElementById('mensagem');
+            msg.className = 'message';
+            msg.innerText = '';
+
+            try {
+                const data = await apiFetch(`/jogo/${jogadorId}/dar-aula`, { method: 'POST' });
+                setSaldo(data.novo_saldo);
+                atualizarSaldoNaTela(data.novo_saldo);
+                msg.className = 'message success';
+                msg.innerText = `+${data.ganho} moedas!`;
+            } catch (error) {
+                msg.className = 'message error';
+                msg.innerText = error.message || 'Erro ao dar aula.';
+            } finally {
+                btn.disabled = false;
+                setTimeout(() => { msg.innerText = ''; msg.className = 'message'; }, 1500);
             }
-        } catch (error) {
-            console.error("Erro na comunicação com a API:", error);
-        } finally {
-            btn.disabled = false;
         }
-    }
 
-    function sair() {
-        localStorage.removeItem("jogador_id");
-        window.location.href = "index.html";
-    }
-</script>
+        function sair() {
+            limparSessao();
+            window.location.href = 'index.html';
+        }
+    </script>
 </body>
 </html>

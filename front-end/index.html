@@ -3,174 +3,138 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Isaac Clicker - Login</title>
-    <style>
-        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #f4f1ea; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; }
-        .container { background: white; padding: 30px; border-radius: 10px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); text-align: center; width: 320px; }
-        
-        /* Estilos dos inputs e mensagens de erro */
-        .input-group { text-align: left; margin-bottom: 5px; }
-        input { width: 90%; padding: 10px; margin: 5px 0; border: 1px solid #ccc; border-radius: 5px; outline: none; transition: 0.3s; }
-        input:focus { border-color: #2980b9; }
-        .input-invalido { border: 2px solid #e74c3c !important; background-color: #fadbd8; }
-        .erro-texto { color: #e74c3c; font-size: 12px; min-height: 15px; display: block; margin-bottom: 5px; margin-left: 5px; font-weight: bold; }
-        
-        button { width: 100%; padding: 10px; margin-top: 10px; border: none; border-radius: 5px; cursor: pointer; font-weight: bold; transition: 0.2s; }
-        button:hover { opacity: 0.9; transform: scale(0.98); }
-        .btn-login { background-color: #6f4e37; color: white; }
-        .btn-cadastro { background-color: #2c3e50; color: white; }
-        h1 { color: #6f4e37; margin-bottom: 5px; } 
-        p.subtitle { margin-top: 0; color: #7f8c8d; font-size: 14px; margin-bottom: 20px;}
-    </style>
+    <title>Professor Clicker - Login</title>
+    <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
+    <div class="flash-container auth-screen">
+        <div class="panel auth-panel">
+            <h1>Professor Clicker</h1>
+            <p class="subtitle">Area do treinador</p>
 
-<div class="container">
-    <h1>☕ Isaac Clicker</h1>
-    <p class="subtitle">Área do Treinador</p>
-    
-    <div class="input-group">
-        <input type="email" id="email" placeholder="Seu E-mail (ex: aluno@ufpa.br)">
-        <span id="erro-email" class="erro-texto"></span>
+            <form id="auth-form" onsubmit="return false;">
+                <input type="email" id="email" placeholder="E-mail (ex: aluno@ufpa.br)" autocomplete="email">
+                <span id="erro-email" class="error-text"></span>
+
+                <input type="password" id="senha" placeholder="Senha" autocomplete="current-password">
+                <span id="erro-senha" class="error-text"></span>
+
+                <button type="button" class="btn-retro btn-primary" style="width: 100%;" onclick="fazerLogin()">Entrar</button>
+
+                <hr style="margin: 12px 0;">
+
+                <input type="text" id="nome" placeholder="Nome (somente para cadastro)" autocomplete="name">
+                <span id="erro-nome" class="error-text"></span>
+
+                <button type="button" class="btn-retro" style="width: 100%;" onclick="fazerCadastro()">Criar Conta</button>
+            </form>
+
+            <p id="mensagem" class="message"></p>
+        </div>
     </div>
-    
-    <div class="input-group">
-        <input type="password" id="senha" placeholder="Sua Senha">
-        <span id="erro-senha" class="erro-texto"></span>
-    </div>
-    
-    <button class="btn-login" onclick="fazerLogin()">Entrar</button>
-    
-    <hr style="margin: 20px 0; border: 0.5px solid #eee;">
-    
-    <div class="input-group">
-        <input type="text" id="nome" placeholder="Nome (Só para cadastro)">
-        <span id="erro-nome" class="erro-texto"></span>
-    </div>
-    
-    <button class="btn-cadastro" onclick="fazerCadastro()">Cadastrar Novo Jogador</button>
-    
-    <p id="mensagem" style="color: red; font-size: 14px; margin-top: 15px; font-weight: bold;"></p>
-</div>
 
-<script src="js/api.js"></script>
-<script>
-    // --- FUNÇÕES DE VALIDAÇÃO VISUAL ---
-
-    function limparErros() {
-        document.querySelectorAll('.erro-texto').forEach(el => el.innerText = "");
-        document.querySelectorAll('input').forEach(el => el.classList.remove('input-invalido'));
-        document.getElementById('mensagem').innerText = "";
-    }
-
-    function mostrarErro(campoId, erroId, mensagem) {
-        document.getElementById(campoId).classList.add('input-invalido');
-        document.getElementById(erroId).innerText = mensagem;
-    }
-
-    function validarEmail(email) {
-        // Expressão Regular simples para checar formato de e-mail com @ e domínio
-        const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-        return re.test(email);
-    }
-
-    function validarFormulario(isCadastro) {
-        limparErros();
-        let valido = true;
-        
-        const email = document.getElementById('email').value.trim();
-        const senha = document.getElementById('senha').value.trim();
-        const nome = document.getElementById('nome').value.trim();
-
-        if (!email) {
-            mostrarErro('email', 'erro-email', 'O e-mail é obrigatório.');
-            valido = false;
-        } else if (!validarEmail(email)) {
-            mostrarErro('email', 'erro-email', 'Digite um e-mail válido com @ e domínio.');
-            valido = false;
+    <script src="js/api.js"></script>
+    <script>
+        function limparErros() {
+            document.querySelectorAll('.error-text').forEach(el => el.innerText = "");
+            document.querySelectorAll('input').forEach(el => el.classList.remove('input-invalid'));
+            const msg = document.getElementById('mensagem');
+            msg.className = 'message';
+            msg.innerText = "";
         }
 
-        if (!senha) {
-            mostrarErro('senha', 'erro-senha', 'A senha é obrigatória.');
-            valido = false;
-        } else if (senha.length < 3) {
-            mostrarErro('senha', 'erro-senha', 'A senha deve ter no mínimo 3 caracteres.');
-            valido = false;
+        function setMensagem(texto, tipo) {
+            const msg = document.getElementById('mensagem');
+            msg.className = `message ${tipo}`;
+            msg.innerText = texto;
         }
 
-        if (isCadastro) {
-            if (!nome) {
-                mostrarErro('nome', 'erro-nome', 'O nome é obrigatório para cadastro.');
+        function mostrarErro(campoId, erroId, mensagem) {
+            document.getElementById(campoId).classList.add('input-invalid');
+            document.getElementById(erroId).innerText = mensagem;
+        }
+
+        function validarEmail(email) {
+            const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            return re.test(email);
+        }
+
+        function validarFormulario(isCadastro) {
+            limparErros();
+            let valido = true;
+
+            const email = document.getElementById('email').value.trim();
+            const senha = document.getElementById('senha').value.trim();
+            const nome = document.getElementById('nome').value.trim();
+
+            if (!email) {
+                mostrarErro('email', 'erro-email', 'O e-mail e obrigatorio.');
+                valido = false;
+            } else if (!validarEmail(email)) {
+                mostrarErro('email', 'erro-email', 'Digite um e-mail valido.');
                 valido = false;
             }
-        }
 
-        return valido;
-    }
-
-    // --- INTEGRAÇÃO COM A API ---
-
-    async function fazerLogin() {
-        if (!validarFormulario(false)) return; // Trava a execução se os dados estiverem errados
-
-        const email = document.getElementById('email').value.trim();
-        const senha = document.getElementById('senha').value.trim();
-        
-        try {
-            const response = await fetch(`${BASE_URL}/jogadores/login`, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ email, senha })
-            });
-            const data = await response.json();
-            
-            if (response.ok) {
-                localStorage.setItem("jogador_id", data.jogador_id);
-                window.location.href = "game.html";
-            } else {
-                document.getElementById('mensagem').style.color = "#e74c3c";
-                document.getElementById('mensagem').innerText = data.detail || "Erro ao logar. Verifique suas credenciais.";
+            if (!senha) {
+                mostrarErro('senha', 'erro-senha', 'A senha e obrigatoria.');
+                valido = false;
+            } else if (senha.length < 3) {
+                mostrarErro('senha', 'erro-senha', 'A senha deve ter no minimo 3 caracteres.');
+                valido = false;
             }
-        } catch (error) {
-            document.getElementById('mensagem').innerText = "Erro ao conectar com o servidor.";
+
+            if (isCadastro && !nome) {
+                mostrarErro('nome', 'erro-nome', 'O nome e obrigatorio para cadastro.');
+                valido = false;
+            }
+
+            return valido;
         }
-    }
 
-    async function fazerCadastro() {
-        if (!validarFormulario(true)) return; // Trava a execução se os dados estiverem errados
+        async function fazerLogin() {
+            if (!validarFormulario(false)) return;
 
-        const nome = document.getElementById('nome').value.trim();
-        const email = document.getElementById('email').value.trim();
-        const senha = document.getElementById('senha').value.trim();
+            const email = document.getElementById('email').value.trim();
+            const senha = document.getElementById('senha').value.trim();
 
-        try {
-            const response = await fetch(`${BASE_URL}/jogadores/`, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ nome, email, senha })
-            });
-            const data = await response.json();
+            try {
+                const data = await apiFetch('/jogadores/login', {
+                    method: 'POST',
+                    body: { email, senha }
+                });
 
-            if (response.ok) {
-                limparErros();
-                document.getElementById('mensagem').style.color = "#2ecc71"; // Verde sucesso
-                document.getElementById('mensagem').innerText = "✅ Cadastro realizado! Agora você pode Entrar.";
-                // Opcional: limpar os campos após sucesso
-                document.getElementById('nome').value = "";
-                document.getElementById('senha').value = "";
-            } else {
-                document.getElementById('mensagem').style.color = "#e74c3c";
-                // Tratando erros específicos do FastAPI/Pydantic
-                if (response.status === 422) {
-                    document.getElementById('mensagem').innerText = "Erro nos dados. O e-mail já existe ou o formato é inválido.";
+                setJogadorId(data.jogador_id);
+                await carregarJogador();
+                window.location.href = 'game.html';
+            } catch (error) {
+                setMensagem(error.message || 'Erro ao logar.', 'error');
+            }
+        }
+
+        async function fazerCadastro() {
+            if (!validarFormulario(true)) return;
+
+            const nome = document.getElementById('nome').value.trim();
+            const email = document.getElementById('email').value.trim();
+            const senha = document.getElementById('senha').value.trim();
+
+            try {
+                await apiFetch('/jogadores/', {
+                    method: 'POST',
+                    body: { nome, email, senha }
+                });
+
+                setMensagem('Cadastro realizado! Agora voce pode entrar.', 'success');
+                document.getElementById('nome').value = '';
+                document.getElementById('senha').value = '';
+            } catch (error) {
+                if (error.status === 422) {
+                    setMensagem('Erro nos dados. Verifique e tente novamente.', 'error');
                 } else {
-                    document.getElementById('mensagem').innerText = data.detail || "Erro ao cadastrar.";
+                    setMensagem(error.message || 'Erro ao cadastrar.', 'error');
                 }
             }
-        } catch (error) {
-            document.getElementById('mensagem').innerText = "Erro ao conectar com o servidor.";
         }
-    }
-</script>
+    </script>
 </body>
 </html>

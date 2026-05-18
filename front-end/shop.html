@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Professor Clicker - Loja</title>
+	<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+	<div class="flash-container">
+		<div class="top-nav">
+			<a href="game.html" class="btn-retro">Dar Aula</a>
+			<a href="shop.html" class="btn-retro">Loja</a>
+			<a href="inventory.html" class="btn-retro">Mochila</a>
+			<a href="pokemon.html" class="btn-retro">Time Pokemon</a>
+			<button class="btn-retro btn-danger" type="button" onclick="sair()">Sair</button>
+			<div class="saldo">Moedas: <span id="saldo-display">--</span></div>
+		</div>
+
+		<div class="content">
+			<div class="panel">
+				<h2>Loja do Professor</h2>
+				<button class="btn-retro btn-success" type="button" onclick="criarItem()" style="float: right; margin-bottom: 10px;">+ Criar Item (Admin)</button>
+				<table id="tabela-loja">
+					<tr>
+						<th>Item</th>
+						<th>Descricao</th>
+						<th>Preco</th>
+						<th>Acoes</th>
+					</tr>
+				</table>
+				<p id="mensagem" class="message"></p>
+			</div>
+		</div>
+	</div>
+
+	<script src="js/api.js"></script>
+	<script>
+		verificarAutenticacao();
+		atualizarSaldoNaTela(getSaldo());
+		carregarJogador();
+
+		const jogadorId = getJogadorId();
+		const tabela = document.getElementById('tabela-loja');
+		const mensagem = document.getElementById('mensagem');
+
+		function sair() {
+			limparSessao();
+			window.location.href = 'index.html';
+		}
+
+		function setMensagem(texto, tipo) {
+			mensagem.className = `message ${tipo || ''}`;
+			mensagem.innerText = texto || '';
+		}
+
+		function criarLinhaVazia() {
+			const row = document.createElement('tr');
+			const cell = document.createElement('td');
+			cell.colSpan = 4;
+			cell.className = 'table-empty';
+			cell.innerText = 'Nenhum item disponivel.';
+			row.appendChild(cell);
+			tabela.appendChild(row);
+		}
+
+		async function carregarLoja() {
+			tabela.innerHTML = `
+				<tr>
+					<th>Item</th>
+					<th>Descricao</th>
+					<th>Preco</th>
+					<th>Acoes</th>
+				</tr>
+			`;
+
+			try {
+				const itens = await apiFetch('/loja/itens');
+				if (!itens.length) {
+					criarLinhaVazia();
+					return;
+				}
+
+				itens.forEach(item => {
+					const row = document.createElement('tr');
+
+					const nomeCell = document.createElement('td');
+					nomeCell.innerText = item.nome;
+
+					const descCell = document.createElement('td');
+					descCell.innerText = item.descricao || '-';
+
+					const precoCell = document.createElement('td');
+					const preco = Number(item.preco);
+					precoCell.innerText = Number.isFinite(preco) ? formatMoedas(preco) : item.preco;
+
+					const acoesCell = document.createElement('td');
+					const comprarBtn = document.createElement('button');
+					comprarBtn.type = 'button';
+					comprarBtn.className = 'btn-retro';
+					comprarBtn.innerText = 'Comprar';
+					comprarBtn.addEventListener('click', () => comprarItem(item.id, preco));
+
+					const precoBtn = document.createElement('button');
+					precoBtn.type = 'button';
+					precoBtn.className = 'btn-retro btn-primary';
+					precoBtn.innerText = 'Preco';
+					precoBtn.addEventListener('click', () => alterarPreco(item.id));
+
+					acoesCell.appendChild(comprarBtn);
+					acoesCell.appendChild(precoBtn);
+
+					row.appendChild(nomeCell);
+					row.appendChild(descCell);
+					row.appendChild(precoCell);
+					row.appendChild(acoesCell);
+
+					tabela.appendChild(row);
+				});
+			} catch (error) {
+				criarLinhaVazia();
+			}
+		}
+
+		async function comprarItem(itemId, preco) {
+			setMensagem('', '');
+			try {
+				await apiFetch(`/inventario/comprar/${jogadorId}/${itemId}`, { method: 'POST' });
+				if (Number.isFinite(preco)) {
+					const saldoAtual = getSaldo();
+					if (saldoAtual !== null) {
+						const novoSaldo = saldoAtual - preco;
+						setSaldo(novoSaldo);
+						atualizarSaldoNaTela(novoSaldo);
+					}
+				}
+				await carregarJogador();
+				setMensagem('Item comprado com sucesso!', 'success');
+			} catch (error) {
+				setMensagem(error.message || 'Erro ao comprar.', 'error');
+			}
+		}
+
+		async function alterarPreco(itemId) {
+			const entrada = prompt('Novo preco?');
+			if (!entrada) return;
+
+			const novoPreco = Number(entrada);
+			if (!Number.isFinite(novoPreco) || novoPreco <= 0) {
+				setMensagem('Preco invalido.', 'error');
+				return;
+			}
+
+			try {
+				await apiFetch(`/loja/itens/${itemId}/preco?novo_preco=${encodeURIComponent(novoPreco)}`, { method: 'PUT' });
+				setMensagem('Preco atualizado.', 'success');
+				carregarLoja();
+			} catch (error) {
+				setMensagem(error.message || 'Erro ao atualizar preco.', 'error');
+			}
+		}
+
+		async function criarItem() {
+			const nome = prompt('Nome do item?');
+			if (!nome) return;
+
+			const entradaPreco = prompt('Preco do item?');
+			if (!entradaPreco) return;
+
+			const preco = Number(entradaPreco);
+			if (!Number.isFinite(preco) || preco <= 0) {
+				setMensagem('Preco invalido.', 'error');
+				return;
+			}
+
+			const entradaMult = prompt('Multiplicador (ex: 2.0)?');
+			const multiplicador = entradaMult ? Number(entradaMult) : 1;
+			const multFinal = Number.isFinite(multiplicador) && multiplicador > 0 ? multiplicador : 1;
+
+			try {
+				await apiFetch('/loja/itens', {
+					method: 'POST',
+					body: {
+						nome,
+						descricao: '',
+						preco,
+						multiplicador: multFinal,
+						tipo: 'equipamento',
+						raridade: 'comum',
+						vendivel: true
+					}
+				});
+				setMensagem('Item criado com sucesso.', 'success');
+				carregarLoja();
+			} catch (error) {
+				setMensagem(error.message || 'Erro ao criar item.', 'error');
+			}
+		}
+
+		carregarLoja();
+	</script>
+</body>
+</html>
