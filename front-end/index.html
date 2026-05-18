@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Isaac Clicker - Login</title>
+    <style>
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #f4f1ea; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; }
+        .container { background: white; padding: 30px; border-radius: 10px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); text-align: center; width: 300px; }
+        input { width: 90%; padding: 10px; margin: 10px 0; border: 1px solid #ccc; border-radius: 5px; }
+        button { width: 100%; padding: 10px; margin-top: 10px; border: none; border-radius: 5px; cursor: pointer; font-weight: bold; }
+        .btn-login { background-color: #6f4e37; color: white; }
+        .btn-cadastro { background-color: #2c3e50; color: white; }
+        h1 { color: #6f4e37; } /* Cor de café */
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>☕ Isaac Clicker</h1>
+    <p>Área do Treinador</p>
+    
+    <input type="email" id="email" placeholder="Seu E-mail" required>
+    <input type="password" id="senha" placeholder="Sua Senha" required>
+    
+    <button class="btn-login" onclick="fazerLogin()">Entrar</button>
+    <hr style="margin: 20px 0; border: 0.5px solid #eee;">
+    <input type="text" id="nome" placeholder="Nome (Só para cadastro)">
+    <button class="btn-cadastro" onclick="fazerCadastro()">Cadastrar Novo Jogador</button>
+    
+    <p id="mensagem" style="color: red; font-size: 14px;"></p>
+</div>
+
+<script src="js/api.js"></script>
+<script>
+    async function fazerLogin() {
+        const email = document.getElementById('email').value;
+        const senha = document.getElementById('senha').value;
+        
+        try {
+            const response = await fetch(`${BASE_URL}/jogadores/login`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ email, senha })
+            });
+            const data = await response.json();
+            
+            if (response.ok) {
+                // Salva o ID no navegador e vai pro jogo!
+                localStorage.setItem("jogador_id", data.jogador_id);
+                window.location.href = "game.html";
+            } else {
+                document.getElementById('mensagem').innerText = data.detail || "Erro ao logar.";
+            }
+        } catch (error) {
+            console.error("Erro de conexão:", error);
+        }
+    }
+
+    async function fazerCadastro() {
+        const nome = document.getElementById('nome').value;
+        const email = document.getElementById('email').value;
+        const senha = document.getElementById('senha').value;
+
+        try {
+            const response = await fetch(`${BASE_URL}/jogadores/`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ nome, email, senha })
+            });
+            const data = await response.json();
+
+            if (response.ok) {
+                document.getElementById('mensagem').style.color = "green";
+                document.getElementById('mensagem').innerText = "Cadastro realizado! Faça login.";
+            } else {
+                document.getElementById('mensagem').innerText = data.detail || "Erro ao cadastrar.";
+            }
+        } catch (error) {
+            console.error("Erro de conexão:", error);
+        }
+    }
+</script>
+</body>
+</html>
