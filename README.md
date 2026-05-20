@@ -13,30 +13,40 @@
 
 ### ✨ Funcionalidades
 
-- 🎯 **Sistema de Cliques** - Ganhe moedas a cada clique
-- 🛒 **Loja de Upgrades** - Compre melhorias para aumentar sua renda
-- 🎒 **Inventário** - Gerencie seus itens e recursos
-- 🐕 **Pokedex** - Colecione e acompanhe seus Pokémon
-- 👤 **Sistema de Usuários** - Crie sua conta e progresso persistente
-- 📊 **API RESTful** - Backend robusto com FastAPI
-- 🗄️ **Banco de Dados** - Dados persistidos com PostgreSQL
+* **Sistema de Cliques** - Ganhe moedas a cada clique
+* **Loja de Upgrades** - Compre melhorias para aumentar sua renda
+* **Inventário** - Gerencie seus itens e recursos
+* **Pokedex** - Colecione e acompanhe seus Pokémon
+* **Sistema de Usuários** - Crie sua conta e progresso persistente
+* **Torneio Pokémon** - Inscreva seu time em torneios de 2, 4 ou 8 participantes e enfrente bots de outros treinadores para ganhar prêmios baseados nos status (BST) dos Pokémon
+* **API RESTful** - Backend robusto com FastAPI
+* **Banco de Dados** - Dados persistidos com PostgreSQL
 
 ---
 
-## 🚀 Quick Start
+## 🚀 Quick Start (Como Executar o Projeto)
 
 #### Pré-requisitos
-- Docker e Docker Compose instalados
+* Python 3.9+ instalado
+* Docker e Docker Compose instalados
+* VS Code com a extensão "Live Server" (ou similar)
 
 #### Passos
 
 **1. Clonar o repositório:**
 ```bash
-git clone https://github.com/jjvaldezzzzz/professor-simulator-clicker.git
+git clone [https://github.com/jjvaldezzzzz/professor-simulator-clicker.git](https://github.com/jjvaldezzzzz/professor-simulator-clicker.git)
 cd professor-simulator-clicker
 ```
 
-**2. Crie um ambiente virtual:**
+**2. Iniciar o Banco de Dados (PostgreSQL via Docker):**
+Levante o container do banco de dados (os scripts `.sql` serão rodados automaticamente).
+```bash
+docker-compose up -d
+```
+
+**3. Configurar e Iniciar o Backend (FastAPI):**
+Crie um ambiente virtual, instale as dependências e inicie o servidor:
 ```bash
 # Windows
 python -m venv venv
@@ -45,24 +55,21 @@ venv\Scripts\activate
 # Linux/Mac
 python3 -m venv venv
 source venv/bin/activate
-```
 
-**3. Instale as dependências:**
-```bash
+# Instalar as dependências
 pip install -r requirements.txt
+
+# Iniciar o servidor backend localmente
+uvicorn app.main:app --reload
 ```
+*A API estará disponível em: http://localhost:8000*
+*Documentação (Swagger): http://localhost:8000/docs*
 
-
-**4. Iniciar os serviços com Docker Compose:**
-```bash
-docker-compose up -d
-```
-
-**5. Pronto! Acesse:**
- - Interface: http://localhost:8000
- - API Docs: http://localhost:8000/docs
- - Postgres: localhost:5433 (user: postgres, pass: suasenha)
-
+**4. Iniciar o Frontend (Interface do Jogo):**
+* Abra a pasta do projeto no VS Code.
+* Navegue até a pasta `front-end` e abra o arquivo `index.html`.
+* Clique com o botão direito na aba do arquivo ou no próprio código e selecione **"Open with Live Server"**.
+* O jogo abrirá no seu navegador padrão (geralmente em `http://127.0.0.1:5500/front-end/index.html`).
 
 ---
 
@@ -71,7 +78,7 @@ docker-compose up -d
 ```
 professor-simulator-clicker/
 ├── app/                          # Backend FastAPI
-│   ├── main.py                  # Configuração principal
+│   ├── main.py                  # Configuração principal e inicialização do CORS
 │   ├── database.py              # Conexão com PostgreSQL
 │   ├── models.py                # Modelos do banco de dados
 │   ├── schemas.py               # Esquemas Pydantic
@@ -80,19 +87,22 @@ professor-simulator-clicker/
 │       ├── shop.py              # 🛒 Sistema de loja
 │       ├── game.py              # 🎮 Lógica do jogo
 │       ├── inventory.py         # 🎒 Gerenciamento de inventário
-│       └── pokemon.py           # 🐕 Sistema de Pokémon
+│       ├── pokemon.py           # 🐕 Sistema de Pokémon
+│       └── tournament.py        # 🏆 Lógica e gerenciamento de Torneios
 ├── front-end/                    # Frontend HTML/CSS/JS
 │   ├── index.html               # Página principal
 │   ├── game.html                # Tela do jogo
 │   ├── inventory.html           # Tela do inventário
 │   ├── pokemon.html             # Tela de Pokémon
 │   ├── shop.html                # Tela da loja
+│   ├── tournament.html          # Tela de Torneios
 │   ├── css/                     # Estilos
 │   └── js/                      # Scripts do cliente
-├── scripts/                      # Scripts SQL
+├── scripts/                      # Scripts SQL (Mapeados na inicialização do DB)
 │   ├── init.sql                 # Criação de tabelas
 │   └── seed.sql                 # Dados iniciais
 ├── tests/                        # Testes automatizados
+│   └── TEST_CASES.md            # Acompanhamento de cenários de teste da Sprint 2
 ├── docker-compose.yml           # Configuração Docker
 ├── requirements.txt             # Dependências Python
 └── README.md                    # Este arquivo
@@ -154,11 +164,22 @@ POST   /pokemon/catch/{pokemon_id} # Capturar Pokémon
 GET    /pokemon/{user_id}/pokedex # Pokedex do usuário
 ```
 
+### 🏆 Torneios
+```
+POST   /torneio/{jogador_id}                                 # Criar novo torneio (2, 4 ou 8 participantes)
+GET    /torneio/{jogador_id}                                 # Listar todos os torneios do jogador
+GET    /torneio/{jogador_id}/{torneio_id}                    # Obter informações detalhadas de um torneio
+POST   /torneio/{torneio_id}/partidas/{partida_id}/resolver  # Resolver o resultado de uma partida no torneio
+DELETE /torneio/{torneio_id}                                 # Deletar um torneio (apenas se estiver finalizado)
+```
+
 **Documentação interativa:** http://localhost:8000/docs
 
 ---
 
 ## 🧪 Testes
+
+O acompanhamento detalhado dos testes unitários, de integração e fluxo de dados (Sprint 2) pode ser visualizado no arquivo `tests/TEST_CASES.md`.
 
 Execute os testes automatizados:
 
@@ -219,8 +240,10 @@ docker-compose restart
 ```
 
 ### CORS bloqueando requisições
-- Verifique se a URL do frontend está configurada em `app.add_middleware()`
-- Em desenvolvimento, `allow_origins=["*"]` permite qualquer origem
+* O acesso do Frontend já é liberado nativamente pelo sistema através do `CORSMiddleware` (com `allow_origins=["*"]`) configurado em `app.add_middleware()`. Se enfrentar problemas, revise a URL no seu arquivo de frontend local ou certifique-se de usar o Live Server.
+
+### Inicialização do Banco de Dados pelo Docker
+* Todos os arquivos com a extensão `.sql` localizados na pasta `./scripts` são automaticamente lidos e executados pela instância do Postgres durante o *build* inicial (volume mapeado em `/docker-entrypoint-initdb.d`), garantindo a correta montagem das tabelas.
 
 ---
 
