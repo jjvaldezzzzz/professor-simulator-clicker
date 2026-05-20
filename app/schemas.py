@@ -90,6 +90,13 @@ class TimePokemonAdicionar(BaseModel):
     pokemon_id: int
 
 # ==========================================
+# SCHEMAS PARA TORNEIO
+# ==========================================
+class TorneioCreate(BaseModel):
+    time_id: int
+    tamanho: int
+
+# ==========================================
 # SCHEMAS PARA A TABELA 'inventario'
 # ==========================================
 class InventarioResponse(BaseModel):

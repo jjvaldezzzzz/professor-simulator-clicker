@@ -27,6 +27,10 @@ def init_db() -> None:
     with engine.begin() as conn:
         conn.execute(text("PRAGMA foreign_keys=ON;"))
         conn.execute(text("DROP TABLE IF EXISTS transacao"))
+        conn.execute(text("DROP TABLE IF EXISTS torneio_partida"))
+        conn.execute(text("DROP TABLE IF EXISTS torneio_pokemon"))
+        conn.execute(text("DROP TABLE IF EXISTS torneio_participante"))
+        conn.execute(text("DROP TABLE IF EXISTS torneio"))
         conn.execute(text("DROP TABLE IF EXISTS pokemon_time"))
         conn.execute(text("DROP TABLE IF EXISTS time_pokemon"))
         conn.execute(text("DROP TABLE IF EXISTS inventario"))
@@ -121,6 +125,77 @@ def init_db() -> None:
                 descricao TEXT,
                 data_transacao TEXT DEFAULT CURRENT_TIMESTAMP,
                 FOREIGN KEY(jogador_id) REFERENCES jogador(id) ON DELETE CASCADE
+            )
+            """
+        ))
+
+        conn.execute(text(
+            """
+            CREATE TABLE torneio (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                jogador_id INTEGER NOT NULL,
+                time_id INTEGER NOT NULL,
+                tamanho INTEGER NOT NULL,
+                custo REAL NOT NULL DEFAULT 1000.0,
+                premio REAL NOT NULL DEFAULT 5000.0,
+                status TEXT NOT NULL DEFAULT 'em_andamento',
+                vencedor_participante_id INTEGER,
+                criado_em TEXT DEFAULT CURRENT_TIMESTAMP,
+                finalizado_em TEXT,
+                FOREIGN KEY(jogador_id) REFERENCES jogador(id) ON DELETE CASCADE,
+                FOREIGN KEY(time_id) REFERENCES time_pokemon(id) ON DELETE RESTRICT
+            )
+            """
+        ))
+
+        conn.execute(text(
+            """
+            CREATE TABLE torneio_participante (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                torneio_id INTEGER NOT NULL,
+                nome_treinador TEXT NOT NULL,
+                nome_time TEXT NOT NULL,
+                total_bst INTEGER NOT NULL DEFAULT 0,
+                ordem INTEGER NOT NULL,
+                is_bot INTEGER NOT NULL DEFAULT 1,
+                jogador_id INTEGER,
+                time_id INTEGER,
+                FOREIGN KEY(torneio_id) REFERENCES torneio(id) ON DELETE CASCADE,
+                FOREIGN KEY(jogador_id) REFERENCES jogador(id) ON DELETE SET NULL,
+                FOREIGN KEY(time_id) REFERENCES time_pokemon(id) ON DELETE SET NULL
+            )
+            """
+        ))
+
+        conn.execute(text(
+            """
+            CREATE TABLE torneio_pokemon (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                torneio_participante_id INTEGER NOT NULL,
+                pokemon_api_id INTEGER NOT NULL,
+                nome_pokemon TEXT NOT NULL,
+                sprite_url TEXT,
+                bst INTEGER NOT NULL,
+                FOREIGN KEY(torneio_participante_id) REFERENCES torneio_participante(id) ON DELETE CASCADE
+            )
+            """
+        ))
+
+        conn.execute(text(
+            """
+            CREATE TABLE torneio_partida (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                torneio_id INTEGER NOT NULL,
+                rodada INTEGER NOT NULL,
+                match_index INTEGER NOT NULL,
+                participante_a_id INTEGER,
+                participante_b_id INTEGER,
+                vencedor_id INTEGER,
+                resolvido_em TEXT,
+                FOREIGN KEY(torneio_id) REFERENCES torneio(id) ON DELETE CASCADE,
+                FOREIGN KEY(participante_a_id) REFERENCES torneio_participante(id) ON DELETE SET NULL,
+                FOREIGN KEY(participante_b_id) REFERENCES torneio_participante(id) ON DELETE SET NULL,
+                FOREIGN KEY(vencedor_id) REFERENCES torneio_participante(id) ON DELETE SET NULL
             )
             """
         ))

@@ -1,6 +1,6 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware # ⬅️ Importação nova
-from app.routers import users, shop, game, inventory, pokemon
+from app.routers import users, shop, game, inventory, pokemon, tournament
 
 app = FastAPI(title="API Isaac Clicker")
 
@@ -18,6 +18,7 @@ app.include_router(shop.router)
 app.include_router(game.router)
 app.include_router(inventory.router)
 app.include_router(pokemon.router)
+app.include_router(tournament.router)
 
 @app.get("/")
 def root():

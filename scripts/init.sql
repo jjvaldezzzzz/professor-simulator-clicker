@@ -93,6 +93,58 @@ CREATE TABLE transacao (
 CREATE INDEX idx_transacao_jogador ON transacao(jogador_id);
 CREATE INDEX idx_transacao_data ON transacao(data_transacao);
 
+-- Tabela de Torneios
+CREATE TABLE torneio (
+    id SERIAL PRIMARY KEY,
+    jogador_id INTEGER NOT NULL REFERENCES jogador(id) ON DELETE CASCADE,
+    time_id INTEGER NOT NULL REFERENCES time_pokemon(id) ON DELETE RESTRICT,
+    tamanho INTEGER NOT NULL CHECK (tamanho IN (2, 4, 8)),
+    custo DECIMAL(10,2) NOT NULL DEFAULT 1000.00,
+    premio DECIMAL(10,2) NOT NULL DEFAULT 5000.00,
+    status VARCHAR(20) NOT NULL DEFAULT 'em_andamento',
+    vencedor_participante_id INTEGER,
+    criado_em TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    finalizado_em TIMESTAMP
+);
+
+CREATE TABLE torneio_participante (
+    id SERIAL PRIMARY KEY,
+    torneio_id INTEGER NOT NULL REFERENCES torneio(id) ON DELETE CASCADE,
+    nome_treinador VARCHAR(100) NOT NULL,
+    nome_time VARCHAR(100) NOT NULL,
+    total_bst INTEGER NOT NULL DEFAULT 0,
+    ordem INTEGER NOT NULL,
+    is_bot BOOLEAN NOT NULL DEFAULT TRUE,
+    jogador_id INTEGER REFERENCES jogador(id) ON DELETE SET NULL,
+    time_id INTEGER REFERENCES time_pokemon(id) ON DELETE SET NULL
+);
+
+CREATE TABLE torneio_pokemon (
+    id SERIAL PRIMARY KEY,
+    torneio_participante_id INTEGER NOT NULL REFERENCES torneio_participante(id) ON DELETE CASCADE,
+    pokemon_api_id INTEGER NOT NULL CHECK (pokemon_api_id BETWEEN 1 AND 1025),
+    nome_pokemon VARCHAR(100) NOT NULL,
+    sprite_url VARCHAR(500),
+    bst INTEGER NOT NULL
+);
+
+CREATE TABLE torneio_partida (
+    id SERIAL PRIMARY KEY,
+    torneio_id INTEGER NOT NULL REFERENCES torneio(id) ON DELETE CASCADE,
+    rodada INTEGER NOT NULL,
+    match_index INTEGER NOT NULL,
+    participante_a_id INTEGER REFERENCES torneio_participante(id) ON DELETE SET NULL,
+    participante_b_id INTEGER REFERENCES torneio_participante(id) ON DELETE SET NULL,
+    vencedor_id INTEGER REFERENCES torneio_participante(id) ON DELETE SET NULL,
+    resolvido_em TIMESTAMP
+);
+
+CREATE INDEX idx_torneio_jogador ON torneio(jogador_id);
+CREATE INDEX idx_torneio_status ON torneio(status);
+CREATE INDEX idx_torneio_participante_torneio ON torneio_participante(torneio_id);
+CREATE INDEX idx_torneio_pokemon_participante ON torneio_pokemon(torneio_participante_id);
+CREATE INDEX idx_torneio_partida_torneio ON torneio_partida(torneio_id);
+
 -- Tabela de Configurações do Jogo (UC06)
 CREATE TABLE config_game (
     id SERIAL PRIMARY KEY,
@@ -111,3 +163,9 @@ CREATE TABLE log_autenticacao (
     sucesso BOOLEAN NOT NULL,
     data_tentativa TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
+
+ALTER TABLE torneio
+    ADD CONSTRAINT fk_torneio_vencedor
+    FOREIGN KEY (vencedor_participante_id)
+    REFERENCES torneio_participante(id)
+    ON DELETE SET NULL;

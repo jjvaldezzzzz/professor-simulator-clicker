@@ -1,0 +1,541 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Professor Clicker - Torneio Pokemon</title>
+	<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+	<div class="flash-container">
+		<div class="top-nav">
+			<a href="game.html" class="btn-retro">Dar Aula</a>
+			<a href="shop.html" class="btn-retro">Loja</a>
+			<a href="inventory.html" class="btn-retro">Mochila</a>
+			<a href="pokemon.html" class="btn-retro">Time Pokemon</a>
+			<a href="tournament.html" class="btn-retro">Torneio Pokemon</a>
+			<a href="profile.html" class="btn-retro">Perfil</a>
+			<button class="btn-retro btn-danger" type="button" onclick="sair()">Sair</button>
+			<div class="saldo">Moedas: <span id="saldo-display">--</span></div>
+		</div>
+
+		<div class="content">
+			<div class="panel">
+				<h2>Criar torneio</h2>
+				<div class="tournament-setup">
+					<div class="tournament-setup-info">
+						<p class="panel-note">Escolha um time com 6 Pokemon para entrar no torneio.</p>
+						<div class="tournament-cost">Custo: <strong id="torneio-custo">1000 moedas</strong> | Premio: <strong id="torneio-premio">5000 moedas</strong></div>
+						<p class="tournament-hint">Torneios de 2, 4 ou 8 jogadores. O BST total decide as batalhas.</p>
+					</div>
+					<div class="tournament-setup-controls">
+						<div class="form-row form-row-setup">
+							<div class="select-group">
+								<label class="select-label" for="select-time">Time</label>
+								<div class="select-shell">
+									<select id="select-time" class="select-retro"></select>
+								</div>
+							</div>
+							<div class="select-group">
+								<label class="select-label" for="select-tamanho">Jogadores</label>
+								<div class="select-shell">
+									<select id="select-tamanho" class="select-retro">
+										<option value="2">2 jogadores - Custo 500 / Premio 700</option>
+										<option value="4">4 jogadores - Custo 700 / Premio 1000</option>
+										<option value="8">8 jogadores - Custo 1000 / Premio 2000</option>
+									</select>
+								</div>
+							</div>
+							<button class="btn-retro btn-primary" type="button" onclick="criarTorneio()">Criar torneio</button>
+						</div>
+					</div>
+				</div>
+				<p id="mensagem" class="message"></p>
+			</div>
+
+			<div class="panel">
+				<h2>Historico de torneios</h2>
+				<ul id="lista-torneios" class="list-compact"></ul>
+			</div>
+
+		</div>
+	</div>
+
+	<div id="modal-torneio" class="modal modal-torneio is-hidden" role="dialog" aria-modal="true">
+		<div class="modal-card modal-card-wide">
+			<div class="modal-header">
+				<h3 class="modal-title">Chave do torneio</h3>
+				<div class="modal-header-actions">
+					<button id="btn-deletar-torneio" class="btn-retro btn-danger btn-small" type="button" onclick="deletarTorneio()">Deletar torneio</button>
+					<button id="btn-fechar-torneio" class="btn-retro" type="button" onclick="fecharModalTorneio()">Fechar</button>
+				</div>
+			</div>
+			<p id="torneio-info" class="panel-note"></p>
+			<div id="chave-container" class="tournament-grid"></div>
+			<p id="mensagem-final" class="message"></p>
+		</div>
+	</div>
+
+	<div id="modal-batalha" class="modal modal-batalha is-hidden" role="dialog" aria-modal="true">
+		<div class="modal-card">
+			<h3 class="modal-title">Batalha</h3>
+			<div class="battle-row">
+				<div class="battle-team" id="battle-team-a"></div>
+				<div class="battle-vs">VS</div>
+				<div class="battle-team" id="battle-team-b"></div>
+			</div>
+			<div id="battle-result" class="battle-result is-hidden"></div>
+			<div class="modal-actions">
+				<button id="btn-iniciar-batalha" class="btn-retro btn-success" type="button">Iniciar batalha</button>
+				<button class="btn-retro" type="button" onclick="fecharModalBatalha()">Fechar</button>
+			</div>
+		</div>
+	</div>
+
+	<script src="js/api.js"></script>
+	<script>
+		verificarAutenticacao();
+		atualizarSaldoNaTela(getSaldo());
+		carregarJogador();
+
+		const jogadorId = getJogadorId();
+		const selectTime = document.getElementById('select-time');
+		const selectTamanho = document.getElementById('select-tamanho');
+		const mensagem = document.getElementById('mensagem');
+		const mensagemFinal = document.getElementById('mensagem-final');
+		const torneioCusto = document.getElementById('torneio-custo');
+		const torneioPremio = document.getElementById('torneio-premio');
+		const chaveContainer = document.getElementById('chave-container');
+		const listaTorneios = document.getElementById('lista-torneios');
+		const torneioInfo = document.getElementById('torneio-info');
+		const btnDeletarTorneio = document.getElementById('btn-deletar-torneio');
+		const modalTorneio = document.getElementById('modal-torneio');
+		const modalBatalha = document.getElementById('modal-batalha');
+		const battleTeamA = document.getElementById('battle-team-a');
+		const battleTeamB = document.getElementById('battle-team-b');
+		const battleResult = document.getElementById('battle-result');
+		const btnIniciarBatalha = document.getElementById('btn-iniciar-batalha');
+
+		let torneioAtual = null;
+		let participantesMap = {};
+		let partidas = [];
+		let matchAtual = null;
+		const custosPorTamanho = { 2: 500, 4: 700, 8: 1000 };
+		const premiosPorTamanho = { 2: 700, 4: 1000, 8: 2000 };
+
+		function sair() {
+			limparSessao();
+			window.location.href = 'index.html';
+		}
+
+		function setMensagem(texto, tipo) {
+			mensagem.className = `message ${tipo || ''}`;
+			mensagem.innerText = texto || '';
+		}
+
+		function setMensagemFinal(texto, tipo) {
+			mensagemFinal.className = `message ${tipo || ''}`;
+			mensagemFinal.innerText = texto || '';
+		}
+
+		function abrirModalBatalha() {
+			modalBatalha.classList.remove('is-hidden');
+		}
+
+		function abrirModalTorneio() {
+			modalTorneio.classList.remove('is-hidden');
+		}
+
+		function fecharModalBatalha() {
+			modalBatalha.classList.add('is-hidden');
+			battleResult.classList.add('is-hidden');
+			battleResult.innerHTML = '';
+			btnIniciarBatalha.disabled = false;
+			matchAtual = null;
+		}
+
+		function fecharModalTorneio() {
+			modalTorneio.classList.add('is-hidden');
+			if (!modalBatalha.classList.contains('is-hidden')) {
+				fecharModalBatalha();
+			}
+		}
+
+		function atualizarCustoPremio() {
+			const tamanho = Number(selectTamanho.value);
+			const custo = custosPorTamanho[tamanho] || 0;
+			const premio = premiosPorTamanho[tamanho] || 0;
+			if (torneioCusto) torneioCusto.innerText = `${custo} moedas`;
+			if (torneioPremio) torneioPremio.innerText = `${premio} moedas`;
+		}
+
+		function atualizarInfoTorneio() {
+			if (!torneioAtual) {
+				torneioInfo.innerText = 'Nenhum torneio selecionado.';
+				btnDeletarTorneio.classList.add('is-hidden');
+				return;
+			}
+			const status = torneioAtual.torneio.status === 'finalizado' ? 'Finalizado' : 'Em andamento';
+			torneioInfo.innerText = `Torneio #${torneioAtual.torneio.id} - ${status} - ${torneioAtual.torneio.tamanho} jogadores`;
+			if (torneioAtual.torneio.status === 'finalizado') {
+				btnDeletarTorneio.classList.remove('is-hidden');
+			} else {
+				btnDeletarTorneio.classList.add('is-hidden');
+			}
+		}
+
+		async function carregarTimes() {
+			selectTime.innerHTML = '';
+			try {
+				const times = await apiFetch(`/pokemon/times/${jogadorId}`);
+				const validos = times.filter(time => time.quantidade === 6);
+				if (!validos.length) {
+					const opt = document.createElement('option');
+					opt.value = '';
+					opt.innerText = 'Nenhum time com 6 Pokemon';
+					selectTime.appendChild(opt);
+					return;
+				}
+				validos.forEach(time => {
+					const opt = document.createElement('option');
+					opt.value = time.id;
+					opt.innerText = `${time.nome} (${time.quantidade}/6)`;
+					selectTime.appendChild(opt);
+				});
+			} catch (error) {
+				const opt = document.createElement('option');
+				opt.value = '';
+				opt.innerText = 'Erro ao carregar times';
+				selectTime.appendChild(opt);
+			}
+		}
+
+		async function carregarTorneios() {
+			listaTorneios.innerHTML = '';
+			try {
+				const data = await apiFetch(`/torneio/${jogadorId}`);
+				if (!data.length) {
+					const item = document.createElement('li');
+					item.className = 'list-item';
+					item.innerText = 'Nenhum torneio registrado.';
+					listaTorneios.appendChild(item);
+					return;
+				}
+				data.forEach(torneio => {
+					const item = document.createElement('li');
+					item.className = 'list-item list-item-col';
+
+					const header = document.createElement('div');
+					header.className = 'team-header';
+					const titulo = document.createElement('strong');
+					const statusLabel = torneio.status === 'finalizado' ? 'Finalizado' : 'Em andamento';
+					titulo.innerText = `Torneio #${torneio.id} - ${torneio.tamanho} jogadores - ${statusLabel}`;
+					header.appendChild(titulo);
+
+					const actions = document.createElement('div');
+					actions.className = 'team-actions';
+					const verBtn = document.createElement('button');
+					verBtn.className = 'btn-retro btn-small';
+					verBtn.type = 'button';
+					verBtn.innerText = 'Ver chave';
+					verBtn.addEventListener('click', () => carregarTorneioDetalhe(torneio.id));
+					actions.appendChild(verBtn);
+					if (torneio.status === 'finalizado') {
+						const delBtn = document.createElement('button');
+						delBtn.className = 'btn-retro btn-danger btn-small';
+						delBtn.type = 'button';
+						delBtn.innerText = 'Deletar';
+						delBtn.addEventListener('click', () => deletarTorneio(torneio.id));
+						actions.appendChild(delBtn);
+					}
+					header.appendChild(actions);
+					item.appendChild(header);
+
+					if (torneio.vencedor_nome) {
+						const vencedor = document.createElement('span');
+						vencedor.className = 'panel-note';
+						vencedor.innerText = `Vencedor: ${torneio.vencedor_nome}`;
+						item.appendChild(vencedor);
+					}
+
+					listaTorneios.appendChild(item);
+				});
+			} catch (error) {
+				const item = document.createElement('li');
+				item.className = 'list-item';
+				item.innerText = 'Erro ao carregar torneios.';
+				listaTorneios.appendChild(item);
+			}
+		}
+
+		async function criarTorneio() {
+			setMensagem('', '');
+			setMensagemFinal('', '');
+			const timeId = Number(selectTime.value);
+			const tamanho = Number(selectTamanho.value);
+			if (!timeId) {
+				setMensagem('Selecione um time valido com 6 Pokemon.', 'error');
+				return;
+			}
+			try {
+				const data = await apiFetch(`/torneio/${jogadorId}`, {
+					method: 'POST',
+					body: { time_id: timeId, tamanho }
+				});
+				definirTorneioAtual(data);
+				abrirModalTorneio();
+				setMensagem('Torneio criado! Clique nas partidas para batalhar.', 'success');
+				await carregarJogador();
+				await carregarTorneios();
+			} catch (error) {
+				setMensagem(error.message || 'Erro ao criar torneio.', 'error');
+			}
+		}
+
+		async function carregarTorneioDetalhe(torneioId) {
+			setMensagemFinal('', '');
+			try {
+				const data = await apiFetch(`/torneio/${jogadorId}/${torneioId}`);
+				definirTorneioAtual(data);
+				abrirModalTorneio();
+			} catch (error) {
+				setMensagemFinal(error.message || 'Erro ao carregar torneio.', 'error');
+			}
+		}
+
+		function definirTorneioAtual(data) {
+			torneioAtual = data;
+			participantesMap = {};
+			data.participantes.forEach(p => {
+				participantesMap[p.id] = p;
+			});
+			partidas = data.partidas || [];
+			montarChave();
+			atualizarInfoTorneio();
+		}
+
+		function montarChave() {
+			chaveContainer.innerHTML = '';
+			if (!torneioAtual) {
+				return;
+			}
+
+			const partidasPorRodada = {};
+			partidas.forEach(partida => {
+				if (!partidasPorRodada[partida.rodada]) {
+					partidasPorRodada[partida.rodada] = [];
+				}
+				partidasPorRodada[partida.rodada].push(partida);
+			});
+
+			const totalRodadas = Math.log2(torneioAtual.torneio.tamanho);
+			for (let rodada = 1; rodada <= totalRodadas; rodada += 1) {
+				const roundCol = document.createElement('div');
+				roundCol.className = 'round-column';
+
+				const roundTitle = document.createElement('h3');
+				roundTitle.className = 'round-title';
+				roundTitle.innerText = `Rodada ${rodada}`;
+				roundCol.appendChild(roundTitle);
+
+				const partidasRodada = (partidasPorRodada[rodada] || []).sort((a, b) => a.match_index - b.match_index);
+				partidasRodada.forEach(partida => {
+					const card = document.createElement('div');
+					card.className = 'match-card';
+
+					const slotA = document.createElement('div');
+					slotA.className = 'match-slot';
+					const slotB = document.createElement('div');
+					slotB.className = 'match-slot';
+
+					const participanteA = participantesMap[partida.participante_a_id];
+					const participanteB = participantesMap[partida.participante_b_id];
+					if (participanteA) {
+						preencherSlot(slotA, participanteA);
+					} else {
+						slotA.innerText = 'Aguardando...';
+					}
+					if (participanteB) {
+						preencherSlot(slotB, participanteB);
+					} else {
+						slotB.innerText = 'Aguardando...';
+					}
+
+					card.appendChild(slotA);
+					card.appendChild(slotB);
+
+					if (!participanteA || !participanteB) {
+						card.classList.add('match-pending');
+					}
+
+					if (partida.vencedor_id) {
+						if (partida.vencedor_id === partida.participante_a_id) {
+							slotA.classList.add('match-winner');
+							slotB.classList.add('match-loser');
+						} else {
+							slotB.classList.add('match-winner');
+							slotA.classList.add('match-loser');
+						}
+					}
+
+					card.addEventListener('click', () => abrirBatalha(partida));
+					roundCol.appendChild(card);
+				});
+
+				chaveContainer.appendChild(roundCol);
+			}
+		}
+
+		function preencherSlot(slot, participante) {
+			slot.innerHTML = '';
+			const nome = document.createElement('strong');
+			nome.innerText = participante.nome_treinador;
+			slot.appendChild(nome);
+
+			const nomeTime = document.createElement('div');
+			nomeTime.className = 'panel-note';
+			nomeTime.innerText = participante.nome_time || 'Time';
+			slot.appendChild(nomeTime);
+
+			const spriteRow = document.createElement('div');
+			spriteRow.className = 'sprite-row';
+			participante.pokemons.forEach(poke => {
+				if (!poke.sprite_url) return;
+				const img = document.createElement('img');
+				img.src = poke.sprite_url;
+				img.alt = poke.nome_pokemon;
+				spriteRow.appendChild(img);
+			});
+			slot.appendChild(spriteRow);
+		}
+
+		function abrirBatalha(partida) {
+			setMensagemFinal('', '');
+			if (!torneioAtual) return;
+			if (!partida.participante_a_id || !partida.participante_b_id) {
+				setMensagemFinal('Partida ainda nao esta pronta.', 'error');
+				return;
+			}
+
+			matchAtual = partida;
+			const participanteA = participantesMap[partida.participante_a_id];
+			const participanteB = participantesMap[partida.participante_b_id];
+			preencherTeamModal(battleTeamA, participanteA, partida.vencedor_id);
+			preencherTeamModal(battleTeamB, participanteB, partida.vencedor_id);
+
+			battleResult.classList.add('is-hidden');
+			battleResult.innerHTML = '';
+			btnIniciarBatalha.disabled = !!partida.vencedor_id || torneioAtual.torneio.status === 'finalizado';
+
+			if (partida.vencedor_id) {
+				mostrarResultado(partida, participanteA, participanteB);
+			}
+
+			abrirModalBatalha();
+		}
+
+		function preencherTeamModal(container, participante, vencedorId) {
+			container.innerHTML = '';
+			const titulo = document.createElement('strong');
+			titulo.innerText = participante.nome_treinador;
+			container.appendChild(titulo);
+
+			const nomeTime = document.createElement('div');
+			nomeTime.className = 'panel-note';
+			nomeTime.innerText = participante.nome_time || 'Time';
+			container.appendChild(nomeTime);
+
+			const bstInfo = document.createElement('div');
+			bstInfo.className = 'panel-note battle-bst';
+			bstInfo.innerText = vencedorId ? `BST total: ${participante.total_bst}` : 'BST total: ???';
+			bstInfo.dataset.bst = participante.total_bst;
+			container.appendChild(bstInfo);
+
+			const spriteRow = document.createElement('div');
+			spriteRow.className = 'sprite-row';
+			participante.pokemons.forEach(poke => {
+				if (!poke.sprite_url) return;
+				const img = document.createElement('img');
+				img.src = poke.sprite_url;
+				img.alt = poke.nome_pokemon;
+				spriteRow.appendChild(img);
+			});
+			container.appendChild(spriteRow);
+		}
+
+		function mostrarResultado(partida, participanteA, participanteB) {
+			const bstA = battleTeamA.querySelector('.battle-bst');
+			const bstB = battleTeamB.querySelector('.battle-bst');
+			if (bstA) bstA.innerText = `BST total: ${participanteA.total_bst}`;
+			if (bstB) bstB.innerText = `BST total: ${participanteB.total_bst}`;
+
+			const vencedor = participantesMap[partida.vencedor_id];
+			battleResult.classList.remove('is-hidden');
+			battleResult.innerText = `BST ${participanteA.total_bst} x ${participanteB.total_bst} - Vencedor: ${vencedor.nome_treinador}`;
+		}
+
+		async function resolverBatalha() {
+			if (!matchAtual || !torneioAtual) return;
+			if (matchAtual.vencedor_id) return;
+			try {
+				const data = await apiFetch(`/torneio/${torneioAtual.torneio.id}/partidas/${matchAtual.id}/resolver?jogador_id=${encodeURIComponent(jogadorId)}`, { method: 'POST' });
+				if (data && data.vencedor_id) {
+					matchAtual.vencedor_id = data.vencedor_id;
+					const participanteA = participantesMap[matchAtual.participante_a_id];
+					const participanteB = participantesMap[matchAtual.participante_b_id];
+					mostrarResultado(matchAtual, participanteA, participanteB);
+					btnIniciarBatalha.disabled = true;
+				}
+				await carregarTorneioDetalhe(torneioAtual.torneio.id);
+				await carregarTorneios();
+				if (data.torneio_status === 'finalizado') {
+					const premio = torneioAtual && torneioAtual.torneio ? Number(torneioAtual.torneio.premio) : null;
+					const premioTexto = premio ? `+${premio} moedas` : '';
+					if (data.venceu) {
+						setMensagemFinal(`Voce venceu o torneio! ${premioTexto}`, 'success');
+					} else {
+						setMensagemFinal('Voce perdeu o torneio.', 'error');
+					}
+					if (typeof data.novo_saldo === 'number') {
+						setSaldo(data.novo_saldo);
+						atualizarSaldoNaTela(data.novo_saldo);
+					}
+				}
+			} catch (error) {
+				setMensagemFinal(error.message || 'Erro ao resolver partida.', 'error');
+			}
+		}
+
+		async function deletarTorneio(idOverride) {
+			const id = idOverride || (torneioAtual ? torneioAtual.torneio.id : null);
+			if (!id) return;
+			if (!idOverride && torneioAtual && torneioAtual.torneio.status !== 'finalizado') {
+				setMensagemFinal('Finalize o torneio antes de deletar.', 'error');
+				return;
+			}
+			if (!confirm('Deseja deletar este torneio?')) return;
+			try {
+				const data = await apiFetch(`/torneio/${id}?jogador_id=${encodeURIComponent(jogadorId)}`, { method: 'DELETE' });
+				setMensagemFinal(data.mensagem || 'Torneio deletado.', 'success');
+				if (torneioAtual && torneioAtual.torneio.id === id) {
+					torneioAtual = null;
+					chaveContainer.innerHTML = '';
+					atualizarInfoTorneio();
+					fecharModalTorneio();
+				}
+				await carregarTorneios();
+			} catch (error) {
+				setMensagemFinal(error.message || 'Erro ao deletar torneio.', 'error');
+			}
+		}
+
+		btnIniciarBatalha.addEventListener('click', resolverBatalha);
+		selectTamanho.addEventListener('change', atualizarCustoPremio);
+		btnDeletarTorneio.classList.add('is-hidden');
+		carregarTimes();
+		carregarTorneios();
+		atualizarInfoTorneio();
+		atualizarCustoPremio();
+	</script>
+</body>
+</html>
