@@ -20,6 +20,7 @@ function limparSessao() {
     localStorage.removeItem("jogador_id");
     localStorage.removeItem("saldo");
     localStorage.removeItem("is_admin");
+    pararAutoClicker();
 }
 
 function setSaldo(valor) {
@@ -87,7 +88,46 @@ async function apiFetch(endpoint, options = {}) {
 function verificarAutenticacao() {
     if (!getJogadorId() && !window.location.pathname.endsWith("index.html")) {
         window.location.href = "index.html";
+        return;
     }
+
+    if (getJogadorId()) {
+        iniciarAutoClicker();
+    }
+}
+
+let autoClickIntervalId = null;
+let autoClickEmAndamento = false;
+
+function iniciarAutoClicker() {
+    if (autoClickIntervalId || !getJogadorId()) return;
+
+    autoClickIntervalId = setInterval(async () => {
+        if (autoClickEmAndamento) return;
+        const jogadorId = getJogadorId();
+        if (!jogadorId) return;
+
+        autoClickEmAndamento = true;
+        try {
+            const data = await apiFetch(`/jogo/${jogadorId}/auto-click`, { method: "POST" });
+            if (data && typeof data.novo_saldo === "number") {
+                setSaldo(data.novo_saldo);
+                atualizarSaldoNaTela(data.novo_saldo);
+            }
+        } catch (error) {
+            // Mantem silencioso para nao poluir a UI em caso de falha temporaria
+        } finally {
+            autoClickEmAndamento = false;
+        }
+    }, 1000);
+}
+
+function pararAutoClicker() {
+    if (autoClickIntervalId) {
+        clearInterval(autoClickIntervalId);
+        autoClickIntervalId = null;
+    }
+    autoClickEmAndamento = false;
 }
 
 async function carregarJogador() {

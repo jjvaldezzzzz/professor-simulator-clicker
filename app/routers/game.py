@@ -19,7 +19,10 @@ def dar_aula(jogador_id: int, db: Session = Depends(get_db)):
         SELECT COALESCE(SUM(i.multiplicador), 0) AS total_mult
         FROM inventario inv
         JOIN item i ON inv.item_id = i.id
-        WHERE inv.jogador_id = :id AND inv.ativo = TRUE
+        WHERE inv.jogador_id = :id
+          AND inv.ativo = TRUE
+          AND i.ativo = TRUE
+          AND (i.tipo IS NULL OR i.tipo <> 'auto_click')
     """)
     multiplicador_itens = db.execute(query_mult, {"id": jogador_id}).scalar()
     
@@ -37,6 +40,52 @@ def dar_aula(jogador_id: int, db: Session = Depends(get_db)):
     
     db.commit()
     return {"mensagem": "Aula dada com sucesso!", "ganho": ganho_total, "novo_saldo": float(jogador.saldo) + ganho_total}
+
+@router.post("/{jogador_id}/auto-click")
+def auto_click(jogador_id: int, db: Session = Depends(get_db)):
+    """Aplica cliques automaticos por segundo baseado em itens do tipo auto_click."""
+
+    jogador = db.execute(text("SELECT id, saldo FROM jogador WHERE id = :id"), {"id": jogador_id}).fetchone()
+    if not jogador:
+        raise HTTPException(status_code=404, detail="Jogador nao encontrado.")
+
+    cps = db.execute(text("""
+        SELECT COALESCE(SUM(i.multiplicador), 0) AS total_cps
+        FROM inventario inv
+        JOIN item i ON inv.item_id = i.id
+        WHERE inv.jogador_id = :id
+          AND inv.ativo = TRUE
+          AND i.ativo = TRUE
+          AND i.tipo = 'auto_click'
+    """), {"id": jogador_id}).scalar()
+
+    if not cps or float(cps) <= 0:
+        return {"ganho": 0, "novo_saldo": float(jogador.saldo), "cps": 0}
+
+    mult = db.execute(text("""
+        SELECT COALESCE(SUM(i.multiplicador), 0) AS total_mult
+        FROM inventario inv
+        JOIN item i ON inv.item_id = i.id
+        WHERE inv.jogador_id = :id
+          AND inv.ativo = TRUE
+          AND i.ativo = TRUE
+          AND (i.tipo IS NULL OR i.tipo <> 'auto_click')
+    """), {"id": jogador_id}).scalar()
+
+    ganho_por_clique = 10 + float(mult)
+    ganho_total = ganho_por_clique * float(cps)
+
+    db.execute(
+        text("UPDATE jogador SET saldo = saldo + :ganho WHERE id = :id"),
+        {"ganho": ganho_total, "id": jogador_id}
+    )
+    db.commit()
+
+    return {
+        "ganho": ganho_total,
+        "novo_saldo": float(jogador.saldo) + ganho_total,
+        "cps": float(cps)
+    }
 
 @router.delete("/{jogador_id}/reset")
 def resetar_progresso(jogador_id: int, db: Session = Depends(get_db)):

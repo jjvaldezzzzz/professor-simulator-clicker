@@ -45,11 +45,18 @@
 				<textarea id="item-descricao" rows="3" placeholder="Descricao do item"></textarea>
 			</div>
 			<div class="form-row">
+				<select id="item-tipo">
+					<option value="equipamento">Multiplicador (ganho por clique)</option>
+					<option value="auto_click">Auto clique (cliques por segundo)</option>
+				</select>
+			</div>
+			<div class="form-row">
 				<input id="item-preco" type="number" min="0" step="0.01" placeholder="Preco">
 			</div>
 			<div class="form-row">
 				<input id="item-multiplicador" type="number" min="0" step="0.1" placeholder="Multiplicador (ex: 2.0)">
 			</div>
+			<p id="item-tipo-info" class="panel-note">Multiplicador soma no ganho por clique.</p>
 			<p id="mensagem-modal-item" class="message"></p>
 			<div class="modal-actions">
 				<button class="btn-retro btn-success" type="button" onclick="confirmarItem()">Confirmar</button>
@@ -73,8 +80,10 @@
 		const modalItemTitulo = document.getElementById('modal-item-titulo');
 		const modalItemNome = document.getElementById('item-nome');
 		const modalItemDescricao = document.getElementById('item-descricao');
+		const modalItemTipo = document.getElementById('item-tipo');
 		const modalItemPreco = document.getElementById('item-preco');
 		const modalItemMultiplicador = document.getElementById('item-multiplicador');
+		const modalItemTipoInfo = document.getElementById('item-tipo-info');
 		const mensagemModalItem = document.getElementById('mensagem-modal-item');
 
 		let modalItemModo = 'criar';
@@ -108,8 +117,10 @@
 			modalItemTitulo.innerText = 'Criar novo item';
 			modalItemNome.value = '';
 			modalItemDescricao.value = '';
+			modalItemTipo.value = 'equipamento';
 			modalItemPreco.value = '';
 			modalItemMultiplicador.value = '';
+			atualizarTipoInfo();
 			setMensagemModalItem('', '');
 			modalItem.classList.remove('is-hidden');
 			modalItemNome.focus();
@@ -122,10 +133,12 @@
 			modalItemTitulo.innerText = 'Editar item';
 			modalItemNome.value = item.nome || '';
 			modalItemDescricao.value = item.descricao || '';
+			modalItemTipo.value = item.tipo === 'auto_click' ? 'auto_click' : 'equipamento';
 			const preco = Number(item.preco);
 			modalItemPreco.value = Number.isFinite(preco) ? preco : '';
 			const multiplicador = Number(item.multiplicador);
 			modalItemMultiplicador.value = Number.isFinite(multiplicador) ? multiplicador : '';
+			atualizarTipoInfo();
 			setMensagemModalItem('', '');
 			modalItem.classList.remove('is-hidden');
 			modalItemNome.focus();
@@ -135,11 +148,22 @@
 			modalItem.classList.add('is-hidden');
 			modalItemNome.value = '';
 			modalItemDescricao.value = '';
+			modalItemTipo.value = 'equipamento';
 			modalItemPreco.value = '';
 			modalItemMultiplicador.value = '';
 			modalItemModo = 'criar';
 			itemEditId = null;
 			setMensagemModalItem('', '');
+		}
+
+		function atualizarTipoInfo() {
+			if (modalItemTipo.value === 'auto_click') {
+				modalItemMultiplicador.placeholder = 'Cliques por segundo (ex: 1.5)';
+				modalItemTipoInfo.innerText = 'Auto clique adiciona cliques por segundo.';
+				return;
+			}
+			modalItemMultiplicador.placeholder = 'Multiplicador (ex: 2.0)';
+			modalItemTipoInfo.innerText = 'Multiplicador soma no ganho por clique.';
 		}
 
 		function criarLinhaVazia() {
@@ -242,6 +266,7 @@
 			setMensagemModalItem('', '');
 			const nome = modalItemNome.value.trim();
 			const descricao = modalItemDescricao.value.trim();
+			const tipo = modalItemTipo.value;
 			const precoRaw = modalItemPreco.value.trim();
 			const preco = Number(precoRaw);
 			const multRaw = modalItemMultiplicador.value.trim();
@@ -265,7 +290,8 @@
 							nome,
 							descricao,
 							preco,
-							multiplicador: multFinal
+							multiplicador: multFinal,
+							tipo
 						}
 					});
 					setMensagem('Item atualizado com sucesso.', 'success');
@@ -277,7 +303,7 @@
 							descricao,
 							preco,
 							multiplicador: multFinal,
-							tipo: 'equipamento',
+							tipo,
 							raridade: 'comum',
 							vendivel: true
 						}
@@ -305,6 +331,7 @@
 		}
 
 		aplicarPermissoesAdmin();
+		modalItemTipo.addEventListener('change', atualizarTipoInfo);
 		carregarLoja();
 	</script>
 </body>
