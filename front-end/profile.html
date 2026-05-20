@@ -34,6 +34,13 @@
                 <button type="button" class="btn-retro btn-primary" onclick="atualizarPerfil()">Salvar</button>
                 <p id="mensagem" class="message"></p>
             </div>
+
+            <div class="panel">
+                <h2>Deletar conta</h2>
+                <p class="panel-note">Esta acao remove sua conta e todo o progresso do jogo.</p>
+                <button id="btn-deletar-conta" type="button" class="btn-retro btn-danger" onclick="deletarConta()">Deletar minha conta</button>
+                <p id="mensagem-deletar" class="message"></p>
+            </div>
         </div>
     </div>
 
@@ -43,9 +50,12 @@
         atualizarSaldoNaTela(getSaldo());
 
         const jogadorId = getJogadorId();
+        const isAdmin = getIsAdmin();
         const inputNome = document.getElementById('nome-exibicao');
         const erroNome = document.getElementById('erro-nome-exibicao');
         const mensagem = document.getElementById('mensagem');
+        const mensagemDeletar = document.getElementById('mensagem-deletar');
+        const btnDeletarConta = document.getElementById('btn-deletar-conta');
 
         function sair() {
             limparSessao();
@@ -55,6 +65,11 @@
         function setMensagem(texto, tipo) {
             mensagem.className = `message ${tipo || ''}`;
             mensagem.innerText = texto || '';
+        }
+
+        function setMensagemDeletar(texto, tipo) {
+            mensagemDeletar.className = `message ${tipo || ''}`;
+            mensagemDeletar.innerText = texto || '';
         }
 
         function limparErros() {
@@ -124,6 +139,24 @@
             }
         }
 
+        async function deletarConta() {
+            if (isAdmin) {
+                setMensagemDeletar('Conta admin nao pode ser deletada.', 'error');
+                return;
+            }
+
+            if (!confirm('Tem certeza? Esta acao e permanente.')) return;
+
+            try {
+                const data = await apiFetch(`/jogadores/${jogadorId}`, { method: 'DELETE' });
+                setMensagemDeletar(data.mensagem || 'Conta deletada com sucesso.', 'success');
+                limparSessao();
+                window.location.href = 'index.html';
+            } catch (error) {
+                setMensagemDeletar(error.message || 'Erro ao deletar conta.', 'error');
+            }
+        }
+
         inputNome.addEventListener('input', () => {
             if (inputNome.classList.contains('input-invalid')) {
                 inputNome.classList.remove('input-invalid');
@@ -132,6 +165,10 @@
         });
 
         carregarPerfil();
+
+        if (isAdmin) {
+            btnDeletarConta.classList.add('is-hidden');
+        }
     </script>
 </body>
 </html>

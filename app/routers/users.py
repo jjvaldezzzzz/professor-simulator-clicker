@@ -107,3 +107,22 @@ def atualizar_perfil(jogador_id: int, perfil: schemas.JogadorUpdate, db: Session
         raise HTTPException(status_code=404, detail="Jogador não encontrado.")
 
     return {"mensagem": "Perfil atualizado com sucesso!", "novo_nome_exibicao": resultado.nome_exibicao}
+
+@router.delete("/{jogador_id}")
+def deletar_conta(jogador_id: int, db: Session = Depends(get_db)):
+    """Remove a conta do jogador (nao permite deletar admin)."""
+
+    jogador = db.execute(
+        text("SELECT id, is_admin FROM jogador WHERE id = :id AND ativo = TRUE"),
+        {"id": jogador_id}
+    ).fetchone()
+
+    if not jogador:
+        raise HTTPException(status_code=404, detail="Jogador nao encontrado.")
+
+    if jogador.is_admin:
+        raise HTTPException(status_code=403, detail="Conta admin nao pode ser deletada.")
+
+    db.execute(text("DELETE FROM jogador WHERE id = :id"), {"id": jogador_id})
+    db.commit()
+    return {"mensagem": "Conta deletada com sucesso."}
