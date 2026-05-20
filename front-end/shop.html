@@ -21,7 +21,7 @@
 		<div class="content">
 			<div class="panel">
 				<h2>Loja do Professor</h2>
-				<button id="btn-criar-item" class="btn-retro btn-success" type="button" onclick="criarItem()" style="float: right; margin-bottom: 10px;">+ Criar Item (Admin)</button>
+				<button id="btn-criar-item" class="btn-retro btn-success" type="button" onclick="abrirModalItem()" style="float: right; margin-bottom: 10px;">+ Criar Item (Admin)</button>
 				<table id="tabela-loja">
 					<tr>
 						<th>Item</th>
@@ -31,6 +31,29 @@
 					</tr>
 				</table>
 				<p id="mensagem" class="message"></p>
+			</div>
+		</div>
+	</div>
+
+	<div id="modal-item" class="modal is-hidden" role="dialog" aria-modal="true">
+		<div class="modal-card">
+			<h3 id="modal-item-titulo" class="modal-title">Criar novo item</h3>
+			<div class="form-row">
+				<input id="item-nome" type="text" placeholder="Nome do item">
+			</div>
+			<div class="form-row">
+				<textarea id="item-descricao" rows="3" placeholder="Descricao do item"></textarea>
+			</div>
+			<div class="form-row">
+				<input id="item-preco" type="number" min="0" step="0.01" placeholder="Preco">
+			</div>
+			<div class="form-row">
+				<input id="item-multiplicador" type="number" min="0" step="0.1" placeholder="Multiplicador (ex: 2.0)">
+			</div>
+			<p id="mensagem-modal-item" class="message"></p>
+			<div class="modal-actions">
+				<button class="btn-retro btn-success" type="button" onclick="confirmarItem()">Confirmar</button>
+				<button class="btn-retro" type="button" onclick="fecharModalItem()">Cancelar</button>
 			</div>
 		</div>
 	</div>
@@ -46,6 +69,16 @@
 		const tabela = document.getElementById('tabela-loja');
 		const mensagem = document.getElementById('mensagem');
 		const btnCriarItem = document.getElementById('btn-criar-item');
+		const modalItem = document.getElementById('modal-item');
+		const modalItemTitulo = document.getElementById('modal-item-titulo');
+		const modalItemNome = document.getElementById('item-nome');
+		const modalItemDescricao = document.getElementById('item-descricao');
+		const modalItemPreco = document.getElementById('item-preco');
+		const modalItemMultiplicador = document.getElementById('item-multiplicador');
+		const mensagemModalItem = document.getElementById('mensagem-modal-item');
+
+		let modalItemModo = 'criar';
+		let itemEditId = null;
 
 		function sair() {
 			limparSessao();
@@ -61,6 +94,52 @@
 			if (!isAdmin) {
 				btnCriarItem.classList.add('is-hidden');
 			}
+		}
+
+		function setMensagemModalItem(texto, tipo) {
+			mensagemModalItem.className = `message ${tipo || ''}`;
+			mensagemModalItem.innerText = texto || '';
+		}
+
+		function abrirModalItem() {
+			if (!isAdmin) return;
+			modalItemModo = 'criar';
+			itemEditId = null;
+			modalItemTitulo.innerText = 'Criar novo item';
+			modalItemNome.value = '';
+			modalItemDescricao.value = '';
+			modalItemPreco.value = '';
+			modalItemMultiplicador.value = '';
+			setMensagemModalItem('', '');
+			modalItem.classList.remove('is-hidden');
+			modalItemNome.focus();
+		}
+
+		function abrirModalItemEditar(item) {
+			if (!isAdmin) return;
+			modalItemModo = 'editar';
+			itemEditId = item.id;
+			modalItemTitulo.innerText = 'Editar item';
+			modalItemNome.value = item.nome || '';
+			modalItemDescricao.value = item.descricao || '';
+			const preco = Number(item.preco);
+			modalItemPreco.value = Number.isFinite(preco) ? preco : '';
+			const multiplicador = Number(item.multiplicador);
+			modalItemMultiplicador.value = Number.isFinite(multiplicador) ? multiplicador : '';
+			setMensagemModalItem('', '');
+			modalItem.classList.remove('is-hidden');
+			modalItemNome.focus();
+		}
+
+		function fecharModalItem() {
+			modalItem.classList.add('is-hidden');
+			modalItemNome.value = '';
+			modalItemDescricao.value = '';
+			modalItemPreco.value = '';
+			modalItemMultiplicador.value = '';
+			modalItemModo = 'criar';
+			itemEditId = null;
+			setMensagemModalItem('', '');
 		}
 
 		function criarLinhaVazia() {
@@ -112,12 +191,19 @@
 
 					acoesCell.appendChild(comprarBtn);
 					if (isAdmin) {
-						const precoBtn = document.createElement('button');
-						precoBtn.type = 'button';
-						precoBtn.className = 'btn-retro btn-primary';
-						precoBtn.innerText = 'Preco';
-						precoBtn.addEventListener('click', () => alterarPreco(item.id));
-						acoesCell.appendChild(precoBtn);
+						const editarBtn = document.createElement('button');
+						editarBtn.type = 'button';
+						editarBtn.className = 'btn-retro btn-primary';
+						editarBtn.innerText = 'Editar';
+						editarBtn.addEventListener('click', () => abrirModalItemEditar(item));
+						acoesCell.appendChild(editarBtn);
+
+						const deleteBtn = document.createElement('button');
+						deleteBtn.type = 'button';
+						deleteBtn.className = 'btn-retro btn-danger';
+						deleteBtn.innerText = 'Deletar';
+						deleteBtn.addEventListener('click', () => deletarItem(item.id));
+						acoesCell.appendChild(deleteBtn);
 					}
 
 					row.appendChild(nomeCell);
@@ -151,59 +237,70 @@
 			}
 		}
 
-		async function alterarPreco(itemId) {
-			const entrada = prompt('Novo preco?');
-			if (!entrada) return;
+		async function confirmarItem() {
+			if (!isAdmin) return;
+			setMensagemModalItem('', '');
+			const nome = modalItemNome.value.trim();
+			const descricao = modalItemDescricao.value.trim();
+			const precoRaw = modalItemPreco.value.trim();
+			const preco = Number(precoRaw);
+			const multRaw = modalItemMultiplicador.value.trim();
+			const multiplicador = multRaw ? Number(multRaw) : 1;
+			const multFinal = Number.isFinite(multiplicador) && multiplicador > 0 ? multiplicador : 1;
 
-			const novoPreco = Number(entrada);
-			if (!Number.isFinite(novoPreco) || novoPreco <= 0) {
-				setMensagem('Preco invalido.', 'error');
+			if (!nome) {
+				setMensagemModalItem('Nome do item e obrigatorio.', 'error');
+				return;
+			}
+			if (!precoRaw || !Number.isFinite(preco) || preco <= 0) {
+				setMensagemModalItem('Preco invalido.', 'error');
 				return;
 			}
 
 			try {
-				await apiFetch(`/loja/itens/${itemId}/preco?novo_preco=${encodeURIComponent(novoPreco)}&jogador_id=${encodeURIComponent(jogadorId)}`, { method: 'PUT' });
-				setMensagem('Preco atualizado.', 'success');
+				if (modalItemModo === 'editar') {
+					await apiFetch(`/loja/itens/${itemEditId}?jogador_id=${encodeURIComponent(jogadorId)}`, {
+						method: 'PUT',
+						body: {
+							nome,
+							descricao,
+							preco,
+							multiplicador: multFinal
+						}
+					});
+					setMensagem('Item atualizado com sucesso.', 'success');
+				} else {
+					await apiFetch(`/loja/itens?jogador_id=${encodeURIComponent(jogadorId)}`, {
+						method: 'POST',
+						body: {
+							nome,
+							descricao,
+							preco,
+							multiplicador: multFinal,
+							tipo: 'equipamento',
+							raridade: 'comum',
+							vendivel: true
+						}
+					});
+					setMensagem('Item criado com sucesso.', 'success');
+				}
+				fecharModalItem();
 				carregarLoja();
 			} catch (error) {
-				setMensagem(error.message || 'Erro ao atualizar preco.', 'error');
+				const acao = modalItemModo === 'editar' ? 'salvar' : 'criar';
+				setMensagemModalItem(error.message || `Erro ao ${acao} item.`, 'error');
 			}
 		}
 
-		async function criarItem() {
-			const nome = prompt('Nome do item?');
-			if (!nome) return;
-
-			const entradaPreco = prompt('Preco do item?');
-			if (!entradaPreco) return;
-
-			const preco = Number(entradaPreco);
-			if (!Number.isFinite(preco) || preco <= 0) {
-				setMensagem('Preco invalido.', 'error');
-				return;
-			}
-
-			const entradaMult = prompt('Multiplicador (ex: 2.0)?');
-			const multiplicador = entradaMult ? Number(entradaMult) : 1;
-			const multFinal = Number.isFinite(multiplicador) && multiplicador > 0 ? multiplicador : 1;
-
+		async function deletarItem(itemId) {
+			if (!isAdmin) return;
+			if (!confirm('Deseja deletar este item?')) return;
 			try {
-				await apiFetch(`/loja/itens?jogador_id=${encodeURIComponent(jogadorId)}`, {
-					method: 'POST',
-					body: {
-						nome,
-						descricao: '',
-						preco,
-						multiplicador: multFinal,
-						tipo: 'equipamento',
-						raridade: 'comum',
-						vendivel: true
-					}
-				});
-				setMensagem('Item criado com sucesso.', 'success');
+				const data = await apiFetch(`/loja/itens/${itemId}?jogador_id=${encodeURIComponent(jogadorId)}`, { method: 'DELETE' });
+				setMensagem(data.mensagem || 'Item deletado com sucesso.', 'success');
 				carregarLoja();
 			} catch (error) {
-				setMensagem(error.message || 'Erro ao criar item.', 'error');
+				setMensagem(error.message || 'Erro ao deletar item.', 'error');
 			}
 		}
 

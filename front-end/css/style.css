@@ -150,7 +150,8 @@ th { background: #C0C0C0; }
 }
 
 /* Formularios */
-input {
+input,
+textarea {
 	border: 2px inset #FFF;
 	padding: 6px;
 	margin-bottom: 6px;

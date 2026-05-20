@@ -39,6 +39,15 @@ class ItemCreate(BaseModel):
     raridade: str = "comum"
     vendivel: bool = True
 
+class ItemUpdate(BaseModel):
+    nome: Optional[str] = None
+    descricao: Optional[str] = None
+    preco: Optional[float] = None
+    multiplicador: Optional[float] = None
+    tipo: Optional[str] = None
+    raridade: Optional[str] = None
+    vendivel: Optional[bool] = None
+
 class ItemResponse(ItemCreate):
     id: int
     ativo: bool
