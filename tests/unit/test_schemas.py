@@ -14,6 +14,11 @@ def test_jogador_create_email_invalido():
         JogadorCreate(nome="Ana", email="ana", senha="123")
 
 
+def test_jogador_create_nome_vazio():
+    with pytest.raises(ValidationError):
+        JogadorCreate(nome="   ", email="ana@example.com", senha="123")
+
+
 def test_item_create_defaults():
     item = ItemCreate(
         nome="Caderno",

@@ -1,4 +1,4 @@
-from pydantic import BaseModel, EmailStr
+from pydantic import BaseModel, EmailStr, field_validator
 from typing import Optional
 from datetime import datetime
 
@@ -9,6 +9,14 @@ class JogadorCreate(BaseModel):
     nome: str
     email: EmailStr
     senha: str # No futuro, o back-end vai transformar isso em senha_hash
+
+    @field_validator("nome")
+    @classmethod
+    def validar_nome(cls, value: str) -> str:
+        nome_limpo = value.strip() if value else ""
+        if not nome_limpo:
+            raise ValueError("Nome e obrigatorio.")
+        return nome_limpo
 
 class JogadorLogin(BaseModel):
     email: EmailStr

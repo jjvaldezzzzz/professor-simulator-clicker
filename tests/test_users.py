@@ -41,3 +41,21 @@ def test_atualizar_perfil_invalido(client, db_session):
 
 	assert response.status_code == 400
 	assert "caracteres invalidos" in response.json()["detail"]
+
+
+def test_cadastrar_jogador_email_invalido(client):
+	response = client.post(
+		"/jogadores/",
+		json={"nome": "Teste", "email": "invalido", "senha": "123"},
+	)
+
+	assert response.status_code == 422
+
+
+def test_cadastrar_jogador_nome_vazio(client):
+	response = client.post(
+		"/jogadores/",
+		json={"nome": "   ", "email": "teste@example.com", "senha": "123"},
+	)
+
+	assert response.status_code == 422
