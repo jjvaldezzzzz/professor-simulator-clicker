@@ -95,6 +95,14 @@ body {
 	margin-bottom: 10px;
 }
 
+.panel-header {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	gap: 8px;
+	margin-bottom: 8px;
+}
+
 /* Tabela */
 table {
 	width: 100%;
@@ -190,10 +198,146 @@ input {
 	background: #EEE;
 }
 
+.list-item-col {
+	flex-direction: column;
+	align-items: stretch;
+}
+
 .list-item img {
 	width: 48px;
 	height: 48px;
 	image-rendering: pixelated;
+}
+
+.team-actions {
+	display: flex;
+	gap: 6px;
+	flex-wrap: wrap;
+}
+
+.form-row {
+	display: flex;
+	gap: 8px;
+	align-items: center;
+	flex-wrap: wrap;
+	margin-bottom: 6px;
+}
+
+.form-row input,
+.form-row select {
+	flex: 1;
+	min-width: 160px;
+	margin-bottom: 0;
+}
+
+.team-header {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	gap: 8px;
+}
+
+.team-rename {
+	display: flex;
+	gap: 6px;
+	align-items: center;
+	flex-wrap: wrap;
+	margin-top: 6px;
+}
+
+.team-pokemons {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 6px;
+	margin-top: 6px;
+}
+
+.pokemon-chip {
+	display: flex;
+	align-items: center;
+	gap: 6px;
+	border: 1px solid #000;
+	background: #FFF;
+	padding: 4px 6px;
+}
+
+.pokemon-chip img {
+	width: 32px;
+	height: 32px;
+	image-rendering: pixelated;
+}
+
+.input-small {
+	width: 180px;
+	max-width: 100%;
+	margin-bottom: 0;
+}
+
+.btn-small {
+	font-size: 12px;
+	padding: 4px 8px;
+}
+
+.modal {
+	position: fixed;
+	inset: 0;
+	background: rgba(0, 0, 0, 0.6);
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	z-index: 999;
+	padding: 20px;
+}
+
+.modal-card {
+	background: #FFF;
+	border: 3px outset #FFF;
+	padding: 16px;
+	width: 100%;
+	max-width: 520px;
+	text-align: center;
+}
+
+.modal-title {
+	font-size: 22px;
+	margin-bottom: 10px;
+}
+
+.modal-header {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	gap: 8px;
+	margin-bottom: 8px;
+}
+
+.modal-actions {
+	display: flex;
+	justify-content: center;
+	gap: 10px;
+	flex-wrap: wrap;
+	margin-top: 12px;
+}
+
+.is-hidden {
+	display: none;
+}
+
+.modal.is-hidden {
+	display: none;
+}
+
+.modal-pokemon-sprite {
+	width: 180px;
+	height: 180px;
+	image-rendering: pixelated;
+	margin: 10px auto;
+	display: block;
+}
+
+.modal-list {
+	max-height: 260px;
+	overflow-y: auto;
 }
 
 .panel-note {

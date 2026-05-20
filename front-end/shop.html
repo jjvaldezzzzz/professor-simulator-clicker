@@ -21,7 +21,7 @@
 		<div class="content">
 			<div class="panel">
 				<h2>Loja do Professor</h2>
-				<button class="btn-retro btn-success" type="button" onclick="criarItem()" style="float: right; margin-bottom: 10px;">+ Criar Item (Admin)</button>
+				<button id="btn-criar-item" class="btn-retro btn-success" type="button" onclick="criarItem()" style="float: right; margin-bottom: 10px;">+ Criar Item (Admin)</button>
 				<table id="tabela-loja">
 					<tr>
 						<th>Item</th>
@@ -42,8 +42,10 @@
 		carregarJogador();
 
 		const jogadorId = getJogadorId();
+		const isAdmin = getIsAdmin();
 		const tabela = document.getElementById('tabela-loja');
 		const mensagem = document.getElementById('mensagem');
+		const btnCriarItem = document.getElementById('btn-criar-item');
 
 		function sair() {
 			limparSessao();
@@ -53,6 +55,12 @@
 		function setMensagem(texto, tipo) {
 			mensagem.className = `message ${tipo || ''}`;
 			mensagem.innerText = texto || '';
+		}
+
+		function aplicarPermissoesAdmin() {
+			if (!isAdmin) {
+				btnCriarItem.classList.add('is-hidden');
+			}
 		}
 
 		function criarLinhaVazia() {
@@ -102,14 +110,15 @@
 					comprarBtn.innerText = 'Comprar';
 					comprarBtn.addEventListener('click', () => comprarItem(item.id, preco));
 
-					const precoBtn = document.createElement('button');
-					precoBtn.type = 'button';
-					precoBtn.className = 'btn-retro btn-primary';
-					precoBtn.innerText = 'Preco';
-					precoBtn.addEventListener('click', () => alterarPreco(item.id));
-
 					acoesCell.appendChild(comprarBtn);
-					acoesCell.appendChild(precoBtn);
+					if (isAdmin) {
+						const precoBtn = document.createElement('button');
+						precoBtn.type = 'button';
+						precoBtn.className = 'btn-retro btn-primary';
+						precoBtn.innerText = 'Preco';
+						precoBtn.addEventListener('click', () => alterarPreco(item.id));
+						acoesCell.appendChild(precoBtn);
+					}
 
 					row.appendChild(nomeCell);
 					row.appendChild(descCell);
@@ -153,7 +162,7 @@
 			}
 
 			try {
-				await apiFetch(`/loja/itens/${itemId}/preco?novo_preco=${encodeURIComponent(novoPreco)}`, { method: 'PUT' });
+				await apiFetch(`/loja/itens/${itemId}/preco?novo_preco=${encodeURIComponent(novoPreco)}&jogador_id=${encodeURIComponent(jogadorId)}`, { method: 'PUT' });
 				setMensagem('Preco atualizado.', 'success');
 				carregarLoja();
 			} catch (error) {
@@ -179,7 +188,7 @@
 			const multFinal = Number.isFinite(multiplicador) && multiplicador > 0 ? multiplicador : 1;
 
 			try {
-				await apiFetch('/loja/itens', {
+				await apiFetch(`/loja/itens?jogador_id=${encodeURIComponent(jogadorId)}`, {
 					method: 'POST',
 					body: {
 						nome,
@@ -198,6 +207,7 @@
 			}
 		}
 
+		aplicarPermissoesAdmin();
 		carregarLoja();
 	</script>
 </body>

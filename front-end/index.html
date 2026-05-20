@@ -104,6 +104,7 @@
                 });
 
                 setJogadorId(data.jogador_id);
+                setIsAdmin(!!data.is_admin);
                 await carregarJogador();
                 window.location.href = 'game.html';
             } catch (error) {

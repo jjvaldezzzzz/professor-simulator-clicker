@@ -8,9 +8,18 @@ function setJogadorId(id) {
     localStorage.setItem("jogador_id", String(id));
 }
 
+function setIsAdmin(value) {
+    localStorage.setItem("is_admin", value ? "true" : "false");
+}
+
+function getIsAdmin() {
+    return localStorage.getItem("is_admin") === "true";
+}
+
 function limparSessao() {
     localStorage.removeItem("jogador_id");
     localStorage.removeItem("saldo");
+    localStorage.removeItem("is_admin");
 }
 
 function setSaldo(valor) {

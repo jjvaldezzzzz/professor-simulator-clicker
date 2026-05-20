@@ -27,8 +27,47 @@
 			</div>
 
 			<div class="panel">
-				<h2>Seu Time</h2>
-				<ul id="lista-time" class="list-compact"></ul>
+				<div class="panel-header">
+					<h2>Seus Times</h2>
+					<button id="btn-toggle-criar-time" class="btn-retro btn-primary btn-small" type="button" onclick="toggleCriarTimeInline()">Criar Time</button>
+				</div>
+				<div id="criar-time-inline" class="form-row is-hidden">
+					<input id="novo-time-nome" type="text" placeholder="Nome do time">
+					<button class="btn-retro btn-success btn-small" type="button" onclick="confirmarCriarTime()">Confirmar</button>
+				</div>
+				<p class="panel-note">Times podem ter ate 6 Pokemon.</p>
+				<p id="mensagem-time" class="message"></p>
+				<ul id="lista-times" class="list-compact"></ul>
+			</div>
+		</div>
+	</div>
+
+	<div id="modal-pokemon" class="modal is-hidden" role="dialog" aria-modal="true">
+		<div class="modal-card">
+			<h3 id="modal-pokemon-nome" class="modal-title"></h3>
+			<img id="modal-pokemon-sprite" class="modal-pokemon-sprite" alt="Pokemon sorteado">
+			<div class="modal-actions">
+				<button class="btn-retro btn-success" type="button" onclick="abrirModalTimes()">Adicionar a um time</button>
+				<button class="btn-retro btn-danger" type="button" onclick="liberarPokemon()">Liberar Pokemon</button>
+			</div>
+		</div>
+	</div>
+
+	<div id="modal-times" class="modal is-hidden" role="dialog" aria-modal="true">
+		<div class="modal-card">
+			<div class="modal-header">
+				<h3 class="modal-title">Escolha um time</h3>
+				<button class="btn-retro btn-primary btn-small" type="button" onclick="toggleCriarTimeModal()">Criar novo time</button>
+			</div>
+			<div id="modal-criar-time" class="form-row is-hidden">
+				<input id="modal-novo-time" type="text" placeholder="Nome do time">
+				<button class="btn-retro btn-success btn-small" type="button" onclick="confirmarCriarTimeModal()">Confirmar</button>
+			</div>
+			<p id="modal-times-empty" class="panel-note"></p>
+			<ul id="modal-times-list" class="list-compact modal-list"></ul>
+			<p id="mensagem-modal-time" class="message"></p>
+			<div class="modal-actions">
+				<button class="btn-retro" type="button" onclick="fecharModalTimes()">Voltar</button>
 			</div>
 		</div>
 	</div>
@@ -40,8 +79,23 @@
 		carregarJogador();
 
 		const jogadorId = getJogadorId();
-		const listaTime = document.getElementById('lista-time');
+		const listaTimes = document.getElementById('lista-times');
 		const mensagem = document.getElementById('mensagem');
+		const mensagemTime = document.getElementById('mensagem-time');
+		const inputNovoTime = document.getElementById('novo-time-nome');
+		const criarTimeInlineRow = document.getElementById('criar-time-inline');
+		const modalPokemon = document.getElementById('modal-pokemon');
+		const modalPokemonNome = document.getElementById('modal-pokemon-nome');
+		const modalPokemonSprite = document.getElementById('modal-pokemon-sprite');
+		const modalTimes = document.getElementById('modal-times');
+		const modalTimesList = document.getElementById('modal-times-list');
+		const modalTimesEmpty = document.getElementById('modal-times-empty');
+		const modalMensagemTime = document.getElementById('mensagem-modal-time');
+		const modalCriarTimeRow = document.getElementById('modal-criar-time');
+		const modalNovoTimeInput = document.getElementById('modal-novo-time');
+
+		let ultimoPokemon = null;
+		let times = [];
 
 		function sair() {
 			limparSessao();
@@ -53,57 +107,331 @@
 			mensagem.innerText = texto || '';
 		}
 
-		function criarItemVazio() {
-			const item = document.createElement('li');
-			item.className = 'list-item';
-			item.innerText = 'Nenhum Pokemon no time ainda.';
-			listaTime.appendChild(item);
+		function setMensagemTime(texto, tipo) {
+			mensagemTime.className = `message ${tipo || ''}`;
+			mensagemTime.innerText = texto || '';
 		}
 
-		async function carregarTime() {
-			listaTime.innerHTML = '';
-			try {
-				const time = await apiFetch(`/pokemon/${jogadorId}`);
-				if (!time.length) {
-					criarItemVazio();
-					return;
+		function setMensagemModalTime(texto, tipo) {
+			modalMensagemTime.className = `message ${tipo || ''}`;
+			modalMensagemTime.innerText = texto || '';
+		}
+
+		function mostrarModal(modal) {
+			modal.classList.remove('is-hidden');
+		}
+
+		function esconderModal(modal) {
+			modal.classList.add('is-hidden');
+		}
+
+		function abrirModalPokemon() {
+			if (!ultimoPokemon) return;
+			modalPokemonNome.innerText = ultimoPokemon.nome_pokemon || 'Pokemon';
+			if (ultimoPokemon.sprite_url) {
+				modalPokemonSprite.src = ultimoPokemon.sprite_url;
+				modalPokemonSprite.alt = ultimoPokemon.nome_pokemon || 'Pokemon sorteado';
+				modalPokemonSprite.style.display = 'block';
+			} else {
+				modalPokemonSprite.removeAttribute('src');
+				modalPokemonSprite.style.display = 'none';
+			}
+			mostrarModal(modalPokemon);
+		}
+
+		function fecharModalPokemon() {
+			esconderModal(modalPokemon);
+		}
+
+		function abrirModalTimes() {
+			if (!ultimoPokemon) return;
+			setMensagemModalTime('', '');
+			renderTimesModal();
+			esconderModal(modalPokemon);
+			mostrarModal(modalTimes);
+		}
+
+		function fecharModalTimes() {
+			esconderModal(modalTimes);
+			if (ultimoPokemon) {
+				mostrarModal(modalPokemon);
+			}
+		}
+
+		function toggleCriarTimeInline() {
+			criarTimeInlineRow.classList.toggle('is-hidden');
+			if (!criarTimeInlineRow.classList.contains('is-hidden')) {
+				inputNovoTime.focus();
+			}
+		}
+
+		function toggleCriarTimeModal() {
+			modalCriarTimeRow.classList.toggle('is-hidden');
+			if (!modalCriarTimeRow.classList.contains('is-hidden')) {
+				modalNovoTimeInput.focus();
+			}
+		}
+
+		function toggleRename(timeId) {
+			const row = document.getElementById(`rename-row-${timeId}`);
+			if (!row) return;
+			row.classList.toggle('is-hidden');
+			if (!row.classList.contains('is-hidden')) {
+				const input = document.getElementById(`rename-${timeId}`);
+				if (input) input.focus();
+			}
+		}
+
+		function renderTimesList(container, modo) {
+			container.innerHTML = '';
+			times.forEach(time => {
+				const item = document.createElement('li');
+				item.className = 'list-item list-item-col';
+
+				const header = document.createElement('div');
+				header.className = 'team-header';
+				const titulo = document.createElement('strong');
+				titulo.innerText = `${time.nome} (${time.quantidade}/6)`;
+				header.appendChild(titulo);
+
+				const actions = document.createElement('div');
+				actions.className = 'team-actions';
+
+				if (modo === 'adicionar') {
+					const btnAdd = document.createElement('button');
+					btnAdd.className = 'btn-retro btn-success btn-small';
+					btnAdd.type = 'button';
+					btnAdd.innerText = 'Adicionar';
+					btnAdd.disabled = time.quantidade >= 6;
+					btnAdd.onclick = () => adicionarPokemonAoTime(time.id);
+					actions.appendChild(btnAdd);
 				}
 
-				time.forEach(poke => {
-					const item = document.createElement('li');
-					item.className = 'list-item';
+				if (modo === 'gerenciar') {
+					const btnRename = document.createElement('button');
+					btnRename.className = 'btn-retro btn-small';
+					btnRename.type = 'button';
+					btnRename.innerText = 'Renomear';
+					btnRename.onclick = () => toggleRename(time.id);
+					const btnDelete = document.createElement('button');
+					btnDelete.className = 'btn-retro btn-danger btn-small';
+					btnDelete.type = 'button';
+					btnDelete.innerText = 'Deletar';
+					btnDelete.onclick = () => deletarTime(time.id);
+					actions.appendChild(btnRename);
+					actions.appendChild(btnDelete);
+				}
 
-					if (poke.sprite_url) {
-						const img = document.createElement('img');
-						img.src = poke.sprite_url;
-						img.alt = poke.nome_pokemon;
-						item.appendChild(img);
-					}
+				header.appendChild(actions);
+				item.appendChild(header);
 
-					const texto = document.createElement('span');
-					texto.innerText = `#${poke.pokemon_api_id} ${poke.nome_pokemon}`;
-					item.appendChild(texto);
+				if (modo === 'gerenciar') {
+					const renameRow = document.createElement('div');
+					renameRow.id = `rename-row-${time.id}`;
+					renameRow.className = 'team-rename is-hidden';
+					const renameInput = document.createElement('input');
+					renameInput.id = `rename-${time.id}`;
+					renameInput.type = 'text';
+					renameInput.placeholder = 'Novo nome';
+					renameInput.className = 'input-small';
+					const renameConfirm = document.createElement('button');
+					renameConfirm.className = 'btn-retro btn-success btn-small';
+					renameConfirm.type = 'button';
+					renameConfirm.innerText = 'Confirmar';
+					renameConfirm.onclick = () => renomearTime(time.id);
+					renameRow.appendChild(renameInput);
+					renameRow.appendChild(renameConfirm);
+					item.appendChild(renameRow);
+				}
 
-					listaTime.appendChild(item);
-				});
-			} catch (error) {
-				criarItemVazio();
+				const pokemonsWrap = document.createElement('div');
+				pokemonsWrap.className = 'team-pokemons';
+				if (!time.pokemons.length) {
+					const vazio = document.createElement('span');
+					vazio.className = 'panel-note';
+					vazio.innerText = 'Time vazio.';
+					pokemonsWrap.appendChild(vazio);
+				} else {
+					time.pokemons.forEach(poke => {
+						const chip = document.createElement('div');
+						chip.className = 'pokemon-chip';
+						if (poke.sprite_url) {
+							const img = document.createElement('img');
+							img.src = poke.sprite_url;
+							img.alt = poke.nome_pokemon;
+							chip.appendChild(img);
+						}
+						const texto = document.createElement('span');
+						texto.innerText = `#${poke.pokemon_api_id} ${poke.nome_pokemon}`;
+						chip.appendChild(texto);
+						pokemonsWrap.appendChild(chip);
+					});
+				}
+				item.appendChild(pokemonsWrap);
+				container.appendChild(item);
+			});
+		}
+
+		function renderTimesGerenciar() {
+			listaTimes.innerHTML = '';
+			if (!times.length) {
+				const item = document.createElement('li');
+				item.className = 'list-item';
+				item.innerText = 'Nenhum time criado.';
+				listaTimes.appendChild(item);
+				return;
 			}
+			renderTimesList(listaTimes, 'gerenciar');
+		}
+
+		function renderTimesModal() {
+			modalTimesList.innerHTML = '';
+			if (!times.length) {
+				modalTimesEmpty.innerText = 'Voce ainda nao tem times.';
+				return;
+			}
+			modalTimesEmpty.innerText = '';
+			renderTimesList(modalTimesList, 'adicionar');
+		}
+
+		async function carregarTimes() {
+			try {
+				times = await apiFetch(`/pokemon/times/${jogadorId}`);
+			} catch (error) {
+				times = [];
+			}
+			renderTimesGerenciar();
+			renderTimesModal();
 		}
 
 		async function sortearPokemon() {
 			setMensagem('', '');
+			setMensagemTime('', '');
+			setMensagemModalTime('', '');
 			try {
 				const data = await apiFetch(`/pokemon/gacha/${jogadorId}`, { method: 'POST' });
+				ultimoPokemon = {
+					id: data.pokemon_id,
+					pokemon_api_id: data.pokemon_api_id,
+					nome_pokemon: data.pokemon,
+					sprite_url: data.imagem
+				};
+				abrirModalPokemon();
 				setMensagem(data.mensagem || 'Pokemon capturado!', 'success');
-				await carregarTime();
+				await carregarTimes();
 				await carregarJogador();
 			} catch (error) {
 				setMensagem(error.message || 'Erro ao sortear Pokemon.', 'error');
 			}
 		}
 
-		carregarTime();
+		async function criarTimeComNome(nome) {
+			return apiFetch(`/pokemon/times/${jogadorId}`, { method: 'POST', body: { nome } });
+		}
+
+		async function confirmarCriarTime() {
+			setMensagemTime('', '');
+			const nome = inputNovoTime.value.trim();
+			if (!nome) {
+				setMensagemTime('Informe um nome para o time.', 'error');
+				return;
+			}
+			try {
+				await criarTimeComNome(nome);
+				inputNovoTime.value = '';
+				criarTimeInlineRow.classList.add('is-hidden');
+				setMensagemTime('Time criado com sucesso!', 'success');
+				await carregarTimes();
+			} catch (error) {
+				setMensagemTime(error.message || 'Erro ao criar time.', 'error');
+			}
+		}
+
+		async function confirmarCriarTimeModal() {
+			setMensagemModalTime('', '');
+			const nome = modalNovoTimeInput.value.trim();
+			if (!nome) {
+				setMensagemModalTime('Informe um nome para o time.', 'error');
+				return;
+			}
+			try {
+				await criarTimeComNome(nome);
+				modalNovoTimeInput.value = '';
+				modalCriarTimeRow.classList.add('is-hidden');
+				setMensagemModalTime('Time criado com sucesso!', 'success');
+				await carregarTimes();
+			} catch (error) {
+				setMensagemModalTime(error.message || 'Erro ao criar time.', 'error');
+			}
+		}
+
+		async function adicionarPokemonAoTime(timeId) {
+			setMensagemModalTime('', '');
+			if (!ultimoPokemon) {
+				setMensagemModalTime('Sorteie um Pokemon antes de adicionar.', 'error');
+				return;
+			}
+			try {
+				const data = await apiFetch(`/pokemon/times/${jogadorId}/${timeId}/adicionar`, {
+					method: 'POST',
+					body: { pokemon_id: ultimoPokemon.id }
+				});
+				setMensagemTime(data.mensagem || 'Pokemon adicionado ao time!', 'success');
+				ultimoPokemon = null;
+				esconderModal(modalTimes);
+				esconderModal(modalPokemon);
+				await carregarTimes();
+			} catch (error) {
+				setMensagemModalTime(error.message || 'Erro ao adicionar Pokemon ao time.', 'error');
+			}
+		}
+
+		async function liberarPokemon() {
+			setMensagem('', '');
+			if (!ultimoPokemon) return;
+			try {
+				const data = await apiFetch(`/pokemon/libertar/${jogadorId}/${ultimoPokemon.id}`, { method: 'DELETE' });
+				setMensagem(data.mensagem || 'Pokemon liberado!', 'success');
+				ultimoPokemon = null;
+				esconderModal(modalPokemon);
+				await carregarTimes();
+			} catch (error) {
+				setMensagem(error.message || 'Erro ao liberar Pokemon.', 'error');
+			}
+		}
+
+		async function renomearTime(timeId) {
+			setMensagemTime('', '');
+			const input = document.getElementById(`rename-${timeId}`);
+			const nome = input ? input.value.trim() : '';
+			if (!nome) {
+				setMensagemTime('Informe um novo nome para o time.', 'error');
+				return;
+			}
+			try {
+				await apiFetch(`/pokemon/times/${jogadorId}/${timeId}`, { method: 'PUT', body: { nome } });
+				if (input) input.value = '';
+				toggleRename(timeId);
+				setMensagemTime('Time renomeado com sucesso!', 'success');
+				await carregarTimes();
+			} catch (error) {
+				setMensagemTime(error.message || 'Erro ao renomear time.', 'error');
+			}
+		}
+
+		async function deletarTime(timeId) {
+			setMensagemTime('', '');
+			if (!confirm('Deseja deletar este time?')) return;
+			try {
+				const data = await apiFetch(`/pokemon/times/${jogadorId}/${timeId}`, { method: 'DELETE' });
+				setMensagemTime(data.mensagem || 'Time deletado com sucesso!', 'success');
+				await carregarTimes();
+			} catch (error) {
+				setMensagemTime(error.message || 'Erro ao deletar time.', 'error');
+			}
+		}
+
+		carregarTimes();
 	</script>
 </body>
 </html>

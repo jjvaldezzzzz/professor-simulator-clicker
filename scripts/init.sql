@@ -50,10 +50,23 @@ CREATE TABLE inventario (
 CREATE INDEX idx_inventario_jogador ON inventario(jogador_id);
 CREATE INDEX idx_inventario_item ON inventario(item_id);
 
--- Tabela de Pokémon do Time (UC13, UC14, UC15)
+-- Tabela de Times de Pokemon
+CREATE TABLE time_pokemon (
+    id SERIAL PRIMARY KEY,
+    jogador_id INTEGER NOT NULL REFERENCES jogador(id) ON DELETE CASCADE,
+    nome VARCHAR(50) NOT NULL,
+    data_criacao TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    ativo BOOLEAN DEFAULT TRUE
+);
+
+-- Índice para consulta dos times
+CREATE INDEX idx_time_pokemon_jogador ON time_pokemon(jogador_id);
+
+-- Tabela de Pokemon do Jogador (UC13, UC14, UC15)
 CREATE TABLE pokemon_time (
     id SERIAL PRIMARY KEY,
     jogador_id INTEGER NOT NULL REFERENCES jogador(id) ON DELETE CASCADE,
+    time_id INTEGER REFERENCES time_pokemon(id) ON DELETE SET NULL,
     pokemon_api_id INTEGER NOT NULL CHECK (pokemon_api_id BETWEEN 1 AND 1025),
     nome_pokemon VARCHAR(100) NOT NULL,
     sprite_url VARCHAR(500),
@@ -64,6 +77,7 @@ CREATE TABLE pokemon_time (
 
 -- Índice para consulta do time
 CREATE INDEX idx_pokemon_jogador ON pokemon_time(jogador_id);
+CREATE INDEX idx_pokemon_time_id ON pokemon_time(time_id);
 
 -- Tabela de Transações/Histórico (UC04, UC05, UC06, UC10, UC12)
 CREATE TABLE transacao (

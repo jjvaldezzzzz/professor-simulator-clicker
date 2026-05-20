@@ -55,9 +55,22 @@ class PokemonResponse(BaseModel):
     nome_pokemon: str
     sprite_url: str
     apelido: Optional[str] = None
+    time_id: Optional[int] = None
 
     class Config:
         from_attributes = True
+
+# ==========================================
+# SCHEMAS PARA A TABELA 'time_pokemon'
+# ==========================================
+class TimePokemonCreate(BaseModel):
+    nome: str
+
+class TimePokemonRename(BaseModel):
+    nome: str
+
+class TimePokemonAdicionar(BaseModel):
+    pokemon_id: int
 
 # ==========================================
 # SCHEMAS PARA A TABELA 'inventario'

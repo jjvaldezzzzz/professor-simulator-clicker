@@ -22,6 +22,7 @@ def init_db() -> None:
         conn.execute(text("PRAGMA foreign_keys=ON;"))
         conn.execute(text("DROP TABLE IF EXISTS transacao"))
         conn.execute(text("DROP TABLE IF EXISTS pokemon_time"))
+        conn.execute(text("DROP TABLE IF EXISTS time_pokemon"))
         conn.execute(text("DROP TABLE IF EXISTS inventario"))
         conn.execute(text("DROP TABLE IF EXISTS item"))
         conn.execute(text("DROP TABLE IF EXISTS jogador"))
@@ -75,16 +76,31 @@ def init_db() -> None:
 
         conn.execute(text(
             """
+            CREATE TABLE time_pokemon (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                jogador_id INTEGER NOT NULL,
+                nome TEXT NOT NULL,
+                data_criacao TEXT DEFAULT CURRENT_TIMESTAMP,
+                ativo INTEGER DEFAULT 1,
+                FOREIGN KEY(jogador_id) REFERENCES jogador(id) ON DELETE CASCADE
+            )
+            """
+        ))
+
+        conn.execute(text(
+            """
             CREATE TABLE pokemon_time (
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
                 jogador_id INTEGER NOT NULL,
+                time_id INTEGER,
                 pokemon_api_id INTEGER NOT NULL,
                 nome_pokemon TEXT NOT NULL,
                 sprite_url TEXT,
                 apelido TEXT,
                 data_obtido TEXT DEFAULT CURRENT_TIMESTAMP,
                 ativo INTEGER DEFAULT 1,
-                FOREIGN KEY(jogador_id) REFERENCES jogador(id) ON DELETE CASCADE
+                FOREIGN KEY(jogador_id) REFERENCES jogador(id) ON DELETE CASCADE,
+                FOREIGN KEY(time_id) REFERENCES time_pokemon(id) ON DELETE SET NULL
             )
             """
         ))

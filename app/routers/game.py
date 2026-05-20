@@ -46,6 +46,7 @@ def resetar_progresso(jogador_id: int, db: Session = Depends(get_db)):
     db.execute(text("UPDATE jogador SET saldo = 0 WHERE id = :id"), {"id": jogador_id})
     db.execute(text("DELETE FROM inventario WHERE jogador_id = :id"), {"id": jogador_id})
     db.execute(text("DELETE FROM pokemon_time WHERE jogador_id = :id"), {"id": jogador_id})
+    db.execute(text("DELETE FROM time_pokemon WHERE jogador_id = :id"), {"id": jogador_id})
     db.execute(text("INSERT INTO transacao (jogador_id, tipo, valor, descricao) VALUES (:id, 'reset', 0, 'Progresso zerado')"), {"id": jogador_id})
     db.commit()
     return {"mensagem": "Progresso do jogo foi resetado."}
