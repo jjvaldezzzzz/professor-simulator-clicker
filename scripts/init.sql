@@ -164,6 +164,23 @@ CREATE TABLE log_autenticacao (
     data_tentativa TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
+-- Tabela de Amizades
+CREATE TABLE amizade (
+    id SERIAL PRIMARY KEY,
+    jogador_id INTEGER NOT NULL REFERENCES jogador(id) ON DELETE CASCADE,
+    amigo_id INTEGER NOT NULL REFERENCES jogador(id) ON DELETE CASCADE,
+    data_amizade TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    favorito BOOLEAN DEFAULT FALSE,
+    ativo BOOLEAN DEFAULT TRUE,
+    UNIQUE(jogador_id, amigo_id), -- Evita duplicatas de amizade
+    CHECK (jogador_id != amigo_id) -- Não pode ser amigo de si mesmo
+);
+
+-- Índices para consultas rápidas
+CREATE INDEX idx_amizade_jogador ON amizade(jogador_id);
+CREATE INDEX idx_amizade_amigo ON amizade(amigo_id);
+CREATE INDEX idx_amizade_favorito ON amizade(jogador_id, favorito);
+
 ALTER TABLE torneio
     ADD CONSTRAINT fk_torneio_vencedor
     FOREIGN KEY (vencedor_participante_id)

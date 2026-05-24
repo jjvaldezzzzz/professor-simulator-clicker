@@ -1,0 +1,547 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Professor Clicker - Amigos</title>
+    <link rel="stylesheet" href="css/style.css">
+    <style>
+        /* Extras para sistema de amigos */
+        .search-box {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 12px;
+            flex-wrap: wrap;
+        }
+
+        .search-box input {
+            flex: 1;
+            min-width: 150px;
+            padding: 6px;
+            border: 3px inset #FFF;
+            font-family: 'Verdana', 'Comic Sans MS', sans-serif;
+            font-size: 14px;
+            background: #FFF;
+        }
+
+        .search-box button {
+            padding: 6px 12px;
+            border: 3px outset #FFF;
+            background: #C0C0C0;
+            font-weight: bold;
+            cursor: pointer;
+            font-family: 'Verdana', 'Comic Sans MS', sans-serif;
+        }
+
+        .search-box button:active {
+            border-style: inset;
+            background: #A0A0A0;
+        }
+
+        /* Abas estilo Windows */
+        .tabs {
+            display: flex;
+            gap: 0;
+            margin-bottom: 8px;
+            border-bottom: 3px outset #FFF;
+        }
+
+        .tab-btn {
+            padding: 6px 15px;
+            background: #C0C0C0;
+            border: 3px outset #FFF;
+            border-bottom: none;
+            cursor: pointer;
+            font-weight: bold;
+            font-family: 'Verdana', 'Comic Sans MS', sans-serif;
+            font-size: 14px;
+            margin-right: 2px;
+        }
+
+        .tab-btn:active {
+            border-style: inset;
+        }
+
+        .tab-btn.active {
+            background: #FFF;
+            border-bottom: 3px outset #FFF;
+            margin-bottom: -3px;
+        }
+
+        /* Conteúdo das abas */
+        .tab-content {
+            display: none;
+            max-height: 350px;
+            overflow-y: auto;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        /* Lista de amigos */
+        .friends-list {
+            background: #FFF;
+        }
+
+        .friend-item {
+            background: #DFDFDF;
+            border: 2px outset #FFF;
+            padding: 8px;
+            margin-bottom: 6px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .friend-item:active {
+            border-style: inset;
+            background: #C0C0C0;
+        }
+
+        .friend-info {
+            flex: 1;
+        }
+
+        .friend-name {
+            font-weight: bold;
+            font-size: 14px;
+            color: #000080;
+        }
+
+        .friend-email {
+            font-size: 11px;
+            color: #666;
+            font-family: monospace;
+        }
+
+        .friend-saldo {
+            font-size: 12px;
+            color: #008000;
+            font-weight: bold;
+        }
+
+        .friend-actions {
+            display: flex;
+            gap: 4px;
+            flex-wrap: wrap;
+        }
+
+        .btn-small {
+            padding: 4px 8px;
+            border: 2px outset #FFF;
+            background: #C0C0C0;
+            cursor: pointer;
+            font-size: 11px;
+            font-weight: bold;
+            font-family: 'Verdana', 'Comic Sans MS', sans-serif;
+        }
+
+        .btn-small:active {
+            border-style: inset;
+            background: #A0A0A0;
+        }
+
+        .btn-favoritar { color: #FF8800; }
+        .btn-remover { color: #CC0000; }
+        .btn-adicionar { color: #008800; }
+
+        /* Resultados de busca */
+        .search-results {
+            max-height: 250px;
+            overflow-y: auto;
+            background: #FFF;
+            border: 2px inset #888;
+        }
+
+        .search-result-item {
+            padding: 8px;
+            border-bottom: 1px solid #C0C0C0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 8px;
+            background: #DFDFDF;
+            margin-bottom: 4px;
+        }
+
+        .search-result-item:last-child {
+            border-bottom: none;
+        }
+
+        /* Mensagens */
+        .empty-message {
+            text-align: center;
+            color: #666;
+            padding: 15px;
+            font-style: italic;
+        }
+
+        .message {
+            padding: 8px;
+            margin-bottom: 10px;
+            border: 2px outset #FFF;
+            text-align: center;
+            font-weight: bold;
+        }
+
+        .message.success {
+            background: #00CC00;
+            color: #FFF;
+            border-color: #00FF00;
+        }
+
+        .message.error {
+            background: #FF4444;
+            color: #FFF;
+            border-color: #FF8888;
+        }
+
+        /* Scroll estilo Windows 98 */
+        ::-webkit-scrollbar {
+            width: 16px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #C0C0C0;
+            border: 2px inset #FFF;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #DFDFDF;
+            border: 2px outset #FFF;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: #E0E0E0;
+        }
+
+        /* Responsivo */
+        @media (max-width: 768px) {
+            .flash-container {
+                width: 90vw;
+                height: auto;
+                max-height: 90vh;
+            }
+
+            .content {
+                max-height: 70vh;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="flash-container">
+        <div class="top-nav">
+            <a href="game.html" class="btn-retro">Dar Aula</a>
+            <a href="shop.html" class="btn-retro">Loja</a>
+            <a href="inventory.html" class="btn-retro">Mochila</a>
+            <a href="pokemon.html" class="btn-retro">Time Pokemon</a>
+            <a href="tournament.html" class="btn-retro">Torneio Pokemon</a>
+            <a href="friends.html" class="btn-retro">👥 Amigos</a>
+            <a href="profile.html" class="btn-retro">Perfil</a>
+            <button class="btn-retro btn-danger" type="button" onclick="sair()">Sair</button>
+            <div class="saldo">Moedas: <span id="saldo-display">--</span></div>
+        </div>
+
+        <div class="content">
+            <div id="message" class="message" style="display: none;"></div>
+
+            <div class="panel">
+                <h2>📝 Gerenciar Amigos</h2>
+                
+                <h3 style="margin-top: 15px; margin-bottom: 8px;">🔍 Buscar Jogador</h3>
+                <div class="search-box">
+                    <input type="text" id="search-input" placeholder="Digite o e-mail do jogador...">
+                    <button onclick="buscarJogador()">Buscar</button>
+                </div>
+                
+                <div id="search-results" class="search-results" style="display: none;">
+                    <p class="empty-message">Digite um nome ou e-mail para buscar...</p>
+                </div>
+            </div>
+
+            <div class="panel">
+                <h3 style="margin-bottom: 8px;">👥 Meus Amigos</h3>
+                
+                <div class="tabs">
+                    <button class="tab-btn active" onclick="alterarAba('todos')">Todos</button>
+                    <button class="tab-btn" onclick="alterarAba('favoritos')">⭐ Favoritos</button>
+                </div>
+
+                <div id="tab-todos" class="tab-content active">
+                    <div id="todos-amigos" class="friends-list">
+                        <p class="empty-message">Nenhum amigo adicionado ainda...</p>
+                    </div>
+                </div>
+
+                <div id="tab-favoritos" class="tab-content">
+                    <div id="favoritos-amigos" class="friends-list">
+                        <p class="empty-message">Nenhum amigo favorito...</p>
+                    </div>
+                </div>
+            </div>
+
+            <button class="btn-retro btn-success" style="width: 100%; margin-top: 10px;" onclick="voltarMenu()">
+                ← Voltar ao Menu
+            </button>
+        </div>
+    </div>
+
+    <script src="js/api.js"></script>
+    <script>
+        let jogador_id = localStorage.getItem('jogador_id');
+        const API_BASE = "http://localhost:8000";
+
+        window.addEventListener('DOMContentLoaded', function() {
+            if (!jogador_id) {
+                window.location.href = 'index.html';
+                return;
+            }
+            atualizarSaldoNaTela(getSaldo());
+            carregarAmigos();
+        });
+
+        function mostrarMensagem(texto, tipo = 'success') {
+            const messageBox = document.getElementById('message');
+            messageBox.textContent = texto;
+            messageBox.className = `message ${tipo}`;
+            messageBox.style.display = 'block';
+            
+            setTimeout(() => {
+                messageBox.style.display = 'none';
+            }, 3000);
+        }
+
+        async function buscarJogador() {
+            const email = document.getElementById('search-input').value.trim();
+            
+            if (email.length < 3) {
+                mostrarMensagem('Digite um e-mail válido', 'error');
+                return;
+            }
+
+            try {
+                // Envia apenas o email como query parameter
+                const params = new URLSearchParams({
+                    email: email,
+                    jogador_id: parseInt(jogador_id)
+                });
+                
+                const response = await fetch(`${API_BASE}/amigos/buscar?${params}`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' }
+                });
+
+                if (!response.ok) {
+                    const erro = await response.json();
+                    throw new Error(erro.detail || 'Erro ao buscar jogador');
+                }
+
+                const dados = await response.json();
+                exibirResultadosBusca(dados.resultados);
+            } catch (erro) {
+                mostrarMensagem('Erro ao buscar: ' + erro.message, 'error');
+                console.error('Erro:', erro);
+            }
+        }
+
+        function exibirResultadosBusca(resultados) {
+            const resultsDiv = document.getElementById('search-results');
+            
+            if (resultados.length === 0) {
+                resultsDiv.innerHTML = '<p class="empty-message">Nenhum jogador encontrado</p>';
+                resultsDiv.style.display = 'block';
+                return;
+            }
+
+            resultsDiv.innerHTML = resultados.map(jogador => `
+                <div class="search-result-item">
+                    <div class="friend-info">
+                        <div class="friend-name">${jogador.nome}</div>
+                        <div class="friend-email">${jogador.email}</div>
+                        <div class="friend-saldo">💰 ${jogador.saldo}</div>
+                    </div>
+                    <button class="btn-small btn-adicionar" onclick="adicionarAmigo(${jogador.id})">
+                        + Adicionar
+                    </button>
+                </div>
+            `).join('');
+            
+            resultsDiv.style.display = 'block';
+        }
+
+        async function adicionarAmigo(amigo_id) {
+            try {
+                const response = await fetch(`${API_BASE}/amigos/adicionar`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        jogador_id: parseInt(jogador_id),
+                        amigo_id: amigo_id
+                    })
+                });
+
+                if (!response.ok) {
+                    const erro = await response.json();
+                    throw new Error(erro.detail || 'Erro ao adicionar amigo');
+                }
+
+                mostrarMensagem('✓ Amigo adicionado com sucesso!', 'success');
+                document.getElementById('search-input').value = '';
+                document.getElementById('search-results').style.display = 'none';
+                carregarAmigos();
+            } catch (erro) {
+                mostrarMensagem('Erro: ' + erro.message, 'error');
+                console.error('Erro:', erro);
+            }
+        }
+
+        async function carregarAmigos() {
+            try {
+                const response = await fetch(`${API_BASE}/amigos/${jogador_id}`);
+                if (!response.ok) throw new Error('Erro ao carregar amigos');
+                
+                const dados = await response.json();
+                exibirAmigos(dados.amigos);
+            } catch (erro) {
+                console.error('Erro:', erro);
+            }
+        }
+
+        async function carregarFavoritos() {
+            try {
+                const response = await fetch(`${API_BASE}/amigos/${jogador_id}/favoritos`);
+                if (!response.ok) throw new Error('Erro ao carregar favoritos');
+                
+                const dados = await response.json();
+                exibirFavoritos(dados.amigos_favoritos);
+            } catch (erro) {
+                console.error('Erro:', erro);
+            }
+        }
+
+        function exibirAmigos(amigos) {
+            const container = document.getElementById('todos-amigos');
+            
+            if (amigos.length === 0) {
+                container.innerHTML = '<p class="empty-message">Você ainda não tem amigos...</p>';
+                return;
+            }
+
+            container.innerHTML = amigos.map(amigo => `
+                <div class="friend-item">
+                    <div class="friend-info">
+                        <div class="friend-name">${amigo.nome}</div>
+                        <div class="friend-email">${amigo.nome_exibicao}</div>
+                        <div class="friend-saldo">💰 ${amigo.saldo}</div>
+                    </div>
+                    <div class="friend-actions">
+                        <button class="btn-small btn-favoritar" 
+                                onclick="alterarFavorito(${amigo.id}, ${!amigo.favorito})">
+                            ${amigo.favorito ? '★ Favoritado' : '☆ Favoritar'}
+                        </button>
+                        <button class="btn-small btn-remover" onclick="removerAmigo(${amigo.id})">
+                            ✕ Remover
+                        </button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function exibirFavoritos(amigos) {
+            const container = document.getElementById('favoritos-amigos');
+            
+            if (amigos.length === 0) {
+                container.innerHTML = '<p class="empty-message">Nenhum amigo favorito...</p>';
+                return;
+            }
+
+            container.innerHTML = amigos.map(amigo => `
+                <div class="friend-item">
+                    <div class="friend-info">
+                        <div class="friend-name">⭐ ${amigo.nome}</div>
+                        <div class="friend-email">${amigo.nome_exibicao}</div>
+                        <div class="friend-saldo">💰 ${amigo.saldo}</div>
+                    </div>
+                    <div class="friend-actions">
+                        <button class="btn-small btn-favoritar" onclick="alterarFavorito(${amigo.id}, false)">
+                            ★ Desfavoritado
+                        </button>
+                        <button class="btn-small btn-remover" onclick="removerAmigo(${amigo.id})">
+                            ✕ Remover
+                        </button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        async function alterarFavorito(amizade_id, favoritar) {
+            try {
+                const endpoint = favoritar ? 'favoritar' : 'desfavoritar';
+                const response = await fetch(`${API_BASE}/amigos/${amizade_id}/${endpoint}`, {
+                    method: 'PUT',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ jogador_id: parseInt(jogador_id) })
+                });
+
+                if (!response.ok) throw new Error('Erro ao atualizar favorito');
+
+                const mensagem = favoritar ? '✓ Marcado como favorito!' : '✓ Removido dos favoritos';
+                mostrarMensagem(mensagem, 'success');
+                carregarAmigos();
+                carregarFavoritos();
+            } catch (erro) {
+                mostrarMensagem('Erro: ' + erro.message, 'error');
+                console.error('Erro:', erro);
+            }
+        }
+
+        async function removerAmigo(amizade_id) {
+            if (!confirm('Tem certeza que deseja remover este amigo?')) return;
+
+            try {
+                const response = await fetch(`${API_BASE}/amigos/${amizade_id}`, {
+                    method: 'DELETE',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ jogador_id: parseInt(jogador_id) })
+                });
+
+                if (!response.ok) throw new Error('Erro ao remover amigo');
+
+                mostrarMensagem('✓ Amigo removido com sucesso', 'success');
+                carregarAmigos();
+                carregarFavoritos();
+            } catch (erro) {
+                mostrarMensagem('Erro: ' + erro.message, 'error');
+                console.error('Erro:', erro);
+            }
+        }
+
+        function alterarAba(aba) {
+            document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
+
+            document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
+
+            if (aba === 'todos') {
+                document.getElementById('tab-todos').classList.add('active');
+                carregarAmigos();
+            } else if (aba === 'favoritos') {
+                document.getElementById('tab-favoritos').classList.add('active');
+                carregarFavoritos();
+            }
+        }
+
+        function voltarMenu() {
+            window.location.href = 'game.html';
+        }
+
+        function sair() {
+            limparSessao();
+            window.location.href = 'index.html';
+        }
+    </script>
+</body>
+</html>
