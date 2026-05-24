@@ -291,14 +291,22 @@
 
     <script src="js/api.js"></script>
     <script>
+        verificarAutenticacao();
+        
         let jogador_id = localStorage.getItem('jogador_id');
         const API_BASE = "http://localhost:8000";
+        
+        console.log('=== Página de Amigos Carregada ===');
+        console.log('jogador_id do localStorage:', jogador_id);
+        console.log('API_BASE:', API_BASE);
 
         window.addEventListener('DOMContentLoaded', function() {
             if (!jogador_id) {
+                console.error('❌ Erro: jogador_id não encontrado no localStorage!');
                 window.location.href = 'index.html';
                 return;
             }
+            console.log('✓ jogador_id confirmado:', jogador_id);
             atualizarSaldoNaTela(getSaldo());
             carregarAmigos();
         });
@@ -317,33 +325,41 @@
         async function buscarJogador() {
             const email = document.getElementById('search-input').value.trim();
             
-            if (email.length < 3) {
-                mostrarMensagem('Digite um e-mail válido', 'error');
+            // Regex para validar email
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            
+            if (!emailRegex.test(email)) {
+                mostrarMensagem('Digite um e-mail válido (ex: usuario@email.com)', 'error');
                 return;
             }
 
             try {
                 // Envia apenas o email como query parameter
                 const params = new URLSearchParams({
-                    email: email,
-                    jogador_id: parseInt(jogador_id)
+                    email: email
                 });
+                
+                console.log('Buscando jogador:', { email, url: `${API_BASE}/amigos/buscar?${params}` });
                 
                 const response = await fetch(`${API_BASE}/amigos/buscar?${params}`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' }
                 });
 
+                console.log('Status da busca:', response.status);
+
                 if (!response.ok) {
                     const erro = await response.json();
+                    console.error('Erro na busca:', erro);
                     throw new Error(erro.detail || 'Erro ao buscar jogador');
                 }
 
                 const dados = await response.json();
+                console.log('Resultados encontrados:', dados);
                 exibirResultadosBusca(dados.resultados);
             } catch (erro) {
+                console.error('Erro ao buscar:', erro);
                 mostrarMensagem('Erro ao buscar: ' + erro.message, 'error');
-                console.error('Erro:', erro);
             }
         }
 
@@ -351,7 +367,7 @@
             const resultsDiv = document.getElementById('search-results');
             
             if (resultados.length === 0) {
-                resultsDiv.innerHTML = '<p class="empty-message">Nenhum jogador encontrado</p>';
+                resultsDiv.innerHTML = '<p class="empty-message">Nenhum jogador encontrado com esse e-mail</p>';
                 resultsDiv.style.display = 'block';
                 return;
             }
@@ -374,51 +390,93 @@
 
         async function adicionarAmigo(amigo_id) {
             try {
+                // Validações
+                if (!jogador_id) {
+                    mostrarMensagem('Erro: Jogador não identificado. Faça login novamente.', 'error');
+                    console.error('jogador_id não definido:', jogador_id);
+                    return;
+                }
+
+                const payload = {
+                    jogador_id: parseInt(jogador_id),
+                    amigo_id: parseInt(amigo_id)
+                };
+
+                console.log('Enviando requisição para adicionar amigo:', {
+                    url: `${API_BASE}/amigos/adicionar`,
+                    payload: payload
+                });
+
                 const response = await fetch(`${API_BASE}/amigos/adicionar`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
-                        jogador_id: parseInt(jogador_id),
-                        amigo_id: amigo_id
-                    })
+                    body: JSON.stringify(payload)
                 });
+
+                console.log('Status da resposta:', response.status);
+                console.log('Headers da resposta:', response.headers);
 
                 if (!response.ok) {
                     const erro = await response.json();
-                    throw new Error(erro.detail || 'Erro ao adicionar amigo');
+                    console.error('Erro do servidor:', erro);
+                    mostrarMensagem(erro.detail || 'Erro ao adicionar amigo', 'error');
+                    return;
                 }
 
+                const dados = await response.json();
+                console.log('Amigo adicionado com sucesso:', dados);
+                
                 mostrarMensagem('✓ Amigo adicionado com sucesso!', 'success');
+                
+                // Limpa a busca
                 document.getElementById('search-input').value = '';
                 document.getElementById('search-results').style.display = 'none';
-                carregarAmigos();
+                
+                // Recarrega as listas após 500ms para garantir que o banco foi atualizado
+                setTimeout(() => {
+                    carregarAmigos();
+                    carregarFavoritos();
+                }, 500);
             } catch (erro) {
-                mostrarMensagem('Erro: ' + erro.message, 'error');
-                console.error('Erro:', erro);
+                console.error('Erro completo:', erro);
+                console.error('Stack:', erro.stack);
+                mostrarMensagem('Erro ao adicionar: ' + erro.message, 'error');
             }
         }
 
         async function carregarAmigos() {
             try {
+                console.log('Carregando amigos para jogador_id:', jogador_id);
                 const response = await fetch(`${API_BASE}/amigos/${jogador_id}`);
-                if (!response.ok) throw new Error('Erro ao carregar amigos');
+                
+                if (!response.ok) {
+                    console.error('Erro ao carregar amigos, status:', response.status);
+                    throw new Error('Erro ao carregar amigos');
+                }
                 
                 const dados = await response.json();
+                console.log('Amigos carregados:', dados);
                 exibirAmigos(dados.amigos);
             } catch (erro) {
-                console.error('Erro:', erro);
+                console.error('Erro ao carregar amigos:', erro);
             }
         }
 
         async function carregarFavoritos() {
             try {
+                console.log('Carregando favoritos para jogador_id:', jogador_id);
                 const response = await fetch(`${API_BASE}/amigos/${jogador_id}/favoritos`);
-                if (!response.ok) throw new Error('Erro ao carregar favoritos');
+                
+                if (!response.ok) {
+                    console.error('Erro ao carregar favoritos, status:', response.status);
+                    throw new Error('Erro ao carregar favoritos');
+                }
                 
                 const dados = await response.json();
+                console.log('Favoritos carregados:', dados);
                 exibirFavoritos(dados.amigos_favoritos);
             } catch (erro) {
-                console.error('Erro:', erro);
+                console.error('Erro ao carregar favoritos:', erro);
             }
         }
 
@@ -434,7 +492,7 @@
                 <div class="friend-item">
                     <div class="friend-info">
                         <div class="friend-name">${amigo.nome}</div>
-                        <div class="friend-email">${amigo.nome_exibicao}</div>
+                        <div class="friend-email">${amigo.email}</div>
                         <div class="friend-saldo">💰 ${amigo.saldo}</div>
                     </div>
                     <div class="friend-actions">
@@ -462,12 +520,12 @@
                 <div class="friend-item">
                     <div class="friend-info">
                         <div class="friend-name">⭐ ${amigo.nome}</div>
-                        <div class="friend-email">${amigo.nome_exibicao}</div>
+                        <div class="friend-email">${amigo.email}</div>
                         <div class="friend-saldo">💰 ${amigo.saldo}</div>
                     </div>
                     <div class="friend-actions">
                         <button class="btn-small btn-favoritar" onclick="alterarFavorito(${amigo.id}, false)">
-                            ★ Desfavoritado
+                            ★ Desfavoritar
                         </button>
                         <button class="btn-small btn-remover" onclick="removerAmigo(${amigo.id})">
                             ✕ Remover
@@ -480,20 +538,30 @@
         async function alterarFavorito(amizade_id, favoritar) {
             try {
                 const endpoint = favoritar ? 'favoritar' : 'desfavoritar';
-                const response = await fetch(`${API_BASE}/amigos/${amizade_id}/${endpoint}`, {
+                const response = await fetch(`${API_BASE}/amigos/${parseInt(amizade_id)}/${endpoint}`, {
                     method: 'PUT',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ jogador_id: parseInt(jogador_id) })
+                    body: JSON.stringify({ 
+                        jogador_id: parseInt(jogador_id) 
+                    })
                 });
 
-                if (!response.ok) throw new Error('Erro ao atualizar favorito');
+                if (!response.ok) {
+                    const erro = await response.json();
+                    mostrarMensagem(erro.detail || 'Erro ao atualizar favorito', 'error');
+                    return;
+                }
 
-                const mensagem = favoritar ? '✓ Marcado como favorito!' : '✓ Removido dos favoritos';
+                const mensagem = favoritar ? '✓ Marcado como favorito!' : '✓ Removido dos favoritos!';
                 mostrarMensagem(mensagem, 'success');
-                carregarAmigos();
-                carregarFavoritos();
+                
+                // Recarrega ambas as listas
+                setTimeout(() => {
+                    carregarAmigos();
+                    carregarFavoritos();
+                }, 300);
             } catch (erro) {
-                mostrarMensagem('Erro: ' + erro.message, 'error');
+                mostrarMensagem('Erro ao atualizar: ' + erro.message, 'error');
                 console.error('Erro:', erro);
             }
         }
@@ -502,19 +570,29 @@
             if (!confirm('Tem certeza que deseja remover este amigo?')) return;
 
             try {
-                const response = await fetch(`${API_BASE}/amigos/${amizade_id}`, {
+                const response = await fetch(`${API_BASE}/amigos/${parseInt(amizade_id)}`, {
                     method: 'DELETE',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ jogador_id: parseInt(jogador_id) })
+                    body: JSON.stringify({ 
+                        jogador_id: parseInt(jogador_id) 
+                    })
                 });
 
-                if (!response.ok) throw new Error('Erro ao remover amigo');
+                if (!response.ok) {
+                    const erro = await response.json();
+                    mostrarMensagem(erro.detail || 'Erro ao remover amigo', 'error');
+                    return;
+                }
 
-                mostrarMensagem('✓ Amigo removido com sucesso', 'success');
-                carregarAmigos();
-                carregarFavoritos();
+                mostrarMensagem('✓ Amigo removido com sucesso!', 'success');
+                
+                // Recarrega ambas as listas
+                setTimeout(() => {
+                    carregarAmigos();
+                    carregarFavoritos();
+                }, 300);
             } catch (erro) {
-                mostrarMensagem('Erro: ' + erro.message, 'error');
+                mostrarMensagem('Erro ao remover: ' + erro.message, 'error');
                 console.error('Erro:', erro);
             }
         }
