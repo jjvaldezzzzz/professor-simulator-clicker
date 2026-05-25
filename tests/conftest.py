@@ -31,8 +31,10 @@ def init_db() -> None:
         conn.execute(text("DROP TABLE IF EXISTS torneio_pokemon"))
         conn.execute(text("DROP TABLE IF EXISTS torneio_participante"))
         conn.execute(text("DROP TABLE IF EXISTS torneio"))
+        conn.execute(text("DROP TABLE IF EXISTS amizade"))
         conn.execute(text("DROP TABLE IF EXISTS pokemon_time"))
         conn.execute(text("DROP TABLE IF EXISTS time_pokemon"))
+        conn.execute(text("DROP TABLE IF EXISTS pokemon"))
         conn.execute(text("DROP TABLE IF EXISTS inventario"))
         conn.execute(text("DROP TABLE IF EXISTS item"))
         conn.execute(text("DROP TABLE IF EXISTS jogador"))
@@ -196,6 +198,39 @@ def init_db() -> None:
                 FOREIGN KEY(participante_a_id) REFERENCES torneio_participante(id) ON DELETE SET NULL,
                 FOREIGN KEY(participante_b_id) REFERENCES torneio_participante(id) ON DELETE SET NULL,
                 FOREIGN KEY(vencedor_id) REFERENCES torneio_participante(id) ON DELETE SET NULL
+            )
+            """
+        ))
+
+        conn.execute(text(
+            """
+            CREATE TABLE pokemon (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                jogador_id INTEGER NOT NULL,
+                nome TEXT NOT NULL,
+                tipo TEXT NOT NULL,
+                bst INTEGER NOT NULL,
+                apelido TEXT,
+                data_obtido TEXT DEFAULT CURRENT_TIMESTAMP,
+                ativo INTEGER DEFAULT 1,
+                FOREIGN KEY(jogador_id) REFERENCES jogador(id) ON DELETE CASCADE
+            )
+            """
+        ))
+
+        conn.execute(text(
+            """
+            CREATE TABLE amizade (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                jogador_a_id INTEGER NOT NULL,
+                jogador_b_id INTEGER NOT NULL,
+                favorito_para_a INTEGER DEFAULT 0,
+                favorito_para_b INTEGER DEFAULT 0,
+                data_amizade TEXT DEFAULT CURRENT_TIMESTAMP,
+                ativo INTEGER DEFAULT 1,
+                UNIQUE(jogador_a_id, jogador_b_id),
+                FOREIGN KEY(jogador_a_id) REFERENCES jogador(id) ON DELETE CASCADE,
+                FOREIGN KEY(jogador_b_id) REFERENCES jogador(id) ON DELETE CASCADE
             )
             """
         ))
