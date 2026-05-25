@@ -35,7 +35,7 @@ class TestCadastroItem:
             "descricao": "Restaura 20 pontos de vida",
             "preco": 50.0
         }
-        response = client.post("/loja/items", json=payload, headers=headers)
+        response = client.post("/loja/itens", json=payload, headers=headers)
 
         assert response.status_code == 201
         data = response.json()
@@ -49,7 +49,7 @@ class TestCadastroItem:
             "descricao": "Restaura 20 pontos de vida",
             "preco": 50.0
         }
-        response = client.post("/loja/items", json=payload)
+        response = client.post("/loja/itens", json=payload)
 
         assert response.status_code == 403
         assert "permissao" in response.json()["detail"].lower()
@@ -62,7 +62,7 @@ class TestCadastroItem:
             "descricao": "Descrição",
             "preco": -10.0
         }
-        response = client.post("/loja/items", json=payload, headers=headers)
+        response = client.post("/loja/itens", json=payload, headers=headers)
 
         assert response.status_code == 400
         assert "preco" in response.json()["detail"].lower()
@@ -73,7 +73,7 @@ class TestListarLoja:
 
     def test_listar_loja_vazia_http_200(self, client: TestClient):
         """IT-UC06-001: Listar loja vazia retorna lista vazia"""
-        response = client.get("/loja/items")
+        response = client.get("/loja/itens")
 
         assert response.status_code == 200
         data = response.json()
@@ -107,7 +107,7 @@ class TestListarLoja:
         )
         db_session.commit()
 
-        response = client.get("/loja/items")
+        response = client.get("/loja/itens")
 
         assert response.status_code == 200
         data = response.json()
@@ -140,7 +140,7 @@ class TestAtualizacaoItem:
             "descricao": "Nova descrição",
             "preco": 75.0
         }
-        response = client.put(f"/loja/items/{item_id}", json=payload, headers=headers)
+        response = client.put(f"/loja/itens/{item_id}", json=payload, headers=headers)
 
         assert response.status_code == 200
         data = response.json()
@@ -163,7 +163,7 @@ class TestAtualizacaoItem:
         ).scalar()
 
         payload = {"nome": "Nova Nome", "descricao": "Desc", "preco": 60.0}
-        response = client.put(f"/loja/items/{item_id}", json=payload)
+        response = client.put(f"/loja/itens/{item_id}", json=payload)
 
         assert response.status_code == 403
 
@@ -171,7 +171,7 @@ class TestAtualizacaoItem:
         """IT-UC07-003: Tentar atualizar item inexistente retorna 404"""
         headers = {"X-Admin-Token": "valid_token"}
         payload = {"nome": "Item", "descricao": "Desc", "preco": 10.0}
-        response = client.put("/loja/items/99999", json=payload, headers=headers)
+        response = client.put("/loja/itens/99999", json=payload, headers=headers)
 
         assert response.status_code == 404
 
@@ -196,7 +196,7 @@ class TestAlterarPreco:
 
         headers = {"X-Admin-Token": "valid_token"}
         payload = {"novo_preco": 100.0}
-        response = client.put(f"/loja/items/{item_id}/preco", json=payload, headers=headers)
+        response = client.put(f"/loja/itens/{item_id}/preco", json=payload, headers=headers)
 
         assert response.status_code == 200
         data = response.json()
@@ -219,7 +219,7 @@ class TestAlterarPreco:
 
         headers = {"X-Admin-Token": "valid_token"}
         payload = {"novo_preco": -50.0}
-        response = client.put(f"/loja/items/{item_id}/preco", json=payload, headers=headers)
+        response = client.put(f"/loja/itens/{item_id}/preco", json=payload, headers=headers)
 
         assert response.status_code == 400
 
@@ -243,7 +243,7 @@ class TestDeletarItem:
         ).scalar()
 
         headers = {"X-Admin-Token": "valid_token"}
-        response = client.delete(f"/loja/items/{item_id}", headers=headers)
+        response = client.delete(f"/loja/itens/{item_id}", headers=headers)
 
         assert response.status_code == 200
         assert "deletado" in response.json()["mensagem"].lower()
@@ -270,7 +270,7 @@ class TestDeletarItem:
             text("SELECT id FROM item WHERE nome = 'Poção'")
         ).scalar()
 
-        response = client.delete(f"/loja/items/{item_id}")
+        response = client.delete(f"/loja/itens/{item_id}")
 
         assert response.status_code == 403
 

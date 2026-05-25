@@ -59,18 +59,6 @@ async def sortear_pokemon(jogador_id: int, db: Session = Depends(get_db)):
         "pokemon_api_id": pokemon_id
     }
 
-@router.get("/{jogador_id}")
-def visualizar_time(jogador_id: int, db: Session = Depends(get_db)):
-    """UC14: Visualizar Pokemon do Jogador"""
-    query = text("""
-        SELECT id, pokemon_api_id, nome_pokemon, sprite_url, apelido, time_id, data_obtido
-        FROM pokemon_time
-        WHERE jogador_id = :id AND ativo = TRUE
-        ORDER BY id
-    """)
-    time = db.execute(query, {"id": jogador_id}).fetchall()
-    return [dict(p._mapping) for p in time]
-
 @router.get("/times/{jogador_id}")
 def listar_times(jogador_id: int, db: Session = Depends(get_db)):
     query = text("""
@@ -111,6 +99,18 @@ def listar_times(jogador_id: int, db: Session = Depends(get_db)):
     for time in times:
         time["quantidade"] = len(time["pokemons"])
     return times
+
+@router.get("/{jogador_id}")
+def visualizar_time(jogador_id: int, db: Session = Depends(get_db)):
+    """UC13: Visualizar Pokemon do Jogador (Usar ANTES de /times para não conflitar)"""
+    query = text("""
+        SELECT id, pokemon_api_id, nome_pokemon, sprite_url, apelido, time_id, data_obtido
+        FROM pokemon_time
+        WHERE jogador_id = :id AND ativo = TRUE
+        ORDER BY id
+    """)
+    time = db.execute(query, {"id": jogador_id}).fetchall()
+    return [dict(p._mapping) for p in time]
 
 @router.post("/times/{jogador_id}")
 def criar_time(jogador_id: int, payload: schemas.TimePokemonCreate, db: Session = Depends(get_db)):
