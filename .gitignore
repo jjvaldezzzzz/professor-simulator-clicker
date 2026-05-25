@@ -1,1 +1,5 @@
 venv
+relatorios
+htmlcov
+*.pyc
+__pycache__
