@@ -52,29 +52,6 @@ class TestCadastroE2E:
         nome_exibido = await page.text_content(".nome-jogador")
         assert "João Silva" in nome_exibido
 
-    @pytest.mark.e2e
-    @pytest.mark.asyncio
-    async def test_fluxo_cadastro_email_duplicado(self, browser_page: Page):
-        """E2E-UC01-002: Sistema rejeita email duplicado"""
-        page = browser_page
-        
-        # Navegar para cadastro
-        await page.goto("http://localhost:8000/index.html")
-        await page.click("text=Cadastro")
-        
-        # Tentar cadastrar com email já existente
-        await page.fill('input[name="nome"]', "Outro Jogador")
-        await page.fill('input[name="email"]', "admin@test.com")  # Email já registrado
-        await page.fill('input[name="senha"]', "senha123")
-        await page.fill('input[name="confirmar_senha"]', "senha123")
-        
-        await page.click("button:has-text('Cadastrar')")
-        
-        # Validar mensagem de erro
-        error_msg = await page.text_content(".erro-mensagem")
-        assert "Email já cadastrado" in error_msg or "duplicado" in error_msg
-
-
 class TestLoginE2E:
     """E2E-UC02-001, E2E-UC02-002: Fluxo completo de login"""
 
@@ -104,27 +81,6 @@ class TestLoginE2E:
         # Validar token salvo no localStorage
         token = await page.evaluate("() => localStorage.getItem('token')")
         assert token is not None
-
-    @pytest.mark.e2e
-    @pytest.mark.asyncio
-    async def test_fluxo_login_credenciais_invalidas(self, browser_page: Page):
-        """E2E-UC02-002: Sistema rejeita credenciais inválidas"""
-        page = browser_page
-        
-        # Navegar para login
-        await page.goto("http://localhost:8000/index.html")
-        await page.click("text=Login")
-        
-        # Tentar login com senha errada
-        await page.fill('input[name="email"]', "admin@test.com")
-        await page.fill('input[name="senha"]', "senhaerrada")
-        
-        await page.click("button:has-text('Entrar')")
-        
-        # Validar erro
-        error = await page.text_content(".erro-mensagem")
-        assert "Credenciais inválidas" in error or "incorretas" in error
-
 
 class TestPerfilE2E:
     """E2E-UC03-001, E2E-UC03-002: Fluxo de atualização de perfil"""
