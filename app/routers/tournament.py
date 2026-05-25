@@ -23,6 +23,15 @@ PREMIO_POR_TAMANHO = {
 RODADAS_POR_TAMANHO = {2: 1, 4: 2, 8: 3}
 
 
+def _validar_nome_torneio(nome: str) -> str:
+    nome_limpo = nome.strip() if nome else ""
+    if not nome_limpo:
+        raise HTTPException(status_code=400, detail="Nome do torneio e obrigatorio.")
+    if len(nome_limpo) > 50:
+        raise HTTPException(status_code=400, detail="Nome do torneio deve ter no maximo 50 caracteres.")
+    return nome_limpo
+
+
 async def _buscar_pokemon(client: httpx.AsyncClient, api_id: int) -> dict:
     response = await client.get(f"https://pokeapi.co/api/v2/pokemon/{api_id}")
     if response.status_code != 200:
@@ -142,7 +151,7 @@ def _criar_partidas(db: Session, torneio_id: int, participantes_ordenados: list[
 def _montar_detalhes_torneio(db: Session, torneio_id: int) -> dict:
     torneio = db.execute(
         text("""
-            SELECT id, jogador_id, tamanho, status, premio, custo, vencedor_participante_id, criado_em, finalizado_em
+            SELECT id, jogador_id, nome, tamanho, status, premio, custo, vencedor_participante_id, criado_em, finalizado_em
             FROM torneio
             WHERE id = :id
         """),
@@ -213,6 +222,7 @@ def _montar_detalhes_torneio(db: Session, torneio_id: int) -> dict:
         "torneio": {
             "id": torneio.id,
             "jogador_id": torneio.jogador_id,
+            "nome": torneio.nome,
             "tamanho": torneio.tamanho,
             "status": torneio.status,
             "premio": float(torneio.premio),
@@ -396,7 +406,7 @@ async def criar_torneio(jogador_id: int, payload: schemas.TorneioCreate, db: Ses
 def listar_torneios(jogador_id: int, db: Session = Depends(get_db)):
     rows = db.execute(
         text("""
-            SELECT t.id, t.tamanho, t.status, t.criado_em, t.finalizado_em, t.vencedor_participante_id,
+            SELECT t.id, t.nome, t.tamanho, t.status, t.criado_em, t.finalizado_em, t.vencedor_participante_id,
                    tp.nome_treinador AS vencedor_nome
             FROM torneio t
             LEFT JOIN torneio_participante tp ON tp.id = t.vencedor_participante_id
@@ -426,7 +436,7 @@ def obter_torneio(jogador_id: int, torneio_id: int, db: Session = Depends(get_db
 def resolver_partida(torneio_id: int, partida_id: int, jogador_id: int, db: Session = Depends(get_db)):
     torneio = db.execute(
         text("""
-            SELECT id, jogador_id, tamanho, status, premio
+            SELECT id, jogador_id, nome, tamanho, status, premio
             FROM torneio
             WHERE id = :id AND jogador_id = :jogador_id
         """),
@@ -558,6 +568,37 @@ def resolver_partida(torneio_id: int, partida_id: int, jogador_id: int, db: Sess
         "venceu": venceu,
         "novo_saldo": float(novo_saldo) if novo_saldo is not None else None,
     }
+
+
+@router.put("/{jogador_id}/{torneio_id}")
+def renomear_torneio(jogador_id: int, torneio_id: int, payload: schemas.TorneioRename, db: Session = Depends(get_db)):
+    """UC19.2: Renomear Torneio"""
+    nome_torneio = _validar_nome_torneio(payload.nome)
+    
+    torneio_existente = db.execute(
+        text("SELECT id FROM torneio WHERE id = :torneio_id AND jogador_id = :jogador_id"),
+        {"torneio_id": torneio_id, "jogador_id": jogador_id}
+    ).fetchone()
+    
+    if not torneio_existente:
+        raise HTTPException(status_code=404, detail="Torneio nao encontrado.")
+    
+    # Verifica se já existe outro torneio com o mesmo nome (do mesmo jogador)
+    duplicado = db.execute(
+        text("SELECT id FROM torneio WHERE jogador_id = :jogador_id AND nome = :nome AND id <> :torneio_id"),
+        {"jogador_id": jogador_id, "nome": nome_torneio, "torneio_id": torneio_id}
+    ).fetchone()
+    
+    if duplicado:
+        raise HTTPException(status_code=400, detail="Ja existe outro torneio com esse nome.")
+    
+    atualizado = db.execute(
+        text("UPDATE torneio SET nome = :nome WHERE id = :torneio_id RETURNING id, nome"),
+        {"nome": nome_torneio, "torneio_id": torneio_id}
+    ).fetchone()
+    
+    db.commit()
+    return dict(atualizado._mapping)
 
 
 @router.delete("/{torneio_id}")

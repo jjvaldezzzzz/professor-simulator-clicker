@@ -1,8 +1,7 @@
-# Casos de Uso — Professor Simulator Clicker
-
+# Casos de Uso — Professor Simulator Clicker 
 Este documento reúne os casos de uso principais do sistema. Cada caso de uso segue um padrão consistente: Ator, Pré-condições, Fluxo Principal, Fluxos Alternativos e Pós-condições.
 
-## Sumário
+## Sumário 
 
 - Perfil do Usuário (UC01–UC04)
 - Loja e Inventário (UC05–UC11)

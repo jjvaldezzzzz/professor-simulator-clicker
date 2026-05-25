@@ -96,6 +96,9 @@ class TorneioCreate(BaseModel):
     time_id: int
     tamanho: int
 
+class TorneioRename(BaseModel):
+    nome: str
+
 # ==========================================
 # SCHEMAS PARA A TABELA 'inventario'
 # ==========================================

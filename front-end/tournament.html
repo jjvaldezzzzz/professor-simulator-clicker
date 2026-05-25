@@ -67,6 +67,7 @@
 			<div class="modal-header">
 				<h3 class="modal-title">Chave do torneio</h3>
 				<div class="modal-header-actions">
+					<button id="btn-renomear-torneio" class="btn-retro btn-small" type="button" onclick="abrirModalRenomearTorneio()">Renomear</button>
 					<button id="btn-deletar-torneio" class="btn-retro btn-danger btn-small" type="button" onclick="deletarTorneio()">Deletar torneio</button>
 					<button id="btn-fechar-torneio" class="btn-retro" type="button" onclick="fecharModalTorneio()">Fechar</button>
 				</div>
@@ -74,6 +75,24 @@
 			<p id="torneio-info" class="panel-note"></p>
 			<div id="chave-container" class="tournament-grid"></div>
 			<p id="mensagem-final" class="message"></p>
+		</div>
+	</div>
+
+	<div id="modal-renomear-torneio" class="modal is-hidden" role="dialog" aria-modal="true">
+		<div class="modal-card">
+			<div class="modal-header">
+				<h3 class="modal-title">Renomear torneio</h3>
+				<button class="btn-retro" type="button" onclick="fecharModalRenomearTorneio()">Fechar</button>
+			</div>
+			<div class="form-row">
+				<label class="form-label" for="input-nome-torneio">Novo nome:</label>
+				<input type="text" id="input-nome-torneio" class="input-retro" placeholder="Ex: Torneio dos Campeões" maxlength="50">
+			</div>
+			<div class="modal-actions">
+				<button class="btn-retro btn-primary" type="button" onclick="confirmarRenomearTorneio()">Renomear</button>
+				<button class="btn-retro" type="button" onclick="fecharModalRenomearTorneio()">Cancelar</button>
+			</div>
+			<p id="mensagem-renomear" class="message"></p>
 		</div>
 	</div>
 
@@ -177,7 +196,8 @@
 				return;
 			}
 			const status = torneioAtual.torneio.status === 'finalizado' ? 'Finalizado' : 'Em andamento';
-			torneioInfo.innerText = `Torneio #${torneioAtual.torneio.id} - ${status} - ${torneioAtual.torneio.tamanho} jogadores`;
+			const nomeTorneio = torneioAtual.torneio.nome ? ` - ${torneioAtual.torneio.nome}` : '';
+			torneioInfo.innerText = `Torneio #${torneioAtual.torneio.id}${nomeTorneio} - ${status} - ${torneioAtual.torneio.tamanho} jogadores`;
 			if (torneioAtual.torneio.status === 'finalizado') {
 				btnDeletarTorneio.classList.remove('is-hidden');
 			} else {
@@ -230,7 +250,8 @@
 					header.className = 'team-header';
 					const titulo = document.createElement('strong');
 					const statusLabel = torneio.status === 'finalizado' ? 'Finalizado' : 'Em andamento';
-					titulo.innerText = `Torneio #${torneio.id} - ${torneio.tamanho} jogadores - ${statusLabel}`;
+					const nomeTorneio = torneio.nome ? ` - ${torneio.nome}` : '';
+					titulo.innerText = `Torneio #${torneio.id}${nomeTorneio} - ${torneio.tamanho} jogadores - ${statusLabel}`;
 					header.appendChild(titulo);
 
 					const actions = document.createElement('div');
@@ -527,6 +548,50 @@
 				await carregarTorneios();
 			} catch (error) {
 				setMensagemFinal(error.message || 'Erro ao deletar torneio.', 'error');
+			}
+		}
+
+		const modalRenomearTorneio = document.getElementById('modal-renomear-torneio');
+		const inputNomeTorneio = document.getElementById('input-nome-torneio');
+		const mensagemRenomear = document.getElementById('mensagem-renomear');
+
+		function abrirModalRenomearTorneio() {
+			if (!torneioAtual) return;
+			inputNomeTorneio.value = torneioAtual.torneio.nome || '';
+			modalRenomearTorneio.classList.remove('is-hidden');
+			inputNomeTorneio.focus();
+		}
+
+		function fecharModalRenomearTorneio() {
+			modalRenomearTorneio.classList.add('is-hidden');
+			inputNomeTorneio.value = '';
+			mensagemRenomear.className = 'message';
+			mensagemRenomear.innerText = '';
+		}
+
+		async function confirmarRenomearTorneio() {
+			if (!torneioAtual) return;
+			const novoNome = inputNomeTorneio.value.trim();
+			if (!novoNome) {
+				mensagemRenomear.className = 'message error';
+				mensagemRenomear.innerText = 'Nome nao pode estar vazio.';
+				return;
+			}
+			try {
+				const data = await apiFetch(`/torneio/${jogadorId}/${torneioAtual.torneio.id}`, {
+					method: 'PUT',
+					body: { nome: novoNome }
+				});
+				torneioAtual.torneio.nome = data.nome;
+				mensagemRenomear.className = 'message success';
+				mensagemRenomear.innerText = 'Torneio renomeado com sucesso!';
+				setTimeout(() => {
+					fecharModalRenomearTorneio();
+					carregarTorneios();
+				}, 1500);
+			} catch (error) {
+				mensagemRenomear.className = 'message error';
+				mensagemRenomear.innerText = error.message || 'Erro ao renomear torneio.';
 			}
 		}
 
