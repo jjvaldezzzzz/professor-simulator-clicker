@@ -17,6 +17,7 @@ def screenshot_on_failure(page: Page, request):
         page.screenshot(path=f"screenshots/{request.node.name}.png")
 
 def test_fluxo_completo_cadastro_login_jogo(page: Page):
+    # Dica: Se rodar em portas diferentes no VSCode Live Server, certifique-se de ajustar a URL
     page.goto("http://127.0.0.1:5500/professor-simulator-clicker/front-end/index.html")
 
     # E-mail único usando timestamp para evitar conflitos no banco ao rodar o teste várias vezes
@@ -35,12 +36,19 @@ def test_fluxo_completo_cadastro_login_jogo(page: Page):
     page.get_by_placeholder("Senha").fill("senha123")
     page.get_by_role("button", name="Entrar").click()
 
+    # Aguarda o redirecionamento para o jogo
     expect(page).to_have_url(re.compile(r".*/game\.html"))
 
     saldo_element = page.locator("#saldo-display")
+    
+    # PEQUENO AJUSTE AQUI: Esperamos a API carregar o saldo inicial (deixar de ser '--')
+    # Isso evita que o Playwright clique no botão "dar aula" antes do sistema carregar
+    expect(saldo_element).not_to_have_text("--")
+    
+    # Agora sim salvamos o valor atual (ex: "0" ou "0.0")
     saldo_texto_antes = saldo_element.inner_text()
     
     page.get_by_role("button", name="DAR AULA!").click()
 
-    # O Playwright faz auto-wait natural aguardando a alteração no DOM antes de afirmar o teste
+    # O Playwright faz auto-wait natural aguardando a alteração no DOM para o novo saldo (ex: 10)
     expect(saldo_element).not_to_have_text(saldo_texto_antes)

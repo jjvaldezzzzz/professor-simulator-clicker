@@ -22,7 +22,6 @@ engine = create_engine(
 )
 TestingSessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 
-
 def init_db() -> None:
     with engine.begin() as conn:
         conn.execute(text("PRAGMA foreign_keys=ON;"))
@@ -34,13 +33,11 @@ def init_db() -> None:
         conn.execute(text("DROP TABLE IF EXISTS amizade"))
         conn.execute(text("DROP TABLE IF EXISTS pokemon_time"))
         conn.execute(text("DROP TABLE IF EXISTS time_pokemon"))
-        conn.execute(text("DROP TABLE IF EXISTS pokemon"))
         conn.execute(text("DROP TABLE IF EXISTS inventario"))
         conn.execute(text("DROP TABLE IF EXISTS item"))
         conn.execute(text("DROP TABLE IF EXISTS jogador"))
 
-        conn.execute(text(
-            """
+        conn.execute(text("""
             CREATE TABLE jogador (
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
                 nome TEXT NOT NULL,
@@ -52,11 +49,9 @@ def init_db() -> None:
                 ultimo_login TEXT,
                 ativo INTEGER DEFAULT 1
             )
-            """
-        ))
+        """))
 
-        conn.execute(text(
-            """
+        conn.execute(text("""
             CREATE TABLE item (
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
                 nome TEXT NOT NULL,
@@ -68,11 +63,9 @@ def init_db() -> None:
                 vendivel INTEGER DEFAULT 1,
                 ativo INTEGER DEFAULT 1
             )
-            """
-        ))
+        """))
 
-        conn.execute(text(
-            """
+        conn.execute(text("""
             CREATE TABLE inventario (
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
                 jogador_id INTEGER NOT NULL,
@@ -83,11 +76,9 @@ def init_db() -> None:
                 FOREIGN KEY(jogador_id) REFERENCES jogador(id) ON DELETE CASCADE,
                 FOREIGN KEY(item_id) REFERENCES item(id) ON DELETE RESTRICT
             )
-            """
-        ))
+        """))
 
-        conn.execute(text(
-            """
+        conn.execute(text("""
             CREATE TABLE time_pokemon (
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
                 jogador_id INTEGER NOT NULL,
@@ -96,11 +87,9 @@ def init_db() -> None:
                 ativo INTEGER DEFAULT 1,
                 FOREIGN KEY(jogador_id) REFERENCES jogador(id) ON DELETE CASCADE
             )
-            """
-        ))
+        """))
 
-        conn.execute(text(
-            """
+        conn.execute(text("""
             CREATE TABLE pokemon_time (
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
                 jogador_id INTEGER NOT NULL,
@@ -114,11 +103,9 @@ def init_db() -> None:
                 FOREIGN KEY(jogador_id) REFERENCES jogador(id) ON DELETE CASCADE,
                 FOREIGN KEY(time_id) REFERENCES time_pokemon(id) ON DELETE SET NULL
             )
-            """
-        ))
+        """))
 
-        conn.execute(text(
-            """
+        conn.execute(text("""
             CREATE TABLE transacao (
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
                 jogador_id INTEGER NOT NULL,
@@ -128,15 +115,14 @@ def init_db() -> None:
                 data_transacao TEXT DEFAULT CURRENT_TIMESTAMP,
                 FOREIGN KEY(jogador_id) REFERENCES jogador(id) ON DELETE CASCADE
             )
-            """
-        ))
+        """))
 
-        conn.execute(text(
-            """
+        conn.execute(text("""
             CREATE TABLE torneio (
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
                 jogador_id INTEGER NOT NULL,
                 time_id INTEGER NOT NULL,
+                nome TEXT,
                 tamanho INTEGER NOT NULL,
                 custo REAL NOT NULL DEFAULT 1000.0,
                 premio REAL NOT NULL DEFAULT 5000.0,
@@ -147,11 +133,9 @@ def init_db() -> None:
                 FOREIGN KEY(jogador_id) REFERENCES jogador(id) ON DELETE CASCADE,
                 FOREIGN KEY(time_id) REFERENCES time_pokemon(id) ON DELETE RESTRICT
             )
-            """
-        ))
+        """))
 
-        conn.execute(text(
-            """
+        conn.execute(text("""
             CREATE TABLE torneio_participante (
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
                 torneio_id INTEGER NOT NULL,
@@ -166,11 +150,9 @@ def init_db() -> None:
                 FOREIGN KEY(jogador_id) REFERENCES jogador(id) ON DELETE SET NULL,
                 FOREIGN KEY(time_id) REFERENCES time_pokemon(id) ON DELETE SET NULL
             )
-            """
-        ))
+        """))
 
-        conn.execute(text(
-            """
+        conn.execute(text("""
             CREATE TABLE torneio_pokemon (
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
                 torneio_participante_id INTEGER NOT NULL,
@@ -180,11 +162,9 @@ def init_db() -> None:
                 bst INTEGER NOT NULL,
                 FOREIGN KEY(torneio_participante_id) REFERENCES torneio_participante(id) ON DELETE CASCADE
             )
-            """
-        ))
+        """))
 
-        conn.execute(text(
-            """
+        conn.execute(text("""
             CREATE TABLE torneio_partida (
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
                 torneio_id INTEGER NOT NULL,
@@ -199,42 +179,21 @@ def init_db() -> None:
                 FOREIGN KEY(participante_b_id) REFERENCES torneio_participante(id) ON DELETE SET NULL,
                 FOREIGN KEY(vencedor_id) REFERENCES torneio_participante(id) ON DELETE SET NULL
             )
-            """
-        ))
+        """))
 
-        conn.execute(text(
-            """
-            CREATE TABLE pokemon (
-                id INTEGER PRIMARY KEY AUTOINCREMENT,
-                jogador_id INTEGER NOT NULL,
-                nome TEXT NOT NULL,
-                tipo TEXT NOT NULL,
-                bst INTEGER NOT NULL,
-                apelido TEXT,
-                data_obtido TEXT DEFAULT CURRENT_TIMESTAMP,
-                ativo INTEGER DEFAULT 1,
-                FOREIGN KEY(jogador_id) REFERENCES jogador(id) ON DELETE CASCADE
-            )
-            """
-        ))
-
-        conn.execute(text(
-            """
+        conn.execute(text("""
             CREATE TABLE amizade (
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
-                jogador_a_id INTEGER NOT NULL,
-                jogador_b_id INTEGER NOT NULL,
-                favorito_para_a INTEGER DEFAULT 0,
-                favorito_para_b INTEGER DEFAULT 0,
+                jogador_id INTEGER NOT NULL,
+                amigo_id INTEGER NOT NULL,
                 data_amizade TEXT DEFAULT CURRENT_TIMESTAMP,
+                favorito INTEGER DEFAULT 0,
                 ativo INTEGER DEFAULT 1,
-                UNIQUE(jogador_a_id, jogador_b_id),
-                FOREIGN KEY(jogador_a_id) REFERENCES jogador(id) ON DELETE CASCADE,
-                FOREIGN KEY(jogador_b_id) REFERENCES jogador(id) ON DELETE CASCADE
+                UNIQUE(jogador_id, amigo_id),
+                FOREIGN KEY(jogador_id) REFERENCES jogador(id) ON DELETE CASCADE,
+                FOREIGN KEY(amigo_id) REFERENCES jogador(id) ON DELETE CASCADE
             )
-            """
-        ))
-
+        """))
 
 @pytest.fixture()
 def db_session():
@@ -245,7 +204,6 @@ def db_session():
     finally:
         session.close()
 
-
 @pytest.fixture()
 def client(db_session):
     def override_get_db():
@@ -253,7 +211,6 @@ def client(db_session):
             yield db_session
         finally:
             pass
-
     app.dependency_overrides[get_db] = override_get_db
     with TestClient(app) as test_client:
         yield test_client

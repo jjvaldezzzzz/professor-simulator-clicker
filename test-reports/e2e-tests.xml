@@ -1,0 +1,1 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites><testsuite name="pytest" errors="0" failures="0" skipped="0" tests="1" time="4.631" timestamp="2026-05-26T11:00:31.376506" hostname="DESKTOP-9QMV1N5"><testcase classname="tests.e2e.test_ui_game" name="test_fluxo_completo_cadastro_login_jogo[chromium]" time="4.071" /></testsuite></testsuites>
