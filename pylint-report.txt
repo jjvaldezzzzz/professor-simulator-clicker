@@ -1,0 +1,243 @@
+************* Module app.database
+app\database.py:5: [C0301(line-too-long), ] Line too long (101/100)
+app\database.py:20: [C0304(missing-final-newline), ] Final newline missing
+app\database.py:1: [C0114(missing-module-docstring), ] Missing module docstring
+app\database.py:15: [C0116(missing-function-docstring), get_db] Missing function or method docstring
+************* Module app.main
+app\main.py:26: [C0304(missing-final-newline), ] Final newline missing
+app\main.py:1: [C0114(missing-module-docstring), ] Missing module docstring
+app\main.py:25: [C0116(missing-function-docstring), root] Missing function or method docstring
+************* Module app.models
+app\models.py:1: [C0304(missing-final-newline), ] Final newline missing
+app\models.py:1: [C0114(missing-module-docstring), ] Missing module docstring
+************* Module app.schemas
+app\schemas.py:62: [C0303(trailing-whitespace), ] Trailing whitespace
+app\schemas.py:143: [C0304(missing-final-newline), ] Final newline missing
+app\schemas.py:1: [C0114(missing-module-docstring), ] Missing module docstring
+app\schemas.py:8: [C0115(missing-class-docstring), JogadorCreate] Missing class docstring
+app\schemas.py:15: [C0116(missing-function-docstring), JogadorCreate.validar_nome] Missing function or method docstring
+app\schemas.py:21: [C0115(missing-class-docstring), JogadorLogin] Missing class docstring
+app\schemas.py:25: [C0115(missing-class-docstring), JogadorUpdate] Missing class docstring
+app\schemas.py:28: [C0115(missing-class-docstring), JogadorResponse] Missing class docstring
+app\schemas.py:35: [C0115(missing-class-docstring), JogadorResponse.Config] Missing class docstring
+app\schemas.py:35: [R0903(too-few-public-methods), JogadorResponse.Config] Too few public methods (0/2)
+app\schemas.py:41: [C0115(missing-class-docstring), ItemCreate] Missing class docstring
+app\schemas.py:50: [C0115(missing-class-docstring), ItemUpdate] Missing class docstring
+app\schemas.py:59: [C0115(missing-class-docstring), ItemResponse] Missing class docstring
+app\schemas.py:63: [C0115(missing-class-docstring), ItemResponse.Config] Missing class docstring
+app\schemas.py:63: [R0903(too-few-public-methods), ItemResponse.Config] Too few public methods (0/2)
+app\schemas.py:69: [C0115(missing-class-docstring), PokemonResponse] Missing class docstring
+app\schemas.py:77: [C0115(missing-class-docstring), PokemonResponse.Config] Missing class docstring
+app\schemas.py:77: [R0903(too-few-public-methods), PokemonResponse.Config] Too few public methods (0/2)
+app\schemas.py:83: [C0115(missing-class-docstring), TimePokemonCreate] Missing class docstring
+app\schemas.py:86: [C0115(missing-class-docstring), TimePokemonRename] Missing class docstring
+app\schemas.py:89: [C0115(missing-class-docstring), TimePokemonAdicionar] Missing class docstring
+app\schemas.py:95: [C0115(missing-class-docstring), TorneioCreate] Missing class docstring
+app\schemas.py:99: [C0115(missing-class-docstring), TorneioRename] Missing class docstring
+app\schemas.py:105: [C0115(missing-class-docstring), InventarioResponse] Missing class docstring
+app\schemas.py:112: [C0115(missing-class-docstring), InventarioResponse.Config] Missing class docstring
+app\schemas.py:112: [R0903(too-few-public-methods), InventarioResponse.Config] Too few public methods (0/2)
+app\schemas.py:115: [C0115(missing-class-docstring), InventarioDetalhadoResponse] Missing class docstring
+app\schemas.py:124: [C0115(missing-class-docstring), TransacaoResponse] Missing class docstring
+app\schemas.py:132: [C0115(missing-class-docstring), TransacaoResponse.Config] Missing class docstring
+app\schemas.py:132: [R0903(too-few-public-methods), TransacaoResponse.Config] Too few public methods (0/2)
+app\schemas.py:138: [C0115(missing-class-docstring), ConfigGameResponse] Missing class docstring
+app\schemas.py:142: [C0115(missing-class-docstring), ConfigGameResponse.Config] Missing class docstring
+app\schemas.py:142: [R0903(too-few-public-methods), ConfigGameResponse.Config] Too few public methods (0/2)
+app\schemas.py:2: [C0411(wrong-import-order), ] standard import "from typing import Optional" should be placed before "from pydantic import BaseModel, EmailStr, field_validator"
+app\schemas.py:3: [C0411(wrong-import-order), ] standard import "from datetime import datetime" should be placed before "from pydantic import BaseModel, EmailStr, field_validator"
+************* Module app.routers.friends
+app\routers\friends.py:35: [C0303(trailing-whitespace), ] Trailing whitespace
+app\routers\friends.py:39: [C0303(trailing-whitespace), ] Trailing whitespace
+app\routers\friends.py:44: [C0303(trailing-whitespace), ] Trailing whitespace
+app\routers\friends.py:47: [C0303(trailing-whitespace), ] Trailing whitespace
+app\routers\friends.py:61: [C0303(trailing-whitespace), ] Trailing whitespace
+app\routers\friends.py:64: [C0303(trailing-whitespace), ] Trailing whitespace
+app\routers\friends.py:71: [C0303(trailing-whitespace), ] Trailing whitespace
+app\routers\friends.py:76: [C0303(trailing-whitespace), ] Trailing whitespace
+app\routers\friends.py:78: [C0303(trailing-whitespace), ] Trailing whitespace
+app\routers\friends.py:88: [C0303(trailing-whitespace), ] Trailing whitespace
+app\routers\friends.py:92: [C0303(trailing-whitespace), ] Trailing whitespace
+app\routers\friends.py:95: [C0303(trailing-whitespace), ] Trailing whitespace
+app\routers\friends.py:112: [C0303(trailing-whitespace), ] Trailing whitespace
+app\routers\friends.py:114: [C0303(trailing-whitespace), ] Trailing whitespace
+app\routers\friends.py:124: [C0303(trailing-whitespace), ] Trailing whitespace
+app\routers\friends.py:128: [C0303(trailing-whitespace), ] Trailing whitespace
+app\routers\friends.py:131: [C0303(trailing-whitespace), ] Trailing whitespace
+app\routers\friends.py:147: [C0303(trailing-whitespace), ] Trailing whitespace
+app\routers\friends.py:149: [C0303(trailing-whitespace), ] Trailing whitespace
+app\routers\friends.py:157: [C0301(line-too-long), ] Line too long (103/100)
+app\routers\friends.py:160: [C0303(trailing-whitespace), ] Trailing whitespace
+app\routers\friends.py:170: [C0303(trailing-whitespace), ] Trailing whitespace
+app\routers\friends.py:173: [C0303(trailing-whitespace), ] Trailing whitespace
+app\routers\friends.py:181: [C0303(trailing-whitespace), ] Trailing whitespace
+app\routers\friends.py:184: [C0303(trailing-whitespace), ] Trailing whitespace
+app\routers\friends.py:192: [C0301(line-too-long), ] Line too long (106/100)
+app\routers\friends.py:195: [C0303(trailing-whitespace), ] Trailing whitespace
+app\routers\friends.py:205: [C0303(trailing-whitespace), ] Trailing whitespace
+app\routers\friends.py:208: [C0303(trailing-whitespace), ] Trailing whitespace
+app\routers\friends.py:216: [C0303(trailing-whitespace), ] Trailing whitespace
+app\routers\friends.py:219: [C0303(trailing-whitespace), ] Trailing whitespace
+app\routers\friends.py:230: [C0303(trailing-whitespace), ] Trailing whitespace
+app\routers\friends.py:240: [C0303(trailing-whitespace), ] Trailing whitespace
+app\routers\friends.py:243: [C0303(trailing-whitespace), ] Trailing whitespace
+app\routers\friends.py:250: [C0303(trailing-whitespace), ] Trailing whitespace
+app\routers\friends.py:253: [C0303(trailing-whitespace), ] Trailing whitespace
+app\routers\friends.py:258: [C0301(line-too-long), ] Line too long (102/100)
+app\routers\friends.py:260: [C0303(trailing-whitespace), ] Trailing whitespace
+app\routers\friends.py:264: [C0303(trailing-whitespace), ] Trailing whitespace
+app\routers\friends.py:277: [C0303(trailing-whitespace), ] Trailing whitespace
+app\routers\friends.py:281: [C0303(trailing-whitespace), ] Trailing whitespace
+app\routers\friends.py:284: [C0303(trailing-whitespace), ] Trailing whitespace
+app\routers\friends.py:1: [C0114(missing-module-docstring), ] Missing module docstring
+app\routers\friends.py:11: [C0115(missing-class-docstring), AdicionarAmigoRequest] Missing class docstring
+app\routers\friends.py:16: [C0115(missing-class-docstring), AtualizarFavoritoRequest] Missing class docstring
+app\routers\friends.py:20: [C0115(missing-class-docstring), RemoverAmigoRequest] Missing class docstring
+app\routers\friends.py:81: [W0212(protected-access), adicionar_amigo] Access to a protected member _mapping of a client class
+app\routers\friends.py:117: [W0212(protected-access), obter_amigos] Access to a protected member _mapping of a client class
+app\routers\friends.py:152: [W0212(protected-access), obter_amigos_favoritos] Access to a protected member _mapping of a client class
+app\routers\friends.py:187: [W0212(protected-access), favoritar_amigo] Access to a protected member _mapping of a client class
+app\routers\friends.py:222: [W0212(protected-access), desfavoritar_amigo] Access to a protected member _mapping of a client class
+app\routers\friends.py:286: [W0212(protected-access), buscar_jogador_para_amizade] Access to a protected member _mapping of a client class
+app\routers\friends.py:1: [W0611(unused-import), ] Unused status imported from fastapi
+************* Module app.routers.game
+app\routers\game.py:11: [C0303(trailing-whitespace), ] Trailing whitespace
+app\routers\game.py:13: [C0301(line-too-long), ] Line too long (109/100)
+app\routers\game.py:28: [C0303(trailing-whitespace), ] Trailing whitespace
+app\routers\game.py:33: [C0303(trailing-whitespace), ] Trailing whitespace
+app\routers\game.py:35: [C0303(trailing-whitespace), ] Trailing whitespace
+app\routers\game.py:40: [C0303(trailing-whitespace), ] Trailing whitespace
+app\routers\game.py:42: [C0301(line-too-long), ] Line too long (121/100)
+app\routers\game.py:48: [C0301(line-too-long), ] Line too long (109/100)
+app\routers\game.py:93: [C0303(trailing-whitespace), ] Trailing whitespace
+app\routers\game.py:99: [C0301(line-too-long), ] Line too long (147/100)
+app\routers\game.py:101: [C0304(missing-final-newline), ] Final newline missing
+app\routers\game.py:1: [C0114(missing-module-docstring), ] Missing module docstring
+************* Module app.routers.inventory
+app\routers\inventory.py:11: [C0303(trailing-whitespace), ] Trailing whitespace
+app\routers\inventory.py:12: [C0301(line-too-long), ] Line too long (105/100)
+app\routers\inventory.py:13: [C0301(line-too-long), ] Line too long (119/100)
+app\routers\inventory.py:22: [C0301(line-too-long), ] Line too long (125/100)
+app\routers\inventory.py:23: [C0301(line-too-long), ] Line too long (133/100)
+app\routers\inventory.py:24: [C0303(trailing-whitespace), ] Trailing whitespace
+app\routers\inventory.py:24: [C0301(line-too-long), ] Line too long (129/100)
+app\routers\inventory.py:43: [C0304(missing-final-newline), ] Final newline missing
+app\routers\inventory.py:1: [C0114(missing-module-docstring), ] Missing module docstring
+app\routers\inventory.py:29: [W0707(raise-missing-from), comprar_item] Consider explicitly re-raising using 'raise HTTPException(status_code=400, detail='Você já possui este item ou ocorreu um erro.') from e'
+app\routers\inventory.py:27: [W0612(unused-variable), comprar_item] Unused variable 'e'
+app\routers\inventory.py:43: [W0212(protected-access), listar_inventario] Access to a protected member _mapping of a client class
+************* Module app.routers.pokemon
+app\routers\pokemon.py:19: [C0301(line-too-long), ] Line too long (101/100)
+app\routers\pokemon.py:25: [C0303(trailing-whitespace), ] Trailing whitespace
+app\routers\pokemon.py:26: [C0301(line-too-long), ] Line too long (105/100)
+app\routers\pokemon.py:28: [C0301(line-too-long), ] Line too long (103/100)
+app\routers\pokemon.py:31: [C0303(trailing-whitespace), ] Trailing whitespace
+app\routers\pokemon.py:37: [C0303(trailing-whitespace), ] Trailing whitespace
+app\routers\pokemon.py:43: [C0301(line-too-long), ] Line too long (122/100)
+app\routers\pokemon.py:48: [C0301(line-too-long), ] Line too long (132/100)
+app\routers\pokemon.py:49: [C0303(trailing-whitespace), ] Trailing whitespace
+app\routers\pokemon.py:50: [C0303(trailing-whitespace), ] Trailing whitespace
+app\routers\pokemon.py:50: [C0301(line-too-long), ] Line too long (129/100)
+app\routers\pokemon.py:118: [C0301(line-too-long), ] Line too long (119/100)
+app\routers\pokemon.py:123: [C0301(line-too-long), ] Line too long (101/100)
+app\routers\pokemon.py:141: [C0301(line-too-long), ] Line too long (116/100)
+app\routers\pokemon.py:144: [C0301(line-too-long), ] Line too long (110/100)
+app\routers\pokemon.py:151: [C0301(line-too-long), ] Line too long (128/100)
+app\routers\pokemon.py:167: [C0301(line-too-long), ] Line too long (110/100)
+app\routers\pokemon.py:173: [C0301(line-too-long), ] Line too long (109/100)
+app\routers\pokemon.py:186: [C0301(line-too-long), ] Line too long (110/100)
+app\routers\pokemon.py:239: [C0304(missing-final-newline), ] Final newline missing
+app\routers\pokemon.py:1: [C0114(missing-module-docstring), ] Missing module docstring
+app\routers\pokemon.py:63: [C0116(missing-function-docstring), listar_times] Missing function or method docstring
+app\routers\pokemon.py:79: [W0212(protected-access), listar_times] Access to a protected member _mapping of a client class
+app\routers\pokemon.py:113: [W0212(protected-access), visualizar_time] Access to a protected member _mapping of a client class
+app\routers\pokemon.py:116: [C0116(missing-function-docstring), criar_time] Missing function or method docstring
+app\routers\pokemon.py:138: [W0212(protected-access), criar_time] Access to a protected member _mapping of a client class
+app\routers\pokemon.py:141: [C0116(missing-function-docstring), renomear_time] Missing function or method docstring
+app\routers\pokemon.py:162: [W0212(protected-access), renomear_time] Access to a protected member _mapping of a client class
+app\routers\pokemon.py:165: [C0116(missing-function-docstring), deletar_time] Missing function or method docstring
+app\routers\pokemon.py:179: [C0116(missing-function-docstring), adicionar_pokemon_ao_time] Missing function or method docstring
+app\routers\pokemon.py:221: [C0116(missing-function-docstring), libertar_pokemon] Missing function or method docstring
+app\routers\pokemon.py:5: [C0411(wrong-import-order), ] standard import "import random" should be placed before "from fastapi import APIRouter, Depends, HTTPException"
+************* Module app.routers.shop
+app\routers\shop.py:12: [C0303(trailing-whitespace), ] Trailing whitespace
+app\routers\shop.py:14: [C0301(line-too-long), ] Line too long (108/100)
+app\routers\shop.py:15: [C0303(trailing-whitespace), ] Trailing whitespace
+app\routers\shop.py:17: [C0301(line-too-long), ] Line too long (112/100)
+app\routers\shop.py:27: [C0301(line-too-long), ] Line too long (118/100)
+app\routers\shop.py:41: [C0301(line-too-long), ] Line too long (107/100)
+app\routers\shop.py:44: [C0301(line-too-long), ] Line too long (108/100)
+app\routers\shop.py:46: [C0301(line-too-long), ] Line too long (113/100)
+app\routers\shop.py:118: [C0301(line-too-long), ] Line too long (119/100)
+app\routers\shop.py:127: [C0303(trailing-whitespace), ] Trailing whitespace
+app\routers\shop.py:129: [C0301(line-too-long), ] Line too long (108/100)
+app\routers\shop.py:130: [C0303(trailing-whitespace), ] Trailing whitespace
+app\routers\shop.py:132: [C0301(line-too-long), ] Line too long (126/100)
+app\routers\shop.py:137: [C0303(trailing-whitespace), ] Trailing whitespace
+app\routers\shop.py:142: [C0303(trailing-whitespace), ] Trailing whitespace
+app\routers\shop.py:145: [C0303(trailing-whitespace), ] Trailing whitespace
+app\routers\shop.py:152: [C0301(line-too-long), ] Line too long (108/100)
+app\routers\shop.py:154: [C0301(line-too-long), ] Line too long (114/100)
+app\routers\shop.py:170: [C0301(line-too-long), ] Line too long (120/100)
+app\routers\shop.py:175: [C0304(missing-final-newline), ] Final newline missing
+app\routers\shop.py:1: [C0114(missing-module-docstring), ] Missing module docstring
+app\routers\shop.py:31: [W0212(protected-access), cadastrar_item] Access to a protected member _mapping of a client class
+app\routers\shop.py:38: [W0212(protected-access), listar_loja] Access to a protected member _mapping of a client class
+app\routers\shop.py:122: [W0212(protected-access), atualizar_item] Access to a protected member _mapping of a client class
+app\routers\shop.py:146: [W0212(protected-access), alterar_preco] Access to a protected member _mapping of a client class
+************* Module app.routers.tournament
+app\routers\tournament.py:31: [C0301(line-too-long), ] Line too long (104/100)
+app\routers\tournament.py:90: [C0301(line-too-long), ] Line too long (101/100)
+app\routers\tournament.py:240: [C0301(line-too-long), ] Line too long (104/100)
+app\routers\tournament.py:287: [C0301(line-too-long), ] Line too long (128/100)
+app\routers\tournament.py:357: [C0301(line-too-long), ] Line too long (104/100)
+app\routers\tournament.py:436: [C0301(line-too-long), ] Line too long (103/100)
+app\routers\tournament.py:497: [C0301(line-too-long), ] Line too long (119/100)
+app\routers\tournament.py:554: [C0301(line-too-long), ] Line too long (129/100)
+app\routers\tournament.py:574: [C0301(line-too-long), ] Line too long (118/100)
+app\routers\tournament.py:577: [C0303(trailing-whitespace), ] Trailing whitespace
+app\routers\tournament.py:582: [C0303(trailing-whitespace), ] Trailing whitespace
+app\routers\tournament.py:585: [C0303(trailing-whitespace), ] Trailing whitespace
+app\routers\tournament.py:588: [C0301(line-too-long), ] Line too long (109/100)
+app\routers\tournament.py:591: [C0303(trailing-whitespace), ] Trailing whitespace
+app\routers\tournament.py:594: [C0303(trailing-whitespace), ] Trailing whitespace
+app\routers\tournament.py:599: [C0303(trailing-whitespace), ] Trailing whitespace
+app\routers\tournament.py:607: [C0301(line-too-long), ] Line too long (103/100)
+app\routers\tournament.py:1: [C0114(missing-module-docstring), ] Missing module docstring
+app\routers\tournament.py:50: [R0913(too-many-arguments), _inserir_participante] Too many arguments (9/5)
+app\routers\tournament.py:187: [W0212(protected-access), _montar_detalhes_torneio] Access to a protected member _mapping of a client class
+app\routers\tournament.py:219: [W0212(protected-access), _montar_detalhes_torneio] Access to a protected member _mapping of a client class
+app\routers\tournament.py:240: [C0116(missing-function-docstring), criar_torneio] Missing function or method docstring
+app\routers\tournament.py:240: [R0914(too-many-locals), criar_torneio] Too many local variables (26/15)
+app\routers\tournament.py:400: [W0707(raise-missing-from), criar_torneio] Consider explicitly re-raising using 'except Exception as exc' and 'raise HTTPException(status_code=500, detail='Erro ao criar torneio.') from exc'
+app\routers\tournament.py:240: [R0915(too-many-statements), criar_torneio] Too many statements (53/50)
+app\routers\tournament.py:406: [C0116(missing-function-docstring), listar_torneios] Missing function or method docstring
+app\routers\tournament.py:419: [W0212(protected-access), listar_torneios] Access to a protected member _mapping of a client class
+app\routers\tournament.py:423: [C0116(missing-function-docstring), obter_torneio] Missing function or method docstring
+app\routers\tournament.py:436: [C0116(missing-function-docstring), resolver_partida] Missing function or method docstring
+app\routers\tournament.py:436: [R0912(too-many-branches), resolver_partida] Too many branches (16/12)
+app\routers\tournament.py:601: [W0212(protected-access), renomear_torneio] Access to a protected member _mapping of a client class
+app\routers\tournament.py:605: [C0116(missing-function-docstring), deletar_torneio] Missing function or method docstring
+app\routers\tournament.py:7: [C0411(wrong-import-order), ] standard import "import random" should be placed before "from fastapi import APIRouter, Depends, HTTPException"
+************* Module app.routers.users
+app\routers\users.py:15: [C0303(trailing-whitespace), ] Trailing whitespace
+app\routers\users.py:19: [C0303(trailing-whitespace), ] Trailing whitespace
+app\routers\users.py:29: [C0303(trailing-whitespace), ] Trailing whitespace
+app\routers\users.py:35: [C0303(trailing-whitespace), ] Trailing whitespace
+app\routers\users.py:37: [C0303(trailing-whitespace), ] Trailing whitespace
+app\routers\users.py:44: [C0303(trailing-whitespace), ] Trailing whitespace
+app\routers\users.py:46: [C0301(line-too-long), ] Line too long (102/100)
+app\routers\users.py:54: [C0301(line-too-long), ] Line too long (110/100)
+app\routers\users.py:89: [C0301(line-too-long), ] Line too long (105/100)
+app\routers\users.py:93: [C0301(line-too-long), ] Line too long (104/100)
+app\routers\users.py:95: [C0303(trailing-whitespace), ] Trailing whitespace
+app\routers\users.py:102: [C0303(trailing-whitespace), ] Trailing whitespace
+app\routers\users.py:109: [C0301(line-too-long), ] Line too long (104/100)
+app\routers\users.py:128: [C0304(missing-final-newline), ] Final newline missing
+app\routers\users.py:1: [C0114(missing-module-docstring), ] Missing module docstring
+app\routers\users.py:39: [W0212(protected-access), cadastrar_jogador] Access to a protected member _mapping of a client class
+app\routers\users.py:79: [W0212(protected-access), obter_jogador] Access to a protected member _mapping of a client class
+
+------------------------------------------------------------------
+Your code has been rated at 6.71/10 (previous run: 6.71/10, +0.00)
+

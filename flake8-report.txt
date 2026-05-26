@@ -1,0 +1,328 @@
+app\database.py:5:80: E501 line too long (101 > 79 characters)
+app\database.py:6:80: E501 line too long (82 > 79 characters)
+app\database.py:11:80: E501 line too long (84 > 79 characters)
+app\database.py:15:1: E302 expected 2 blank lines, found 1
+app\database.py:20:19: W292 no newline at end of file
+app\main.py:2:51: E261 at least two spaces before inline comment
+app\main.py:3:80: E501 line too long (82 > 79 characters)
+app\main.py:24:1: E302 expected 2 blank lines, found 1
+app\main.py:26:66: W292 no newline at end of file
+app\models.py:1:4: W292 no newline at end of file
+app\routers\friends.py:1:1: F401 'fastapi.status' imported but unused
+app\routers\friends.py:26:80: E501 line too long (83 > 79 characters)
+app\routers\friends.py:29:1: W293 blank line contains whitespace
+app\routers\friends.py:35:1: W293 blank line contains whitespace
+app\routers\friends.py:38:80: E501 line too long (93 > 79 characters)
+app\routers\friends.py:39:1: W293 blank line contains whitespace
+app\routers\friends.py:41:80: E501 line too long (80 > 79 characters)
+app\routers\friends.py:44:1: W293 blank line contains whitespace
+app\routers\friends.py:47:1: W293 blank line contains whitespace
+app\routers\friends.py:50:31: W291 trailing whitespace
+app\routers\friends.py:52:64: W291 trailing whitespace
+app\routers\friends.py:61:1: W293 blank line contains whitespace
+app\routers\friends.py:63:80: E501 line too long (85 > 79 characters)
+app\routers\friends.py:64:1: W293 blank line contains whitespace
+app\routers\friends.py:67:51: W291 trailing whitespace
+app\routers\friends.py:71:1: W293 blank line contains whitespace
+app\routers\friends.py:76:1: W293 blank line contains whitespace
+app\routers\friends.py:78:1: W293 blank line contains whitespace
+app\routers\friends.py:88:1: W293 blank line contains whitespace
+app\routers\friends.py:90:80: E501 line too long (80 > 79 characters)
+app\routers\friends.py:92:1: W293 blank line contains whitespace
+app\routers\friends.py:95:1: W293 blank line contains whitespace
+app\routers\friends.py:98:15: W291 trailing whitespace
+app\routers\friends.py:112:1: W293 blank line contains whitespace
+app\routers\friends.py:114:1: W293 blank line contains whitespace
+app\routers\friends.py:124:1: W293 blank line contains whitespace
+app\routers\friends.py:126:80: E501 line too long (80 > 79 characters)
+app\routers\friends.py:128:1: W293 blank line contains whitespace
+app\routers\friends.py:131:1: W293 blank line contains whitespace
+app\routers\friends.py:134:15: W291 trailing whitespace
+app\routers\friends.py:144:80: E501 line too long (81 > 79 characters)
+app\routers\friends.py:147:1: W293 blank line contains whitespace
+app\routers\friends.py:149:1: W293 blank line contains whitespace
+app\routers\friends.py:152:80: E501 line too long (80 > 79 characters)
+app\routers\friends.py:157:80: E501 line too long (103 > 79 characters)
+app\routers\friends.py:160:1: W293 blank line contains whitespace
+app\routers\friends.py:163:43: W291 trailing whitespace
+app\routers\friends.py:170:1: W293 blank line contains whitespace
+app\routers\friends.py:173:1: W293 blank line contains whitespace
+app\routers\friends.py:176:23: W291 trailing whitespace
+app\routers\friends.py:177:28: W291 trailing whitespace
+app\routers\friends.py:178:23: W291 trailing whitespace
+app\routers\friends.py:181:1: W293 blank line contains whitespace
+app\routers\friends.py:182:80: E501 line too long (80 > 79 characters)
+app\routers\friends.py:184:1: W293 blank line contains whitespace
+app\routers\friends.py:192:80: E501 line too long (106 > 79 characters)
+app\routers\friends.py:195:1: W293 blank line contains whitespace
+app\routers\friends.py:198:43: W291 trailing whitespace
+app\routers\friends.py:205:1: W293 blank line contains whitespace
+app\routers\friends.py:208:1: W293 blank line contains whitespace
+app\routers\friends.py:211:23: W291 trailing whitespace
+app\routers\friends.py:212:29: W291 trailing whitespace
+app\routers\friends.py:213:23: W291 trailing whitespace
+app\routers\friends.py:216:1: W293 blank line contains whitespace
+app\routers\friends.py:217:80: E501 line too long (80 > 79 characters)
+app\routers\friends.py:219:1: W293 blank line contains whitespace
+app\routers\friends.py:227:80: E501 line too long (96 > 79 characters)
+app\routers\friends.py:230:1: W293 blank line contains whitespace
+app\routers\friends.py:233:53: W291 trailing whitespace
+app\routers\friends.py:240:1: W293 blank line contains whitespace
+app\routers\friends.py:243:1: W293 blank line contains whitespace
+app\routers\friends.py:246:23: W291 trailing whitespace
+app\routers\friends.py:247:26: W291 trailing whitespace
+app\routers\friends.py:250:1: W293 blank line contains whitespace
+app\routers\friends.py:253:1: W293 blank line contains whitespace
+app\routers\friends.py:258:80: E501 line too long (102 > 79 characters)
+app\routers\friends.py:260:1: W293 blank line contains whitespace
+app\routers\friends.py:264:1: W293 blank line contains whitespace
+app\routers\friends.py:267:15: W291 trailing whitespace
+app\routers\friends.py:277:1: W293 blank line contains whitespace
+app\routers\friends.py:281:1: W293 blank line contains whitespace
+app\routers\friends.py:283:80: E501 line too long (97 > 79 characters)
+app\routers\friends.py:284:1: W293 blank line contains whitespace
+app\routers\game.py:8:1: E302 expected 2 blank lines, found 1
+app\routers\game.py:11:1: W293 blank line contains whitespace
+app\routers\game.py:13:80: E501 line too long (109 > 79 characters)
+app\routers\game.py:28:1: W293 blank line contains whitespace
+app\routers\game.py:32:80: E501 line too long (82 > 79 characters)
+app\routers\game.py:33:80: E501 line too long (80 > 79 characters)
+app\routers\game.py:33:81: W291 trailing whitespace
+app\routers\game.py:35:1: W293 blank line contains whitespace
+app\routers\game.py:37:67: W291 trailing whitespace
+app\routers\game.py:40:1: W293 blank line contains whitespace
+app\routers\game.py:42:80: E501 line too long (121 > 79 characters)
+app\routers\game.py:44:1: E302 expected 2 blank lines, found 1
+app\routers\game.py:46:80: E501 line too long (85 > 79 characters)
+app\routers\game.py:48:80: E501 line too long (109 > 79 characters)
+app\routers\game.py:90:1: E302 expected 2 blank lines, found 1
+app\routers\game.py:93:71: W291 trailing whitespace
+app\routers\game.py:95:80: E501 line too long (87 > 79 characters)
+app\routers\game.py:96:80: E501 line too long (89 > 79 characters)
+app\routers\game.py:97:80: E501 line too long (91 > 79 characters)
+app\routers\game.py:98:80: E501 line too long (91 > 79 characters)
+app\routers\game.py:99:80: E501 line too long (147 > 79 characters)
+app\routers\game.py:101:59: W292 no newline at end of file
+app\routers\inventory.py:8:1: E302 expected 2 blank lines, found 1
+app\routers\inventory.py:11:1: W293 blank line contains whitespace
+app\routers\inventory.py:12:80: E501 line too long (105 > 79 characters)
+app\routers\inventory.py:13:80: E501 line too long (119 > 79 characters)
+app\routers\inventory.py:16:80: E501 line too long (86 > 79 characters)
+app\routers\inventory.py:22:80: E501 line too long (125 > 79 characters)
+app\routers\inventory.py:23:80: E501 line too long (133 > 79 characters)
+app\routers\inventory.py:24:80: E501 line too long (129 > 79 characters)
+app\routers\inventory.py:24:130: W291 trailing whitespace
+app\routers\inventory.py:25:80: E501 line too long (92 > 79 characters)
+app\routers\inventory.py:27:5: F841 local variable 'e' is assigned to but never used
+app\routers\inventory.py:29:80: E501 line too long (99 > 79 characters)
+app\routers\inventory.py:33:1: E302 expected 2 blank lines, found 1
+app\routers\inventory.py:37:80: E501 line too long (80 > 79 characters)
+app\routers\inventory.py:37:81: W291 trailing whitespace
+app\routers\inventory.py:43:45: W292 no newline at end of file
+app\routers\pokemon.py:14:1: E302 expected 2 blank lines, found 1
+app\routers\pokemon.py:17:80: E501 line too long (82 > 79 characters)
+app\routers\pokemon.py:19:80: E501 line too long (101 > 79 characters)
+app\routers\pokemon.py:22:1: E302 expected 2 blank lines, found 1
+app\routers\pokemon.py:25:1: W293 blank line contains whitespace
+app\routers\pokemon.py:26:80: E501 line too long (105 > 79 characters)
+app\routers\pokemon.py:28:80: E501 line too long (103 > 79 characters)
+app\routers\pokemon.py:31:1: W293 blank line contains whitespace
+app\routers\pokemon.py:34:80: E501 line too long (86 > 79 characters)
+app\routers\pokemon.py:36:80: E501 line too long (94 > 79 characters)
+app\routers\pokemon.py:37:1: W293 blank line contains whitespace
+app\routers\pokemon.py:43:80: E501 line too long (122 > 79 characters)
+app\routers\pokemon.py:45:80: E501 line too long (87 > 79 characters)
+app\routers\pokemon.py:48:80: E501 line too long (132 > 79 characters)
+app\routers\pokemon.py:49:1: W293 blank line contains whitespace
+app\routers\pokemon.py:50:80: E501 line too long (129 > 79 characters)
+app\routers\pokemon.py:50:130: W291 trailing whitespace
+app\routers\pokemon.py:51:80: E501 line too long (89 > 79 characters)
+app\routers\pokemon.py:62:1: E302 expected 2 blank lines, found 1
+app\routers\pokemon.py:66:80: E501 line too long (92 > 79 characters)
+app\routers\pokemon.py:103:1: E302 expected 2 blank lines, found 1
+app\routers\pokemon.py:105:80: E501 line too long (87 > 79 characters)
+app\routers\pokemon.py:107:80: E501 line too long (90 > 79 characters)
+app\routers\pokemon.py:115:1: E302 expected 2 blank lines, found 1
+app\routers\pokemon.py:116:80: E501 line too long (99 > 79 characters)
+app\routers\pokemon.py:118:80: E501 line too long (119 > 79 characters)
+app\routers\pokemon.py:123:80: E501 line too long (101 > 79 characters)
+app\routers\pokemon.py:127:80: E501 line too long (87 > 79 characters)
+app\routers\pokemon.py:140:1: E302 expected 2 blank lines, found 1
+app\routers\pokemon.py:141:80: E501 line too long (116 > 79 characters)
+app\routers\pokemon.py:144:80: E501 line too long (110 > 79 characters)
+app\routers\pokemon.py:151:80: E501 line too long (128 > 79 characters)
+app\routers\pokemon.py:155:80: E501 line too long (87 > 79 characters)
+app\routers\pokemon.py:158:80: E501 line too long (92 > 79 characters)
+app\routers\pokemon.py:164:1: E302 expected 2 blank lines, found 1
+app\routers\pokemon.py:167:80: E501 line too long (110 > 79 characters)
+app\routers\pokemon.py:173:80: E501 line too long (109 > 79 characters)
+app\routers\pokemon.py:174:80: E501 line too long (90 > 79 characters)
+app\routers\pokemon.py:178:1: E302 expected 2 blank lines, found 1
+app\routers\pokemon.py:186:80: E501 line too long (110 > 79 characters)
+app\routers\pokemon.py:196:80: E501 line too long (80 > 79 characters)
+app\routers\pokemon.py:207:80: E501 line too long (92 > 79 characters)
+app\routers\pokemon.py:211:80: E501 line too long (87 > 79 characters)
+app\routers\pokemon.py:214:80: E501 line too long (82 > 79 characters)
+app\routers\pokemon.py:220:1: E302 expected 2 blank lines, found 1
+app\routers\pokemon.py:221:80: E501 line too long (86 > 79 characters)
+app\routers\pokemon.py:226:80: E501 line too long (80 > 79 characters)
+app\routers\pokemon.py:239:57: W292 no newline at end of file
+app\routers\shop.py:9:1: E302 expected 2 blank lines, found 1
+app\routers\shop.py:10:80: E501 line too long (93 > 79 characters)
+app\routers\shop.py:12:1: W293 blank line contains whitespace
+app\routers\shop.py:14:80: E501 line too long (108 > 79 characters)
+app\routers\shop.py:15:1: W293 blank line contains whitespace
+app\routers\shop.py:17:80: E501 line too long (112 > 79 characters)
+app\routers\shop.py:21:80: E501 line too long (90 > 79 characters)
+app\routers\shop.py:21:91: W291 trailing whitespace
+app\routers\shop.py:22:80: E501 line too long (87 > 79 characters)
+app\routers\shop.py:27:80: E501 line too long (118 > 79 characters)
+app\routers\shop.py:33:1: E302 expected 2 blank lines, found 1
+app\routers\shop.py:40:1: E302 expected 2 blank lines, found 1
+app\routers\shop.py:41:80: E501 line too long (107 > 79 characters)
+app\routers\shop.py:44:80: E501 line too long (108 > 79 characters)
+app\routers\shop.py:46:80: E501 line too long (113 > 79 characters)
+app\routers\shop.py:51:80: E501 line too long (91 > 79 characters)
+app\routers\shop.py:57:80: E501 line too long (85 > 79 characters)
+app\routers\shop.py:60:80: E501 line too long (93 > 79 characters)
+app\routers\shop.py:65:80: E501 line too long (91 > 79 characters)
+app\routers\shop.py:70:80: E501 line too long (95 > 79 characters)
+app\routers\shop.py:85:80: E501 line too long (81 > 79 characters)
+app\routers\shop.py:97:80: E501 line too long (85 > 79 characters)
+app\routers\shop.py:118:80: E501 line too long (119 > 79 characters)
+app\routers\shop.py:124:1: E302 expected 2 blank lines, found 1
+app\routers\shop.py:125:80: E501 line too long (99 > 79 characters)
+app\routers\shop.py:127:1: W293 blank line contains whitespace
+app\routers\shop.py:129:80: E501 line too long (108 > 79 characters)
+app\routers\shop.py:130:1: W293 blank line contains whitespace
+app\routers\shop.py:132:80: E501 line too long (126 > 79 characters)
+app\routers\shop.py:136:80: E501 line too long (85 > 79 characters)
+app\routers\shop.py:137:1: W293 blank line contains whitespace
+app\routers\shop.py:139:80: E501 line too long (91 > 79 characters)
+app\routers\shop.py:140:80: E501 line too long (82 > 79 characters)
+app\routers\shop.py:142:1: W293 blank line contains whitespace
+app\routers\shop.py:145:1: W293 blank line contains whitespace
+app\routers\shop.py:148:1: E302 expected 2 blank lines, found 1
+app\routers\shop.py:152:80: E501 line too long (108 > 79 characters)
+app\routers\shop.py:154:80: E501 line too long (114 > 79 characters)
+app\routers\shop.py:162:80: E501 line too long (97 > 79 characters)
+app\routers\shop.py:170:80: E501 line too long (120 > 79 characters)
+app\routers\shop.py:175:72: W292 no newline at end of file
+app\routers\tournament.py:29:80: E501 line too long (85 > 79 characters)
+app\routers\tournament.py:31:80: E501 line too long (104 > 79 characters)
+app\routers\tournament.py:38:80: E501 line too long (90 > 79 characters)
+app\routers\tournament.py:72:80: E501 line too long (109 > 79 characters)
+app\routers\tournament.py:90:80: E501 line too long (101 > 79 characters)
+app\routers\tournament.py:133:80: E501 line too long (81 > 79 characters)
+app\routers\tournament.py:137:80: E501 line too long (89 > 79 characters)
+app\routers\tournament.py:154:80: E501 line too long (123 > 79 characters)
+app\routers\tournament.py:211:80: E501 line too long (93 > 79 characters)
+app\routers\tournament.py:240:80: E501 line too long (104 > 79 characters)
+app\routers\tournament.py:242:80: E501 line too long (83 > 79 characters)
+app\routers\tournament.py:248:80: E501 line too long (99 > 79 characters)
+app\routers\tournament.py:255:80: E501 line too long (97 > 79 characters)
+app\routers\tournament.py:279:80: E501 line too long (95 > 79 characters)
+app\routers\tournament.py:287:80: E501 line too long (128 > 79 characters)
+app\routers\tournament.py:288:80: E501 line too long (80 > 79 characters)
+app\routers\tournament.py:293:80: E501 line too long (89 > 79 characters)
+app\routers\tournament.py:294:80: E501 line too long (89 > 79 characters)
+app\routers\tournament.py:324:80: E501 line too long (81 > 79 characters)
+app\routers\tournament.py:335:80: E501 line too long (80 > 79 characters)
+app\routers\tournament.py:347:80: E501 line too long (90 > 79 characters)
+app\routers\tournament.py:351:80: E501 line too long (93 > 79 characters)
+app\routers\tournament.py:357:80: E501 line too long (104 > 79 characters)
+app\routers\tournament.py:373:80: E501 line too long (84 > 79 characters)
+app\routers\tournament.py:385:80: E501 line too long (94 > 79 characters)
+app\routers\tournament.py:388:80: E501 line too long (92 > 79 characters)
+app\routers\tournament.py:390:80: E501 line too long (87 > 79 characters)
+app\routers\tournament.py:391:80: E501 line too long (81 > 79 characters)
+app\routers\tournament.py:409:80: E501 line too long (111 > 79 characters)
+app\routers\tournament.py:412:80: E501 line too long (83 > 79 characters)
+app\routers\tournament.py:423:80: E501 line too long (83 > 79 characters)
+app\routers\tournament.py:425:80: E501 line too long (83 > 79 characters)
+app\routers\tournament.py:436:80: E501 line too long (103 > 79 characters)
+app\routers\tournament.py:450:80: E501 line too long (81 > 79 characters)
+app\routers\tournament.py:454:80: E501 line too long (93 > 79 characters)
+app\routers\tournament.py:465:80: E501 line too long (80 > 79 characters)
+app\routers\tournament.py:468:80: E501 line too long (85 > 79 characters)
+app\routers\tournament.py:482:80: E501 line too long (88 > 79 characters)
+app\routers\tournament.py:483:80: E501 line too long (88 > 79 characters)
+app\routers\tournament.py:494:80: E501 line too long (83 > 79 characters)
+app\routers\tournament.py:497:80: E501 line too long (119 > 79 characters)
+app\routers\tournament.py:512:80: E501 line too long (102 > 79 characters)
+app\routers\tournament.py:526:80: E501 line too long (102 > 79 characters)
+app\routers\tournament.py:550:80: E501 line too long (98 > 79 characters)
+app\routers\tournament.py:554:80: E501 line too long (129 > 79 characters)
+app\routers\tournament.py:555:80: E501 line too long (89 > 79 characters)
+app\routers\tournament.py:567:80: E501 line too long (93 > 79 characters)
+app\routers\tournament.py:574:80: E501 line too long (118 > 79 characters)
+app\routers\tournament.py:577:1: W293 blank line contains whitespace
+app\routers\tournament.py:579:80: E501 line too long (91 > 79 characters)
+app\routers\tournament.py:582:1: W293 blank line contains whitespace
+app\routers\tournament.py:585:1: W293 blank line contains whitespace
+app\routers\tournament.py:588:80: E501 line too long (109 > 79 characters)
+app\routers\tournament.py:589:80: E501 line too long (82 > 79 characters)
+app\routers\tournament.py:591:1: W293 blank line contains whitespace
+app\routers\tournament.py:593:80: E501 line too long (93 > 79 characters)
+app\routers\tournament.py:594:1: W293 blank line contains whitespace
+app\routers\tournament.py:596:80: E501 line too long (90 > 79 characters)
+app\routers\tournament.py:599:1: W293 blank line contains whitespace
+app\routers\tournament.py:605:80: E501 line too long (85 > 79 characters)
+app\routers\tournament.py:607:80: E501 line too long (103 > 79 characters)
+app\routers\tournament.py:615:80: E501 line too long (91 > 79 characters)
+app\routers\users.py:12:1: E302 expected 2 blank lines, found 1
+app\routers\users.py:13:80: E501 line too long (85 > 79 characters)
+app\routers\users.py:15:1: W293 blank line contains whitespace
+app\routers\users.py:19:1: W293 blank line contains whitespace
+app\routers\users.py:23:80: E501 line too long (88 > 79 characters)
+app\routers\users.py:25:54: W291 trailing whitespace
+app\routers\users.py:26:39: W291 trailing whitespace
+app\routers\users.py:29:1: W293 blank line contains whitespace
+app\routers\users.py:33:31: E261 at least two spaces before inline comment
+app\routers\users.py:35:1: W293 blank line contains whitespace
+app\routers\users.py:37:1: W293 blank line contains whitespace
+app\routers\users.py:41:1: E302 expected 2 blank lines, found 1
+app\routers\users.py:42:80: E501 line too long (89 > 79 characters)
+app\routers\users.py:44:1: W293 blank line contains whitespace
+app\routers\users.py:46:80: E501 line too long (102 > 79 characters)
+app\routers\users.py:54:80: E501 line too long (110 > 79 characters)
+app\routers\users.py:59:42: W291 trailing whitespace
+app\routers\users.py:60:34: W291 trailing whitespace
+app\routers\users.py:61:80: E501 line too long (87 > 79 characters)
+app\routers\users.py:65:1: E302 expected 2 blank lines, found 1
+app\routers\users.py:81:1: E302 expected 2 blank lines, found 1
+app\routers\users.py:82:80: E501 line too long (100 > 79 characters)
+app\routers\users.py:85:80: E501 line too long (80 > 79 characters)
+app\routers\users.py:87:80: E501 line too long (86 > 79 characters)
+app\routers\users.py:89:80: E501 line too long (105 > 79 characters)
+app\routers\users.py:93:80: E501 line too long (104 > 79 characters)
+app\routers\users.py:95:1: W293 blank line contains whitespace
+app\routers\users.py:97:23: W291 trailing whitespace
+app\routers\users.py:98:43: W291 trailing whitespace
+app\routers\users.py:102:1: W293 blank line contains whitespace
+app\routers\users.py:103:80: E501 line too long (96 > 79 characters)
+app\routers\users.py:109:80: E501 line too long (104 > 79 characters)
+app\routers\users.py:111:1: E302 expected 2 blank lines, found 1
+app\routers\users.py:116:80: E501 line too long (81 > 79 characters)
+app\routers\users.py:124:80: E501 line too long (89 > 79 characters)
+app\routers\users.py:128:55: W292 no newline at end of file
+app\schemas.py:8:1: E302 expected 2 blank lines, found 1
+app\schemas.py:11:15: E261 at least two spaces before inline comment
+app\schemas.py:21:1: E302 expected 2 blank lines, found 1
+app\schemas.py:25:1: E302 expected 2 blank lines, found 1
+app\schemas.py:28:1: E302 expected 2 blank lines, found 1
+app\schemas.py:41:1: E302 expected 2 blank lines, found 1
+app\schemas.py:50:1: E302 expected 2 blank lines, found 1
+app\schemas.py:59:1: E302 expected 2 blank lines, found 1
+app\schemas.py:62:1: W293 blank line contains whitespace
+app\schemas.py:69:1: E302 expected 2 blank lines, found 1
+app\schemas.py:83:1: E302 expected 2 blank lines, found 1
+app\schemas.py:86:1: E302 expected 2 blank lines, found 1
+app\schemas.py:89:1: E302 expected 2 blank lines, found 1
+app\schemas.py:95:1: E302 expected 2 blank lines, found 1
+app\schemas.py:99:1: E302 expected 2 blank lines, found 1
+app\schemas.py:105:1: E302 expected 2 blank lines, found 1
+app\schemas.py:115:1: E302 expected 2 blank lines, found 1
+app\schemas.py:124:1: E302 expected 2 blank lines, found 1
+app\schemas.py:138:1: E302 expected 2 blank lines, found 1
+app\schemas.py:143:31: W292 no newline at end of file

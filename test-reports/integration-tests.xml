@@ -1,0 +1,1126 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites><testsuite name="pytest" errors="0" failures="45" skipped="0" tests="77" time="13.586" timestamp="2026-05-26T11:00:15.180762" hostname="DESKTOP-9QMV1N5"><testcase classname="tests.integration.test_friends_integration.TestAdicionarAmigo" name="test_adicionar_amigo_bilateral_http_201" time="0.037"><failure message="assert 404 == 201&#10; +  where 404 = &lt;Response [404 Not Found]&gt;.status_code">tests\integration\test_friends_integration.py:48: in test_adicionar_amigo_bilateral_http_201
+    assert response.status_code == 201
+E   assert 404 == 201
+E    +  where 404 = &lt;Response [404 Not Found]&gt;.status_code</failure></testcase><testcase classname="tests.integration.test_friends_integration.TestAdicionarAmigo" name="test_adicionar_amigo_ja_existe_http_400" time="0.011"><failure message="sqlalchemy.exc.OperationalError: (sqlite3.OperationalError) table amizade has no column named jogador_id&#10;[SQL: &#10;                INSERT INTO amizade (jogador_id, amigo_id, ativo)&#10;                VALUES (?, ?, 1)&#10;            ]&#10;[parameters: (1, 2)]&#10;(Background on this error at: https://sqlalche.me/e/20/e3q8)">..\.venv\Lib\site-packages\sqlalchemy\engine\base.py:1969: in _exec_single_context
+    self.dialect.do_execute(
+..\.venv\Lib\site-packages\sqlalchemy\engine\default.py:922: in do_execute
+    cursor.execute(statement, parameters)
+E   sqlite3.OperationalError: table amizade has no column named jogador_id
+
+The above exception was the direct cause of the following exception:
+tests\integration\test_friends_integration.py:98: in test_adicionar_amigo_ja_existe_http_400
+    db_session.execute(
+..\.venv\Lib\site-packages\sqlalchemy\orm\session.py:2308: in execute
+    return self._execute_internal(
+..\.venv\Lib\site-packages\sqlalchemy\orm\session.py:2199: in _execute_internal
+    result = conn.execute(
+..\.venv\Lib\site-packages\sqlalchemy\engine\base.py:1416: in execute
+    return meth(
+..\.venv\Lib\site-packages\sqlalchemy\sql\elements.py:516: in _execute_on_connection
+    return connection._execute_clauseelement(
+..\.venv\Lib\site-packages\sqlalchemy\engine\base.py:1639: in _execute_clauseelement
+    ret = self._execute_context(
+..\.venv\Lib\site-packages\sqlalchemy\engine\base.py:1848: in _execute_context
+    return self._exec_single_context(
+..\.venv\Lib\site-packages\sqlalchemy\engine\base.py:1988: in _exec_single_context
+    self._handle_dbapi_exception(
+..\.venv\Lib\site-packages\sqlalchemy\engine\base.py:2343: in _handle_dbapi_exception
+    raise sqlalchemy_exception.with_traceback(exc_info[2]) from e
+..\.venv\Lib\site-packages\sqlalchemy\engine\base.py:1969: in _exec_single_context
+    self.dialect.do_execute(
+..\.venv\Lib\site-packages\sqlalchemy\engine\default.py:922: in do_execute
+    cursor.execute(statement, parameters)
+E   sqlalchemy.exc.OperationalError: (sqlite3.OperationalError) table amizade has no column named jogador_id
+E   [SQL: 
+E                   INSERT INTO amizade (jogador_id, amigo_id, ativo)
+E                   VALUES (?, ?, 1)
+E               ]
+E   [parameters: (1, 2)]
+E   (Background on this error at: https://sqlalche.me/e/20/e3q8)</failure></testcase><testcase classname="tests.integration.test_friends_integration.TestAdicionarAmigo" name="test_adicionar_jogador_inexistente_http_404" time="0.012" /><testcase classname="tests.integration.test_friends_integration.TestObterAmigos" name="test_obter_amigos_vazio_http_200" time="0.014"><failure message="sqlalchemy.exc.OperationalError: (sqlite3.OperationalError) no such column: a.favorito&#10;[SQL: &#10;        SELECT &#10;            a.id,&#10;            j.id as amigo_id,&#10;            j.nome,&#10;            j.nome_exibicao,&#10;            j.email,&#10;            j.saldo,&#10;            a.favorito,&#10;            a.data_amizade&#10;        FROM amizade a&#10;        JOIN jogador j ON a.amigo_id = j.id&#10;        WHERE a.jogador_id = ? AND a.ativo = TRUE&#10;        ORDER BY a.favorito DESC, a.data_amizade DESC&#10;    ]&#10;[parameters: (1,)]&#10;(Background on this error at: https://sqlalche.me/e/20/e3q8)">..\.venv\Lib\site-packages\sqlalchemy\engine\base.py:1969: in _exec_single_context
+    self.dialect.do_execute(
+..\.venv\Lib\site-packages\sqlalchemy\engine\default.py:922: in do_execute
+    cursor.execute(statement, parameters)
+E   sqlite3.OperationalError: no such column: a.favorito
+
+The above exception was the direct cause of the following exception:
+tests\integration\test_friends_integration.py:139: in test_obter_amigos_vazio_http_200
+    response = client.get(f"/amigos/{jogador_id}")
+..\.venv\Lib\site-packages\starlette\testclient.py:499: in get
+    return super().get(
+..\.venv\Lib\site-packages\httpx\_client.py:1041: in get
+    return self.request(
+..\.venv\Lib\site-packages\starlette\testclient.py:465: in request
+    return super().request(
+..\.venv\Lib\site-packages\httpx\_client.py:814: in request
+    return self.send(request, auth=auth, follow_redirects=follow_redirects)
+..\.venv\Lib\site-packages\httpx\_client.py:901: in send
+    response = self._send_handling_auth(
+..\.venv\Lib\site-packages\httpx\_client.py:929: in _send_handling_auth
+    response = self._send_handling_redirects(
+..\.venv\Lib\site-packages\httpx\_client.py:966: in _send_handling_redirects
+    response = self._send_single_request(request)
+..\.venv\Lib\site-packages\httpx\_client.py:1002: in _send_single_request
+    response = transport.handle_request(request)
+..\.venv\Lib\site-packages\starlette\testclient.py:342: in handle_request
+    raise exc
+..\.venv\Lib\site-packages\starlette\testclient.py:339: in handle_request
+    portal.call(self.app, scope, receive, send)
+..\.venv\Lib\site-packages\anyio\from_thread.py:277: in call
+    return cast(T_Retval, self.start_task_soon(func, *args).result())
+..\..\..\AppData\Local\Programs\Python\Python311\Lib\concurrent\futures\_base.py:456: in result
+    return self.__get_result()
+..\..\..\AppData\Local\Programs\Python\Python311\Lib\concurrent\futures\_base.py:401: in __get_result
+    raise self._exception
+..\.venv\Lib\site-packages\anyio\from_thread.py:217: in _call_func
+    retval = await retval
+..\.venv\Lib\site-packages\fastapi\applications.py:1106: in __call__
+    await super().__call__(scope, receive, send)
+..\.venv\Lib\site-packages\starlette\applications.py:122: in __call__
+    await self.middleware_stack(scope, receive, send)
+..\.venv\Lib\site-packages\starlette\middleware\errors.py:184: in __call__
+    raise exc
+..\.venv\Lib\site-packages\starlette\middleware\errors.py:162: in __call__
+    await self.app(scope, receive, _send)
+..\.venv\Lib\site-packages\starlette\middleware\cors.py:83: in __call__
+    await self.app(scope, receive, send)
+..\.venv\Lib\site-packages\starlette\middleware\exceptions.py:79: in __call__
+    raise exc
+..\.venv\Lib\site-packages\starlette\middleware\exceptions.py:68: in __call__
+    await self.app(scope, receive, sender)
+..\.venv\Lib\site-packages\fastapi\middleware\asyncexitstack.py:20: in __call__
+    raise e
+..\.venv\Lib\site-packages\fastapi\middleware\asyncexitstack.py:17: in __call__
+    await self.app(scope, receive, send)
+..\.venv\Lib\site-packages\starlette\routing.py:718: in __call__
+    await route.handle(scope, receive, send)
+..\.venv\Lib\site-packages\starlette\routing.py:276: in handle
+    await self.app(scope, receive, send)
+..\.venv\Lib\site-packages\starlette\routing.py:66: in app
+    response = await func(request)
+..\.venv\Lib\site-packages\fastapi\routing.py:274: in app
+    raw_response = await run_endpoint_function(
+..\.venv\Lib\site-packages\fastapi\routing.py:193: in run_endpoint_function
+    return await run_in_threadpool(dependant.call, **values)
+..\.venv\Lib\site-packages\starlette\concurrency.py:41: in run_in_threadpool
+    return await anyio.to_thread.run_sync(func, *args)
+..\.venv\Lib\site-packages\anyio\to_thread.py:33: in run_sync
+    return await get_asynclib().run_sync_in_worker_thread(
+..\.venv\Lib\site-packages\anyio\_backends\_asyncio.py:877: in run_sync_in_worker_thread
+    return await future
+..\.venv\Lib\site-packages\anyio\_backends\_asyncio.py:807: in run
+    result = context.run(func, *args)
+app\routers\friends.py:113: in obter_amigos
+    amigos = db.execute(query, {"jogador_id": jogador_id}).fetchall()
+..\.venv\Lib\site-packages\sqlalchemy\orm\session.py:2308: in execute
+    return self._execute_internal(
+..\.venv\Lib\site-packages\sqlalchemy\orm\session.py:2199: in _execute_internal
+    result = conn.execute(
+..\.venv\Lib\site-packages\sqlalchemy\engine\base.py:1416: in execute
+    return meth(
+..\.venv\Lib\site-packages\sqlalchemy\sql\elements.py:516: in _execute_on_connection
+    return connection._execute_clauseelement(
+..\.venv\Lib\site-packages\sqlalchemy\engine\base.py:1639: in _execute_clauseelement
+    ret = self._execute_context(
+..\.venv\Lib\site-packages\sqlalchemy\engine\base.py:1848: in _execute_context
+    return self._exec_single_context(
+..\.venv\Lib\site-packages\sqlalchemy\engine\base.py:1988: in _exec_single_context
+    self._handle_dbapi_exception(
+..\.venv\Lib\site-packages\sqlalchemy\engine\base.py:2343: in _handle_dbapi_exception
+    raise sqlalchemy_exception.with_traceback(exc_info[2]) from e
+..\.venv\Lib\site-packages\sqlalchemy\engine\base.py:1969: in _exec_single_context
+    self.dialect.do_execute(
+..\.venv\Lib\site-packages\sqlalchemy\engine\default.py:922: in do_execute
+    cursor.execute(statement, parameters)
+E   sqlalchemy.exc.OperationalError: (sqlite3.OperationalError) no such column: a.favorito
+E   [SQL: 
+E           SELECT 
+E               a.id,
+E               j.id as amigo_id,
+E               j.nome,
+E               j.nome_exibicao,
+E               j.email,
+E               j.saldo,
+E               a.favorito,
+E               a.data_amizade
+E           FROM amizade a
+E           JOIN jogador j ON a.amigo_id = j.id
+E           WHERE a.jogador_id = ? AND a.ativo = TRUE
+E           ORDER BY a.favorito DESC, a.data_amizade DESC
+E       ]
+E   [parameters: (1,)]
+E   (Background on this error at: https://sqlalche.me/e/20/e3q8)</failure></testcase><testcase classname="tests.integration.test_friends_integration.TestObterAmigos" name="test_obter_amigos_com_dados_http_200" time="0.012"><failure message="sqlalchemy.exc.OperationalError: (sqlite3.OperationalError) table amizade has no column named jogador_id&#10;[SQL: &#10;                INSERT INTO amizade (jogador_id, amigo_id, ativo)&#10;                VALUES (?, ?, 1)&#10;            ]&#10;[parameters: (1, 2)]&#10;(Background on this error at: https://sqlalche.me/e/20/e3q8)">..\.venv\Lib\site-packages\sqlalchemy\engine\base.py:1969: in _exec_single_context
+    self.dialect.do_execute(
+..\.venv\Lib\site-packages\sqlalchemy\engine\default.py:922: in do_execute
+    cursor.execute(statement, parameters)
+E   sqlite3.OperationalError: table amizade has no column named jogador_id
+
+The above exception was the direct cause of the following exception:
+tests\integration\test_friends_integration.py:177: in test_obter_amigos_com_dados_http_200
+    db_session.execute(
+..\.venv\Lib\site-packages\sqlalchemy\orm\session.py:2308: in execute
+    return self._execute_internal(
+..\.venv\Lib\site-packages\sqlalchemy\orm\session.py:2199: in _execute_internal
+    result = conn.execute(
+..\.venv\Lib\site-packages\sqlalchemy\engine\base.py:1416: in execute
+    return meth(
+..\.venv\Lib\site-packages\sqlalchemy\sql\elements.py:516: in _execute_on_connection
+    return connection._execute_clauseelement(
+..\.venv\Lib\site-packages\sqlalchemy\engine\base.py:1639: in _execute_clauseelement
+    ret = self._execute_context(
+..\.venv\Lib\site-packages\sqlalchemy\engine\base.py:1848: in _execute_context
+    return self._exec_single_context(
+..\.venv\Lib\site-packages\sqlalchemy\engine\base.py:1988: in _exec_single_context
+    self._handle_dbapi_exception(
+..\.venv\Lib\site-packages\sqlalchemy\engine\base.py:2343: in _handle_dbapi_exception
+    raise sqlalchemy_exception.with_traceback(exc_info[2]) from e
+..\.venv\Lib\site-packages\sqlalchemy\engine\base.py:1969: in _exec_single_context
+    self.dialect.do_execute(
+..\.venv\Lib\site-packages\sqlalchemy\engine\default.py:922: in do_execute
+    cursor.execute(statement, parameters)
+E   sqlalchemy.exc.OperationalError: (sqlite3.OperationalError) table amizade has no column named jogador_id
+E   [SQL: 
+E                   INSERT INTO amizade (jogador_id, amigo_id, ativo)
+E                   VALUES (?, ?, 1)
+E               ]
+E   [parameters: (1, 2)]
+E   (Background on this error at: https://sqlalche.me/e/20/e3q8)</failure></testcase><testcase classname="tests.integration.test_friends_integration.TestObterAmigosFavoritos" name="test_obter_amigos_favoritos_vazio_http_200" time="0.013"><failure message="sqlalchemy.exc.OperationalError: (sqlite3.OperationalError) no such column: a.jogador_id&#10;[SQL: &#10;        SELECT &#10;            a.id,&#10;            j.id as amigo_id,&#10;            j.nome,&#10;            j.nome_exibicao,&#10;            j.email,&#10;            j.saldo,&#10;            a.data_amizade&#10;        FROM amizade a&#10;        JOIN jogador j ON a.amigo_id = j.id&#10;        WHERE a.jogador_id = ? AND a.ativo = TRUE AND a.favorito = TRUE&#10;        ORDER BY a.data_amizade DESC&#10;    ]&#10;[parameters: (1,)]&#10;(Background on this error at: https://sqlalche.me/e/20/e3q8)">..\.venv\Lib\site-packages\sqlalchemy\engine\base.py:1969: in _exec_single_context
+    self.dialect.do_execute(
+..\.venv\Lib\site-packages\sqlalchemy\engine\default.py:922: in do_execute
+    cursor.execute(statement, parameters)
+E   sqlite3.OperationalError: no such column: a.jogador_id
+
+The above exception was the direct cause of the following exception:
+tests\integration\test_friends_integration.py:221: in test_obter_amigos_favoritos_vazio_http_200
+    response = client.get(f"/amigos/{jogador_id}/favoritos")
+..\.venv\Lib\site-packages\starlette\testclient.py:499: in get
+    return super().get(
+..\.venv\Lib\site-packages\httpx\_client.py:1041: in get
+    return self.request(
+..\.venv\Lib\site-packages\starlette\testclient.py:465: in request
+    return super().request(
+..\.venv\Lib\site-packages\httpx\_client.py:814: in request
+    return self.send(request, auth=auth, follow_redirects=follow_redirects)
+..\.venv\Lib\site-packages\httpx\_client.py:901: in send
+    response = self._send_handling_auth(
+..\.venv\Lib\site-packages\httpx\_client.py:929: in _send_handling_auth
+    response = self._send_handling_redirects(
+..\.venv\Lib\site-packages\httpx\_client.py:966: in _send_handling_redirects
+    response = self._send_single_request(request)
+..\.venv\Lib\site-packages\httpx\_client.py:1002: in _send_single_request
+    response = transport.handle_request(request)
+..\.venv\Lib\site-packages\starlette\testclient.py:342: in handle_request
+    raise exc
+..\.venv\Lib\site-packages\starlette\testclient.py:339: in handle_request
+    portal.call(self.app, scope, receive, send)
+..\.venv\Lib\site-packages\anyio\from_thread.py:277: in call
+    return cast(T_Retval, self.start_task_soon(func, *args).result())
+..\..\..\AppData\Local\Programs\Python\Python311\Lib\concurrent\futures\_base.py:456: in result
+    return self.__get_result()
+..\..\..\AppData\Local\Programs\Python\Python311\Lib\concurrent\futures\_base.py:401: in __get_result
+    raise self._exception
+..\.venv\Lib\site-packages\anyio\from_thread.py:217: in _call_func
+    retval = await retval
+..\.venv\Lib\site-packages\fastapi\applications.py:1106: in __call__
+    await super().__call__(scope, receive, send)
+..\.venv\Lib\site-packages\starlette\applications.py:122: in __call__
+    await self.middleware_stack(scope, receive, send)
+..\.venv\Lib\site-packages\starlette\middleware\errors.py:184: in __call__
+    raise exc
+..\.venv\Lib\site-packages\starlette\middleware\errors.py:162: in __call__
+    await self.app(scope, receive, _send)
+..\.venv\Lib\site-packages\starlette\middleware\cors.py:83: in __call__
+    await self.app(scope, receive, send)
+..\.venv\Lib\site-packages\starlette\middleware\exceptions.py:79: in __call__
+    raise exc
+..\.venv\Lib\site-packages\starlette\middleware\exceptions.py:68: in __call__
+    await self.app(scope, receive, sender)
+..\.venv\Lib\site-packages\fastapi\middleware\asyncexitstack.py:20: in __call__
+    raise e
+..\.venv\Lib\site-packages\fastapi\middleware\asyncexitstack.py:17: in __call__
+    await self.app(scope, receive, send)
+..\.venv\Lib\site-packages\starlette\routing.py:718: in __call__
+    await route.handle(scope, receive, send)
+..\.venv\Lib\site-packages\starlette\routing.py:276: in handle
+    await self.app(scope, receive, send)
+..\.venv\Lib\site-packages\starlette\routing.py:66: in app
+    response = await func(request)
+..\.venv\Lib\site-packages\fastapi\routing.py:274: in app
+    raw_response = await run_endpoint_function(
+..\.venv\Lib\site-packages\fastapi\routing.py:193: in run_endpoint_function
+    return await run_in_threadpool(dependant.call, **values)
+..\.venv\Lib\site-packages\starlette\concurrency.py:41: in run_in_threadpool
+    return await anyio.to_thread.run_sync(func, *args)
+..\.venv\Lib\site-packages\anyio\to_thread.py:33: in run_sync
+    return await get_asynclib().run_sync_in_worker_thread(
+..\.venv\Lib\site-packages\anyio\_backends\_asyncio.py:877: in run_sync_in_worker_thread
+    return await future
+..\.venv\Lib\site-packages\anyio\_backends\_asyncio.py:807: in run
+    result = context.run(func, *args)
+app\routers\friends.py:148: in obter_amigos_favoritos
+    amigos_favoritos = db.execute(query, {"jogador_id": jogador_id}).fetchall()
+..\.venv\Lib\site-packages\sqlalchemy\orm\session.py:2308: in execute
+    return self._execute_internal(
+..\.venv\Lib\site-packages\sqlalchemy\orm\session.py:2199: in _execute_internal
+    result = conn.execute(
+..\.venv\Lib\site-packages\sqlalchemy\engine\base.py:1416: in execute
+    return meth(
+..\.venv\Lib\site-packages\sqlalchemy\sql\elements.py:516: in _execute_on_connection
+    return connection._execute_clauseelement(
+..\.venv\Lib\site-packages\sqlalchemy\engine\base.py:1639: in _execute_clauseelement
+    ret = self._execute_context(
+..\.venv\Lib\site-packages\sqlalchemy\engine\base.py:1848: in _execute_context
+    return self._exec_single_context(
+..\.venv\Lib\site-packages\sqlalchemy\engine\base.py:1988: in _exec_single_context
+    self._handle_dbapi_exception(
+..\.venv\Lib\site-packages\sqlalchemy\engine\base.py:2343: in _handle_dbapi_exception
+    raise sqlalchemy_exception.with_traceback(exc_info[2]) from e
+..\.venv\Lib\site-packages\sqlalchemy\engine\base.py:1969: in _exec_single_context
+    self.dialect.do_execute(
+..\.venv\Lib\site-packages\sqlalchemy\engine\default.py:922: in do_execute
+    cursor.execute(statement, parameters)
+E   sqlalchemy.exc.OperationalError: (sqlite3.OperationalError) no such column: a.jogador_id
+E   [SQL: 
+E           SELECT 
+E               a.id,
+E               j.id as amigo_id,
+E               j.nome,
+E               j.nome_exibicao,
+E               j.email,
+E               j.saldo,
+E               a.data_amizade
+E           FROM amizade a
+E           JOIN jogador j ON a.amigo_id = j.id
+E           WHERE a.jogador_id = ? AND a.ativo = TRUE AND a.favorito = TRUE
+E           ORDER BY a.data_amizade DESC
+E       ]
+E   [parameters: (1,)]
+E   (Background on this error at: https://sqlalche.me/e/20/e3q8)</failure></testcase><testcase classname="tests.integration.test_friends_integration.TestObterAmigosFavoritos" name="test_obter_amigos_favoritos_com_dados_http_200" time="0.010"><failure message="sqlalchemy.exc.OperationalError: (sqlite3.OperationalError) table amizade has no column named jogador_id&#10;[SQL: &#10;                INSERT INTO amizade (jogador_id, amigo_id, ativo, favorito)&#10;                VALUES (?, ?, 1, ?)&#10;            ]&#10;[parameters: (1, 2, 1)]&#10;(Background on this error at: https://sqlalche.me/e/20/e3q8)">..\.venv\Lib\site-packages\sqlalchemy\engine\base.py:1969: in _exec_single_context
+    self.dialect.do_execute(
+..\.venv\Lib\site-packages\sqlalchemy\engine\default.py:922: in do_execute
+    cursor.execute(statement, parameters)
+E   sqlite3.OperationalError: table amizade has no column named jogador_id
+
+The above exception was the direct cause of the following exception:
+tests\integration\test_friends_integration.py:259: in test_obter_amigos_favoritos_com_dados_http_200
+    db_session.execute(
+..\.venv\Lib\site-packages\sqlalchemy\orm\session.py:2308: in execute
+    return self._execute_internal(
+..\.venv\Lib\site-packages\sqlalchemy\orm\session.py:2199: in _execute_internal
+    result = conn.execute(
+..\.venv\Lib\site-packages\sqlalchemy\engine\base.py:1416: in execute
+    return meth(
+..\.venv\Lib\site-packages\sqlalchemy\sql\elements.py:516: in _execute_on_connection
+    return connection._execute_clauseelement(
+..\.venv\Lib\site-packages\sqlalchemy\engine\base.py:1639: in _execute_clauseelement
+    ret = self._execute_context(
+..\.venv\Lib\site-packages\sqlalchemy\engine\base.py:1848: in _execute_context
+    return self._exec_single_context(
+..\.venv\Lib\site-packages\sqlalchemy\engine\base.py:1988: in _exec_single_context
+    self._handle_dbapi_exception(
+..\.venv\Lib\site-packages\sqlalchemy\engine\base.py:2343: in _handle_dbapi_exception
+    raise sqlalchemy_exception.with_traceback(exc_info[2]) from e
+..\.venv\Lib\site-packages\sqlalchemy\engine\base.py:1969: in _exec_single_context
+    self.dialect.do_execute(
+..\.venv\Lib\site-packages\sqlalchemy\engine\default.py:922: in do_execute
+    cursor.execute(statement, parameters)
+E   sqlalchemy.exc.OperationalError: (sqlite3.OperationalError) table amizade has no column named jogador_id
+E   [SQL: 
+E                   INSERT INTO amizade (jogador_id, amigo_id, ativo, favorito)
+E                   VALUES (?, ?, 1, ?)
+E               ]
+E   [parameters: (1, 2, 1)]
+E   (Background on this error at: https://sqlalche.me/e/20/e3q8)</failure></testcase><testcase classname="tests.integration.test_friends_integration.TestFavoritarAmigo" name="test_favoritartar_amigo_sucesso_http_200" time="0.011"><failure message="sqlalchemy.exc.OperationalError: (sqlite3.OperationalError) table amizade has no column named jogador_id&#10;[SQL: &#10;                INSERT INTO amizade (jogador_id, amigo_id, ativo, favorito)&#10;                VALUES (?, ?, 1, 0)&#10;            ]&#10;[parameters: (1, 2)]&#10;(Background on this error at: https://sqlalche.me/e/20/e3q8)">..\.venv\Lib\site-packages\sqlalchemy\engine\base.py:1969: in _exec_single_context
+    self.dialect.do_execute(
+..\.venv\Lib\site-packages\sqlalchemy\engine\default.py:922: in do_execute
+    cursor.execute(statement, parameters)
+E   sqlite3.OperationalError: table amizade has no column named jogador_id
+
+The above exception was the direct cause of the following exception:
+tests\integration\test_friends_integration.py:309: in test_favoritartar_amigo_sucesso_http_200
+    db_session.execute(
+..\.venv\Lib\site-packages\sqlalchemy\orm\session.py:2308: in execute
+    return self._execute_internal(
+..\.venv\Lib\site-packages\sqlalchemy\orm\session.py:2199: in _execute_internal
+    result = conn.execute(
+..\.venv\Lib\site-packages\sqlalchemy\engine\base.py:1416: in execute
+    return meth(
+..\.venv\Lib\site-packages\sqlalchemy\sql\elements.py:516: in _execute_on_connection
+    return connection._execute_clauseelement(
+..\.venv\Lib\site-packages\sqlalchemy\engine\base.py:1639: in _execute_clauseelement
+    ret = self._execute_context(
+..\.venv\Lib\site-packages\sqlalchemy\engine\base.py:1848: in _execute_context
+    return self._exec_single_context(
+..\.venv\Lib\site-packages\sqlalchemy\engine\base.py:1988: in _exec_single_context
+    self._handle_dbapi_exception(
+..\.venv\Lib\site-packages\sqlalchemy\engine\base.py:2343: in _handle_dbapi_exception
+    raise sqlalchemy_exception.with_traceback(exc_info[2]) from e
+..\.venv\Lib\site-packages\sqlalchemy\engine\base.py:1969: in _exec_single_context
+    self.dialect.do_execute(
+..\.venv\Lib\site-packages\sqlalchemy\engine\default.py:922: in do_execute
+    cursor.execute(statement, parameters)
+E   sqlalchemy.exc.OperationalError: (sqlite3.OperationalError) table amizade has no column named jogador_id
+E   [SQL: 
+E                   INSERT INTO amizade (jogador_id, amigo_id, ativo, favorito)
+E                   VALUES (?, ?, 1, 0)
+E               ]
+E   [parameters: (1, 2)]
+E   (Background on this error at: https://sqlalche.me/e/20/e3q8)</failure></testcase><testcase classname="tests.integration.test_friends_integration.TestFavoritarAmigo" name="test_favoritartar_amizade_inexistente_http_404" time="0.011" /><testcase classname="tests.integration.test_friends_integration.TestDesfavoritarAmigo" name="test_desfavoritartar_amigo_sucesso_http_200" time="0.010"><failure message="sqlalchemy.exc.OperationalError: (sqlite3.OperationalError) table amizade has no column named jogador_id&#10;[SQL: &#10;                INSERT INTO amizade (jogador_id, amigo_id, ativo, favorito)&#10;                VALUES (?, ?, 1, 1)&#10;            ]&#10;[parameters: (1, 2)]&#10;(Background on this error at: https://sqlalche.me/e/20/e3q8)">..\.venv\Lib\site-packages\sqlalchemy\engine\base.py:1969: in _exec_single_context
+    self.dialect.do_execute(
+..\.venv\Lib\site-packages\sqlalchemy\engine\default.py:922: in do_execute
+    cursor.execute(statement, parameters)
+E   sqlite3.OperationalError: table amizade has no column named jogador_id
+
+The above exception was the direct cause of the following exception:
+tests\integration\test_friends_integration.py:364: in test_desfavoritartar_amigo_sucesso_http_200
+    db_session.execute(
+..\.venv\Lib\site-packages\sqlalchemy\orm\session.py:2308: in execute
+    return self._execute_internal(
+..\.venv\Lib\site-packages\sqlalchemy\orm\session.py:2199: in _execute_internal
+    result = conn.execute(
+..\.venv\Lib\site-packages\sqlalchemy\engine\base.py:1416: in execute
+    return meth(
+..\.venv\Lib\site-packages\sqlalchemy\sql\elements.py:516: in _execute_on_connection
+    return connection._execute_clauseelement(
+..\.venv\Lib\site-packages\sqlalchemy\engine\base.py:1639: in _execute_clauseelement
+    ret = self._execute_context(
+..\.venv\Lib\site-packages\sqlalchemy\engine\base.py:1848: in _execute_context
+    return self._exec_single_context(
+..\.venv\Lib\site-packages\sqlalchemy\engine\base.py:1988: in _exec_single_context
+    self._handle_dbapi_exception(
+..\.venv\Lib\site-packages\sqlalchemy\engine\base.py:2343: in _handle_dbapi_exception
+    raise sqlalchemy_exception.with_traceback(exc_info[2]) from e
+..\.venv\Lib\site-packages\sqlalchemy\engine\base.py:1969: in _exec_single_context
+    self.dialect.do_execute(
+..\.venv\Lib\site-packages\sqlalchemy\engine\default.py:922: in do_execute
+    cursor.execute(statement, parameters)
+E   sqlalchemy.exc.OperationalError: (sqlite3.OperationalError) table amizade has no column named jogador_id
+E   [SQL: 
+E                   INSERT INTO amizade (jogador_id, amigo_id, ativo, favorito)
+E                   VALUES (?, ?, 1, 1)
+E               ]
+E   [parameters: (1, 2)]
+E   (Background on this error at: https://sqlalche.me/e/20/e3q8)</failure></testcase><testcase classname="tests.integration.test_friends_integration.TestDesfavoritarAmigo" name="test_desfavoritartar_amizade_inexistente_http_404" time="0.012" /><testcase classname="tests.integration.test_friends_integration.TestRemoverAmigo" name="test_remover_amigo_sucesso_http_200" time="0.009"><failure message="sqlalchemy.exc.OperationalError: (sqlite3.OperationalError) table amizade has no column named jogador_id&#10;[SQL: &#10;                INSERT INTO amizade (jogador_id, amigo_id, ativo)&#10;                VALUES (?, ?, 1)&#10;            ]&#10;[parameters: (1, 2)]&#10;(Background on this error at: https://sqlalche.me/e/20/e3q8)">..\.venv\Lib\site-packages\sqlalchemy\engine\base.py:1969: in _exec_single_context
+    self.dialect.do_execute(
+..\.venv\Lib\site-packages\sqlalchemy\engine\default.py:922: in do_execute
+    cursor.execute(statement, parameters)
+E   sqlite3.OperationalError: table amizade has no column named jogador_id
+
+The above exception was the direct cause of the following exception:
+tests\integration\test_friends_integration.py:419: in test_remover_amigo_sucesso_http_200
+    db_session.execute(
+..\.venv\Lib\site-packages\sqlalchemy\orm\session.py:2308: in execute
+    return self._execute_internal(
+..\.venv\Lib\site-packages\sqlalchemy\orm\session.py:2199: in _execute_internal
+    result = conn.execute(
+..\.venv\Lib\site-packages\sqlalchemy\engine\base.py:1416: in execute
+    return meth(
+..\.venv\Lib\site-packages\sqlalchemy\sql\elements.py:516: in _execute_on_connection
+    return connection._execute_clauseelement(
+..\.venv\Lib\site-packages\sqlalchemy\engine\base.py:1639: in _execute_clauseelement
+    ret = self._execute_context(
+..\.venv\Lib\site-packages\sqlalchemy\engine\base.py:1848: in _execute_context
+    return self._exec_single_context(
+..\.venv\Lib\site-packages\sqlalchemy\engine\base.py:1988: in _exec_single_context
+    self._handle_dbapi_exception(
+..\.venv\Lib\site-packages\sqlalchemy\engine\base.py:2343: in _handle_dbapi_exception
+    raise sqlalchemy_exception.with_traceback(exc_info[2]) from e
+..\.venv\Lib\site-packages\sqlalchemy\engine\base.py:1969: in _exec_single_context
+    self.dialect.do_execute(
+..\.venv\Lib\site-packages\sqlalchemy\engine\default.py:922: in do_execute
+    cursor.execute(statement, parameters)
+E   sqlalchemy.exc.OperationalError: (sqlite3.OperationalError) table amizade has no column named jogador_id
+E   [SQL: 
+E                   INSERT INTO amizade (jogador_id, amigo_id, ativo)
+E                   VALUES (?, ?, 1)
+E               ]
+E   [parameters: (1, 2)]
+E   (Background on this error at: https://sqlalche.me/e/20/e3q8)</failure></testcase><testcase classname="tests.integration.test_friends_integration.TestBuscarJogador" name="test_buscar_jogador_por_nome_http_200" time="0.024"><failure message="assert 422 == 200&#10; +  where 422 = &lt;Response [422 Unprocessable Entity]&gt;.status_code">tests\integration\test_friends_integration.py:488: in test_buscar_jogador_por_nome_http_200
+    assert response.status_code == 200
+E   assert 422 == 200
+E    +  where 422 = &lt;Response [422 Unprocessable Entity]&gt;.status_code</failure></testcase><testcase classname="tests.integration.test_pokemon_integration.TestSorteioPokemon" name="test_jogador_sorteia_pokemon_saldo_suficiente_http_200" time="0.498"><failure message="TypeError: string indices must be integers, not 'str'">tests\integration\test_pokemon_integration.py:39: in test_jogador_sorteia_pokemon_saldo_suficiente_http_200
+    assert data["pokemon"]["nome"] is not None
+E   TypeError: string indices must be integers, not 'str'</failure></testcase><testcase classname="tests.integration.test_pokemon_integration.TestSorteioPokemon" name="test_jogador_sorteia_pokemon_saldo_insuficiente_http_400" time="0.012" /><testcase classname="tests.integration.test_pokemon_integration.TestSorteioPokemon" name="test_sortear_pokemon_jogador_inexistente_http_404" time="0.014"><failure message="assert 400 == 404&#10; +  where 400 = &lt;Response [400 Bad Request]&gt;.status_code">tests\integration\test_pokemon_integration.py:67: in test_sortear_pokemon_jogador_inexistente_http_404
+    assert response.status_code == 404
+E   assert 400 == 404
+E    +  where 400 = &lt;Response [400 Bad Request]&gt;.status_code</failure></testcase><testcase classname="tests.integration.test_pokemon_integration.TestVisualizarTime" name="test_visualizar_time_vazio_http_200" time="0.013"><failure message="assert 405 == 200&#10; +  where 405 = &lt;Response [405 Method Not Allowed]&gt;.status_code">tests\integration\test_pokemon_integration.py:91: in test_visualizar_time_vazio_http_200
+    assert response.status_code == 200
+E   assert 405 == 200
+E    +  where 405 = &lt;Response [405 Method Not Allowed]&gt;.status_code</failure></testcase><testcase classname="tests.integration.test_pokemon_integration.TestVisualizarTime" name="test_visualizar_time_com_pokemons_http_200" time="0.013"><failure message="assert 405 == 200&#10; +  where 405 = &lt;Response [405 Method Not Allowed]&gt;.status_code">tests\integration\test_pokemon_integration.py:122: in test_visualizar_time_com_pokemons_http_200
+    assert response.status_code == 200
+E   assert 405 == 200
+E    +  where 405 = &lt;Response [405 Method Not Allowed]&gt;.status_code</failure></testcase><testcase classname="tests.integration.test_pokemon_integration.TestListarTimes" name="test_listar_times_vazio_http_200" time="0.016" /><testcase classname="tests.integration.test_pokemon_integration.TestListarTimes" name="test_listar_times_com_dados_http_200" time="0.013" /><testcase classname="tests.integration.test_pokemon_integration.TestCriarTime" name="test_criar_time_sucesso_http_201" time="0.016"><failure message="assert 200 == 201&#10; +  where 200 = &lt;Response [200 OK]&gt;.status_code">tests\integration\test_pokemon_integration.py:201: in test_criar_time_sucesso_http_201
+    assert response.status_code == 201
+E   assert 200 == 201
+E    +  where 200 = &lt;Response [200 OK]&gt;.status_code</failure></testcase><testcase classname="tests.integration.test_pokemon_integration.TestCriarTime" name="test_criar_time_nome_vazio_http_400" time="0.013" /><testcase classname="tests.integration.test_pokemon_integration.TestCriarTime" name="test_criar_time_jogador_inexistente_http_404" time="0.013" /><testcase classname="tests.integration.test_pokemon_integration.TestRenomearTime" name="test_renomear_time_sucesso_http_200" time="0.012"><failure message="assert 405 == 200&#10; +  where 405 = &lt;Response [405 Method Not Allowed]&gt;.status_code">tests\integration\test_pokemon_integration.py:266: in test_renomear_time_sucesso_http_200
+    assert response.status_code == 200
+E   assert 405 == 200
+E    +  where 405 = &lt;Response [405 Method Not Allowed]&gt;.status_code</failure></testcase><testcase classname="tests.integration.test_pokemon_integration.TestRenomearTime" name="test_renomear_time_inexistente_http_404" time="0.011"><failure message="assert 405 == 404&#10; +  where 405 = &lt;Response [405 Method Not Allowed]&gt;.status_code">tests\integration\test_pokemon_integration.py:274: in test_renomear_time_inexistente_http_404
+    assert response.status_code == 404
+E   assert 405 == 404
+E    +  where 405 = &lt;Response [405 Method Not Allowed]&gt;.status_code</failure></testcase><testcase classname="tests.integration.test_pokemon_integration.TestDeletarTime" name="test_deletar_time_sucesso_http_200" time="0.013"><failure message="assert 405 == 200&#10; +  where 405 = &lt;Response [405 Method Not Allowed]&gt;.status_code">tests\integration\test_pokemon_integration.py:310: in test_deletar_time_sucesso_http_200
+    assert response.status_code == 200
+E   assert 405 == 200
+E    +  where 405 = &lt;Response [405 Method Not Allowed]&gt;.status_code</failure></testcase><testcase classname="tests.integration.test_pokemon_integration.TestDeletarTime" name="test_deletar_time_inexistente_http_404" time="0.011"><failure message="assert 405 == 404&#10; +  where 405 = &lt;Response [405 Method Not Allowed]&gt;.status_code">tests\integration\test_pokemon_integration.py:316: in test_deletar_time_inexistente_http_404
+    assert response.status_code == 404
+E   assert 405 == 404
+E    +  where 405 = &lt;Response [405 Method Not Allowed]&gt;.status_code</failure></testcase><testcase classname="tests.integration.test_pokemon_integration.TestAdicionarPokemonTime" name="test_adicionar_pokemon_time_sucesso_http_200" time="0.014"><failure message="assert 405 == 200&#10; +  where 405 = &lt;Response [405 Method Not Allowed]&gt;.status_code">tests\integration\test_pokemon_integration.py:364: in test_adicionar_pokemon_time_sucesso_http_200
+    assert response.status_code == 200
+E   assert 405 == 200
+E    +  where 405 = &lt;Response [405 Method Not Allowed]&gt;.status_code</failure></testcase><testcase classname="tests.integration.test_pokemon_integration.TestAdicionarPokemonTime" name="test_adicionar_pokemon_time_cheio_http_400" time="0.011"><failure message="sqlalchemy.exc.OperationalError: (sqlite3.OperationalError) no such table: tempo_pokemon&#10;[SQL: &#10;                    INSERT INTO tempo_pokemon (time_id, pokemon_id)&#10;                    VALUES (?, ?)&#10;                ]&#10;[parameters: (1, 7)]&#10;(Background on this error at: https://sqlalche.me/e/20/e3q8)">..\.venv\Lib\site-packages\sqlalchemy\engine\base.py:1969: in _exec_single_context
+    self.dialect.do_execute(
+..\.venv\Lib\site-packages\sqlalchemy\engine\default.py:922: in do_execute
+    cursor.execute(statement, parameters)
+E   sqlite3.OperationalError: no such table: tempo_pokemon
+
+The above exception was the direct cause of the following exception:
+tests\integration\test_pokemon_integration.py:413: in test_adicionar_pokemon_time_cheio_http_400
+    db_session.execute(
+..\.venv\Lib\site-packages\sqlalchemy\orm\session.py:2308: in execute
+    return self._execute_internal(
+..\.venv\Lib\site-packages\sqlalchemy\orm\session.py:2199: in _execute_internal
+    result = conn.execute(
+..\.venv\Lib\site-packages\sqlalchemy\engine\base.py:1416: in execute
+    return meth(
+..\.venv\Lib\site-packages\sqlalchemy\sql\elements.py:516: in _execute_on_connection
+    return connection._execute_clauseelement(
+..\.venv\Lib\site-packages\sqlalchemy\engine\base.py:1639: in _execute_clauseelement
+    ret = self._execute_context(
+..\.venv\Lib\site-packages\sqlalchemy\engine\base.py:1848: in _execute_context
+    return self._exec_single_context(
+..\.venv\Lib\site-packages\sqlalchemy\engine\base.py:1988: in _exec_single_context
+    self._handle_dbapi_exception(
+..\.venv\Lib\site-packages\sqlalchemy\engine\base.py:2343: in _handle_dbapi_exception
+    raise sqlalchemy_exception.with_traceback(exc_info[2]) from e
+..\.venv\Lib\site-packages\sqlalchemy\engine\base.py:1969: in _exec_single_context
+    self.dialect.do_execute(
+..\.venv\Lib\site-packages\sqlalchemy\engine\default.py:922: in do_execute
+    cursor.execute(statement, parameters)
+E   sqlalchemy.exc.OperationalError: (sqlite3.OperationalError) no such table: tempo_pokemon
+E   [SQL: 
+E                       INSERT INTO tempo_pokemon (time_id, pokemon_id)
+E                       VALUES (?, ?)
+E                   ]
+E   [parameters: (1, 7)]
+E   (Background on this error at: https://sqlalche.me/e/20/e3q8)</failure></testcase><testcase classname="tests.integration.test_pokemon_integration.TestAdicionarPokemonTime" name="test_adicionar_pokemon_inexistente_http_404" time="0.013"><failure message="assert 405 == 404&#10; +  where 405 = &lt;Response [405 Method Not Allowed]&gt;.status_code">tests\integration\test_pokemon_integration.py:464: in test_adicionar_pokemon_inexistente_http_404
+    assert response.status_code == 404
+E   assert 405 == 404
+E    +  where 405 = &lt;Response [405 Method Not Allowed]&gt;.status_code</failure></testcase><testcase classname="tests.integration.test_pokemon_integration.TestLivertarPokemon" name="test_liberar_pokemon_sucesso_http_200" time="0.013"><failure message="assert 405 == 200&#10; +  where 405 = &lt;Response [405 Method Not Allowed]&gt;.status_code">tests\integration\test_pokemon_integration.py:500: in test_liberar_pokemon_sucesso_http_200
+    assert response.status_code == 200
+E   assert 405 == 200
+E    +  where 405 = &lt;Response [405 Method Not Allowed]&gt;.status_code</failure></testcase><testcase classname="tests.integration.test_shop_integration.TestCadastroItem" name="test_admin_cadastra_item_sucesso_http_201" time="0.014"><failure message="assert 422 == 201&#10; +  where 422 = &lt;Response [422 Unprocessable Entity]&gt;.status_code">tests\integration\test_shop_integration.py:40: in test_admin_cadastra_item_sucesso_http_201
+    assert response.status_code == 201
+E   assert 422 == 201
+E    +  where 422 = &lt;Response [422 Unprocessable Entity]&gt;.status_code</failure></testcase><testcase classname="tests.integration.test_shop_integration.TestCadastroItem" name="test_nao_admin_cadastra_item_http_403" time="0.013"><failure message="assert 422 == 403&#10; +  where 422 = &lt;Response [422 Unprocessable Entity]&gt;.status_code">tests\integration\test_shop_integration.py:54: in test_nao_admin_cadastra_item_http_403
+    assert response.status_code == 403
+E   assert 422 == 403
+E    +  where 422 = &lt;Response [422 Unprocessable Entity]&gt;.status_code</failure></testcase><testcase classname="tests.integration.test_shop_integration.TestCadastroItem" name="test_cadastro_item_preco_negativo_http_400" time="0.013"><failure message="assert 422 == 400&#10; +  where 422 = &lt;Response [422 Unprocessable Entity]&gt;.status_code">tests\integration\test_shop_integration.py:67: in test_cadastro_item_preco_negativo_http_400
+    assert response.status_code == 400
+E   assert 422 == 400
+E    +  where 422 = &lt;Response [422 Unprocessable Entity]&gt;.status_code</failure></testcase><testcase classname="tests.integration.test_shop_integration.TestListarLoja" name="test_listar_loja_vazia_http_200" time="0.014" /><testcase classname="tests.integration.test_shop_integration.TestListarLoja" name="test_listar_loja_com_items_http_200" time="0.009"><failure message="sqlalchemy.exc.IntegrityError: (sqlite3.IntegrityError) NOT NULL constraint failed: item.tipo&#10;[SQL: &#10;                INSERT INTO item (nome, descricao, preco)&#10;                VALUES (?, ?, ?)&#10;            ]&#10;[parameters: ('Poção de Vida', 'Restaura 20 HP', 50.0)]&#10;(Background on this error at: https://sqlalche.me/e/20/gkpj)">..\.venv\Lib\site-packages\sqlalchemy\engine\base.py:1969: in _exec_single_context
+    self.dialect.do_execute(
+..\.venv\Lib\site-packages\sqlalchemy\engine\default.py:922: in do_execute
+    cursor.execute(statement, parameters)
+E   sqlite3.IntegrityError: NOT NULL constraint failed: item.tipo
+
+The above exception was the direct cause of the following exception:
+tests\integration\test_shop_integration.py:86: in test_listar_loja_com_items_http_200
+    db_session.execute(
+..\.venv\Lib\site-packages\sqlalchemy\orm\session.py:2308: in execute
+    return self._execute_internal(
+..\.venv\Lib\site-packages\sqlalchemy\orm\session.py:2199: in _execute_internal
+    result = conn.execute(
+..\.venv\Lib\site-packages\sqlalchemy\engine\base.py:1416: in execute
+    return meth(
+..\.venv\Lib\site-packages\sqlalchemy\sql\elements.py:516: in _execute_on_connection
+    return connection._execute_clauseelement(
+..\.venv\Lib\site-packages\sqlalchemy\engine\base.py:1639: in _execute_clauseelement
+    ret = self._execute_context(
+..\.venv\Lib\site-packages\sqlalchemy\engine\base.py:1848: in _execute_context
+    return self._exec_single_context(
+..\.venv\Lib\site-packages\sqlalchemy\engine\base.py:1988: in _exec_single_context
+    self._handle_dbapi_exception(
+..\.venv\Lib\site-packages\sqlalchemy\engine\base.py:2343: in _handle_dbapi_exception
+    raise sqlalchemy_exception.with_traceback(exc_info[2]) from e
+..\.venv\Lib\site-packages\sqlalchemy\engine\base.py:1969: in _exec_single_context
+    self.dialect.do_execute(
+..\.venv\Lib\site-packages\sqlalchemy\engine\default.py:922: in do_execute
+    cursor.execute(statement, parameters)
+E   sqlalchemy.exc.IntegrityError: (sqlite3.IntegrityError) NOT NULL constraint failed: item.tipo
+E   [SQL: 
+E                   INSERT INTO item (nome, descricao, preco)
+E                   VALUES (?, ?, ?)
+E               ]
+E   [parameters: ('Poção de Vida', 'Restaura 20 HP', 50.0)]
+E   (Background on this error at: https://sqlalche.me/e/20/gkpj)</failure></testcase><testcase classname="tests.integration.test_shop_integration.TestAtualizacaoItem" name="test_admin_atualiza_item_sucesso_http_200" time="0.009"><failure message="sqlalchemy.exc.IntegrityError: (sqlite3.IntegrityError) NOT NULL constraint failed: item.tipo&#10;[SQL: &#10;                INSERT INTO item (nome, descricao, preco)&#10;                VALUES (?, ?, ?)&#10;            ]&#10;[parameters: ('Poção', 'HP', 50.0)]&#10;(Background on this error at: https://sqlalche.me/e/20/gkpj)">..\.venv\Lib\site-packages\sqlalchemy\engine\base.py:1969: in _exec_single_context
+    self.dialect.do_execute(
+..\.venv\Lib\site-packages\sqlalchemy\engine\default.py:922: in do_execute
+    cursor.execute(statement, parameters)
+E   sqlite3.IntegrityError: NOT NULL constraint failed: item.tipo
+
+The above exception was the direct cause of the following exception:
+tests\integration\test_shop_integration.py:125: in test_admin_atualiza_item_sucesso_http_200
+    db_session.execute(
+..\.venv\Lib\site-packages\sqlalchemy\orm\session.py:2308: in execute
+    return self._execute_internal(
+..\.venv\Lib\site-packages\sqlalchemy\orm\session.py:2199: in _execute_internal
+    result = conn.execute(
+..\.venv\Lib\site-packages\sqlalchemy\engine\base.py:1416: in execute
+    return meth(
+..\.venv\Lib\site-packages\sqlalchemy\sql\elements.py:516: in _execute_on_connection
+    return connection._execute_clauseelement(
+..\.venv\Lib\site-packages\sqlalchemy\engine\base.py:1639: in _execute_clauseelement
+    ret = self._execute_context(
+..\.venv\Lib\site-packages\sqlalchemy\engine\base.py:1848: in _execute_context
+    return self._exec_single_context(
+..\.venv\Lib\site-packages\sqlalchemy\engine\base.py:1988: in _exec_single_context
+    self._handle_dbapi_exception(
+..\.venv\Lib\site-packages\sqlalchemy\engine\base.py:2343: in _handle_dbapi_exception
+    raise sqlalchemy_exception.with_traceback(exc_info[2]) from e
+..\.venv\Lib\site-packages\sqlalchemy\engine\base.py:1969: in _exec_single_context
+    self.dialect.do_execute(
+..\.venv\Lib\site-packages\sqlalchemy\engine\default.py:922: in do_execute
+    cursor.execute(statement, parameters)
+E   sqlalchemy.exc.IntegrityError: (sqlite3.IntegrityError) NOT NULL constraint failed: item.tipo
+E   [SQL: 
+E                   INSERT INTO item (nome, descricao, preco)
+E                   VALUES (?, ?, ?)
+E               ]
+E   [parameters: ('Poção', 'HP', 50.0)]
+E   (Background on this error at: https://sqlalche.me/e/20/gkpj)</failure></testcase><testcase classname="tests.integration.test_shop_integration.TestAtualizacaoItem" name="test_nao_admin_atualiza_item_http_403" time="0.008"><failure message="sqlalchemy.exc.IntegrityError: (sqlite3.IntegrityError) NOT NULL constraint failed: item.tipo&#10;[SQL: &#10;                INSERT INTO item (nome, descricao, preco)&#10;                VALUES (?, ?, ?)&#10;            ]&#10;[parameters: ('Poção', 'HP', 50.0)]&#10;(Background on this error at: https://sqlalche.me/e/20/gkpj)">..\.venv\Lib\site-packages\sqlalchemy\engine\base.py:1969: in _exec_single_context
+    self.dialect.do_execute(
+..\.venv\Lib\site-packages\sqlalchemy\engine\default.py:922: in do_execute
+    cursor.execute(statement, parameters)
+E   sqlite3.IntegrityError: NOT NULL constraint failed: item.tipo
+
+The above exception was the direct cause of the following exception:
+tests\integration\test_shop_integration.py:153: in test_nao_admin_atualiza_item_http_403
+    db_session.execute(
+..\.venv\Lib\site-packages\sqlalchemy\orm\session.py:2308: in execute
+    return self._execute_internal(
+..\.venv\Lib\site-packages\sqlalchemy\orm\session.py:2199: in _execute_internal
+    result = conn.execute(
+..\.venv\Lib\site-packages\sqlalchemy\engine\base.py:1416: in execute
+    return meth(
+..\.venv\Lib\site-packages\sqlalchemy\sql\elements.py:516: in _execute_on_connection
+    return connection._execute_clauseelement(
+..\.venv\Lib\site-packages\sqlalchemy\engine\base.py:1639: in _execute_clauseelement
+    ret = self._execute_context(
+..\.venv\Lib\site-packages\sqlalchemy\engine\base.py:1848: in _execute_context
+    return self._exec_single_context(
+..\.venv\Lib\site-packages\sqlalchemy\engine\base.py:1988: in _exec_single_context
+    self._handle_dbapi_exception(
+..\.venv\Lib\site-packages\sqlalchemy\engine\base.py:2343: in _handle_dbapi_exception
+    raise sqlalchemy_exception.with_traceback(exc_info[2]) from e
+..\.venv\Lib\site-packages\sqlalchemy\engine\base.py:1969: in _exec_single_context
+    self.dialect.do_execute(
+..\.venv\Lib\site-packages\sqlalchemy\engine\default.py:922: in do_execute
+    cursor.execute(statement, parameters)
+E   sqlalchemy.exc.IntegrityError: (sqlite3.IntegrityError) NOT NULL constraint failed: item.tipo
+E   [SQL: 
+E                   INSERT INTO item (nome, descricao, preco)
+E                   VALUES (?, ?, ?)
+E               ]
+E   [parameters: ('Poção', 'HP', 50.0)]
+E   (Background on this error at: https://sqlalche.me/e/20/gkpj)</failure></testcase><testcase classname="tests.integration.test_shop_integration.TestAtualizacaoItem" name="test_atualizar_item_inexistente_http_404" time="0.014"><failure message="assert 422 == 404&#10; +  where 422 = &lt;Response [422 Unprocessable Entity]&gt;.status_code">tests\integration\test_shop_integration.py:176: in test_atualizar_item_inexistente_http_404
+    assert response.status_code == 404
+E   assert 422 == 404
+E    +  where 422 = &lt;Response [422 Unprocessable Entity]&gt;.status_code</failure></testcase><testcase classname="tests.integration.test_shop_integration.TestAlterarPreco" name="test_admin_altera_preco_sucesso_http_200" time="0.010"><failure message="sqlalchemy.exc.IntegrityError: (sqlite3.IntegrityError) NOT NULL constraint failed: item.tipo&#10;[SQL: &#10;                INSERT INTO item (nome, descricao, preco)&#10;                VALUES (?, ?, ?)&#10;            ]&#10;[parameters: ('Poção', 'HP', 50.0)]&#10;(Background on this error at: https://sqlalche.me/e/20/gkpj)">..\.venv\Lib\site-packages\sqlalchemy\engine\base.py:1969: in _exec_single_context
+    self.dialect.do_execute(
+..\.venv\Lib\site-packages\sqlalchemy\engine\default.py:922: in do_execute
+    cursor.execute(statement, parameters)
+E   sqlite3.IntegrityError: NOT NULL constraint failed: item.tipo
+
+The above exception was the direct cause of the following exception:
+tests\integration\test_shop_integration.py:185: in test_admin_altera_preco_sucesso_http_200
+    db_session.execute(
+..\.venv\Lib\site-packages\sqlalchemy\orm\session.py:2308: in execute
+    return self._execute_internal(
+..\.venv\Lib\site-packages\sqlalchemy\orm\session.py:2199: in _execute_internal
+    result = conn.execute(
+..\.venv\Lib\site-packages\sqlalchemy\engine\base.py:1416: in execute
+    return meth(
+..\.venv\Lib\site-packages\sqlalchemy\sql\elements.py:516: in _execute_on_connection
+    return connection._execute_clauseelement(
+..\.venv\Lib\site-packages\sqlalchemy\engine\base.py:1639: in _execute_clauseelement
+    ret = self._execute_context(
+..\.venv\Lib\site-packages\sqlalchemy\engine\base.py:1848: in _execute_context
+    return self._exec_single_context(
+..\.venv\Lib\site-packages\sqlalchemy\engine\base.py:1988: in _exec_single_context
+    self._handle_dbapi_exception(
+..\.venv\Lib\site-packages\sqlalchemy\engine\base.py:2343: in _handle_dbapi_exception
+    raise sqlalchemy_exception.with_traceback(exc_info[2]) from e
+..\.venv\Lib\site-packages\sqlalchemy\engine\base.py:1969: in _exec_single_context
+    self.dialect.do_execute(
+..\.venv\Lib\site-packages\sqlalchemy\engine\default.py:922: in do_execute
+    cursor.execute(statement, parameters)
+E   sqlalchemy.exc.IntegrityError: (sqlite3.IntegrityError) NOT NULL constraint failed: item.tipo
+E   [SQL: 
+E                   INSERT INTO item (nome, descricao, preco)
+E                   VALUES (?, ?, ?)
+E               ]
+E   [parameters: ('Poção', 'HP', 50.0)]
+E   (Background on this error at: https://sqlalche.me/e/20/gkpj)</failure></testcase><testcase classname="tests.integration.test_shop_integration.TestAlterarPreco" name="test_altera_preco_negativo_http_400" time="0.011"><failure message="sqlalchemy.exc.IntegrityError: (sqlite3.IntegrityError) NOT NULL constraint failed: item.tipo&#10;[SQL: &#10;                INSERT INTO item (nome, descricao, preco)&#10;                VALUES (?, ?, ?)&#10;            ]&#10;[parameters: ('Poção', 'HP', 50.0)]&#10;(Background on this error at: https://sqlalche.me/e/20/gkpj)">..\.venv\Lib\site-packages\sqlalchemy\engine\base.py:1969: in _exec_single_context
+    self.dialect.do_execute(
+..\.venv\Lib\site-packages\sqlalchemy\engine\default.py:922: in do_execute
+    cursor.execute(statement, parameters)
+E   sqlite3.IntegrityError: NOT NULL constraint failed: item.tipo
+
+The above exception was the direct cause of the following exception:
+tests\integration\test_shop_integration.py:208: in test_altera_preco_negativo_http_400
+    db_session.execute(
+..\.venv\Lib\site-packages\sqlalchemy\orm\session.py:2308: in execute
+    return self._execute_internal(
+..\.venv\Lib\site-packages\sqlalchemy\orm\session.py:2199: in _execute_internal
+    result = conn.execute(
+..\.venv\Lib\site-packages\sqlalchemy\engine\base.py:1416: in execute
+    return meth(
+..\.venv\Lib\site-packages\sqlalchemy\sql\elements.py:516: in _execute_on_connection
+    return connection._execute_clauseelement(
+..\.venv\Lib\site-packages\sqlalchemy\engine\base.py:1639: in _execute_clauseelement
+    ret = self._execute_context(
+..\.venv\Lib\site-packages\sqlalchemy\engine\base.py:1848: in _execute_context
+    return self._exec_single_context(
+..\.venv\Lib\site-packages\sqlalchemy\engine\base.py:1988: in _exec_single_context
+    self._handle_dbapi_exception(
+..\.venv\Lib\site-packages\sqlalchemy\engine\base.py:2343: in _handle_dbapi_exception
+    raise sqlalchemy_exception.with_traceback(exc_info[2]) from e
+..\.venv\Lib\site-packages\sqlalchemy\engine\base.py:1969: in _exec_single_context
+    self.dialect.do_execute(
+..\.venv\Lib\site-packages\sqlalchemy\engine\default.py:922: in do_execute
+    cursor.execute(statement, parameters)
+E   sqlalchemy.exc.IntegrityError: (sqlite3.IntegrityError) NOT NULL constraint failed: item.tipo
+E   [SQL: 
+E                   INSERT INTO item (nome, descricao, preco)
+E                   VALUES (?, ?, ?)
+E               ]
+E   [parameters: ('Poção', 'HP', 50.0)]
+E   (Background on this error at: https://sqlalche.me/e/20/gkpj)</failure></testcase><testcase classname="tests.integration.test_shop_integration.TestDeletarItem" name="test_admin_deleta_item_sucesso_http_200" time="0.008"><failure message="sqlalchemy.exc.IntegrityError: (sqlite3.IntegrityError) NOT NULL constraint failed: item.tipo&#10;[SQL: &#10;                INSERT INTO item (nome, descricao, preco)&#10;                VALUES (?, ?, ?)&#10;            ]&#10;[parameters: ('Poção', 'HP', 50.0)]&#10;(Background on this error at: https://sqlalche.me/e/20/gkpj)">..\.venv\Lib\site-packages\sqlalchemy\engine\base.py:1969: in _exec_single_context
+    self.dialect.do_execute(
+..\.venv\Lib\site-packages\sqlalchemy\engine\default.py:922: in do_execute
+    cursor.execute(statement, parameters)
+E   sqlite3.IntegrityError: NOT NULL constraint failed: item.tipo
+
+The above exception was the direct cause of the following exception:
+tests\integration\test_shop_integration.py:233: in test_admin_deleta_item_sucesso_http_200
+    db_session.execute(
+..\.venv\Lib\site-packages\sqlalchemy\orm\session.py:2308: in execute
+    return self._execute_internal(
+..\.venv\Lib\site-packages\sqlalchemy\orm\session.py:2199: in _execute_internal
+    result = conn.execute(
+..\.venv\Lib\site-packages\sqlalchemy\engine\base.py:1416: in execute
+    return meth(
+..\.venv\Lib\site-packages\sqlalchemy\sql\elements.py:516: in _execute_on_connection
+    return connection._execute_clauseelement(
+..\.venv\Lib\site-packages\sqlalchemy\engine\base.py:1639: in _execute_clauseelement
+    ret = self._execute_context(
+..\.venv\Lib\site-packages\sqlalchemy\engine\base.py:1848: in _execute_context
+    return self._exec_single_context(
+..\.venv\Lib\site-packages\sqlalchemy\engine\base.py:1988: in _exec_single_context
+    self._handle_dbapi_exception(
+..\.venv\Lib\site-packages\sqlalchemy\engine\base.py:2343: in _handle_dbapi_exception
+    raise sqlalchemy_exception.with_traceback(exc_info[2]) from e
+..\.venv\Lib\site-packages\sqlalchemy\engine\base.py:1969: in _exec_single_context
+    self.dialect.do_execute(
+..\.venv\Lib\site-packages\sqlalchemy\engine\default.py:922: in do_execute
+    cursor.execute(statement, parameters)
+E   sqlalchemy.exc.IntegrityError: (sqlite3.IntegrityError) NOT NULL constraint failed: item.tipo
+E   [SQL: 
+E                   INSERT INTO item (nome, descricao, preco)
+E                   VALUES (?, ?, ?)
+E               ]
+E   [parameters: ('Poção', 'HP', 50.0)]
+E   (Background on this error at: https://sqlalche.me/e/20/gkpj)</failure></testcase><testcase classname="tests.integration.test_shop_integration.TestDeletarItem" name="test_nao_admin_deleta_item_http_403" time="0.010"><failure message="sqlalchemy.exc.IntegrityError: (sqlite3.IntegrityError) NOT NULL constraint failed: item.tipo&#10;[SQL: &#10;                INSERT INTO item (nome, descricao, preco)&#10;                VALUES (?, ?, ?)&#10;            ]&#10;[parameters: ('Poção', 'HP', 50.0)]&#10;(Background on this error at: https://sqlalche.me/e/20/gkpj)">..\.venv\Lib\site-packages\sqlalchemy\engine\base.py:1969: in _exec_single_context
+    self.dialect.do_execute(
+..\.venv\Lib\site-packages\sqlalchemy\engine\default.py:922: in do_execute
+    cursor.execute(statement, parameters)
+E   sqlite3.IntegrityError: NOT NULL constraint failed: item.tipo
+
+The above exception was the direct cause of the following exception:
+tests\integration\test_shop_integration.py:261: in test_nao_admin_deleta_item_http_403
+    db_session.execute(
+..\.venv\Lib\site-packages\sqlalchemy\orm\session.py:2308: in execute
+    return self._execute_internal(
+..\.venv\Lib\site-packages\sqlalchemy\orm\session.py:2199: in _execute_internal
+    result = conn.execute(
+..\.venv\Lib\site-packages\sqlalchemy\engine\base.py:1416: in execute
+    return meth(
+..\.venv\Lib\site-packages\sqlalchemy\sql\elements.py:516: in _execute_on_connection
+    return connection._execute_clauseelement(
+..\.venv\Lib\site-packages\sqlalchemy\engine\base.py:1639: in _execute_clauseelement
+    ret = self._execute_context(
+..\.venv\Lib\site-packages\sqlalchemy\engine\base.py:1848: in _execute_context
+    return self._exec_single_context(
+..\.venv\Lib\site-packages\sqlalchemy\engine\base.py:1988: in _exec_single_context
+    self._handle_dbapi_exception(
+..\.venv\Lib\site-packages\sqlalchemy\engine\base.py:2343: in _handle_dbapi_exception
+    raise sqlalchemy_exception.with_traceback(exc_info[2]) from e
+..\.venv\Lib\site-packages\sqlalchemy\engine\base.py:1969: in _exec_single_context
+    self.dialect.do_execute(
+..\.venv\Lib\site-packages\sqlalchemy\engine\default.py:922: in do_execute
+    cursor.execute(statement, parameters)
+E   sqlalchemy.exc.IntegrityError: (sqlite3.IntegrityError) NOT NULL constraint failed: item.tipo
+E   [SQL: 
+E                   INSERT INTO item (nome, descricao, preco)
+E                   VALUES (?, ?, ?)
+E               ]
+E   [parameters: ('Poção', 'HP', 50.0)]
+E   (Background on this error at: https://sqlalche.me/e/20/gkpj)</failure></testcase><testcase classname="tests.integration.test_shop_integration.TestCompraItem" name="test_jogador_compra_item_saldo_suficiente_http_200" time="0.011"><failure message="sqlalchemy.exc.IntegrityError: (sqlite3.IntegrityError) NOT NULL constraint failed: item.tipo&#10;[SQL: &#10;                INSERT INTO item (nome, descricao, preco)&#10;                VALUES (?, ?, ?)&#10;            ]&#10;[parameters: ('Poção', 'HP', 50.0)]&#10;(Background on this error at: https://sqlalche.me/e/20/gkpj)">..\.venv\Lib\site-packages\sqlalchemy\engine\base.py:1969: in _exec_single_context
+    self.dialect.do_execute(
+..\.venv\Lib\site-packages\sqlalchemy\engine\default.py:922: in do_execute
+    cursor.execute(statement, parameters)
+E   sqlite3.IntegrityError: NOT NULL constraint failed: item.tipo
+
+The above exception was the direct cause of the following exception:
+tests\integration\test_shop_integration.py:297: in test_jogador_compra_item_saldo_suficiente_http_200
+    db_session.execute(
+..\.venv\Lib\site-packages\sqlalchemy\orm\session.py:2308: in execute
+    return self._execute_internal(
+..\.venv\Lib\site-packages\sqlalchemy\orm\session.py:2199: in _execute_internal
+    result = conn.execute(
+..\.venv\Lib\site-packages\sqlalchemy\engine\base.py:1416: in execute
+    return meth(
+..\.venv\Lib\site-packages\sqlalchemy\sql\elements.py:516: in _execute_on_connection
+    return connection._execute_clauseelement(
+..\.venv\Lib\site-packages\sqlalchemy\engine\base.py:1639: in _execute_clauseelement
+    ret = self._execute_context(
+..\.venv\Lib\site-packages\sqlalchemy\engine\base.py:1848: in _execute_context
+    return self._exec_single_context(
+..\.venv\Lib\site-packages\sqlalchemy\engine\base.py:1988: in _exec_single_context
+    self._handle_dbapi_exception(
+..\.venv\Lib\site-packages\sqlalchemy\engine\base.py:2343: in _handle_dbapi_exception
+    raise sqlalchemy_exception.with_traceback(exc_info[2]) from e
+..\.venv\Lib\site-packages\sqlalchemy\engine\base.py:1969: in _exec_single_context
+    self.dialect.do_execute(
+..\.venv\Lib\site-packages\sqlalchemy\engine\default.py:922: in do_execute
+    cursor.execute(statement, parameters)
+E   sqlalchemy.exc.IntegrityError: (sqlite3.IntegrityError) NOT NULL constraint failed: item.tipo
+E   [SQL: 
+E                   INSERT INTO item (nome, descricao, preco)
+E                   VALUES (?, ?, ?)
+E               ]
+E   [parameters: ('Poção', 'HP', 50.0)]
+E   (Background on this error at: https://sqlalche.me/e/20/gkpj)</failure></testcase><testcase classname="tests.integration.test_shop_integration.TestCompraItem" name="test_jogador_compra_item_saldo_insuficiente_http_400" time="0.010"><failure message="sqlalchemy.exc.IntegrityError: (sqlite3.IntegrityError) NOT NULL constraint failed: item.tipo&#10;[SQL: &#10;                INSERT INTO item (nome, descricao, preco)&#10;                VALUES (?, ?, ?)&#10;            ]&#10;[parameters: ('Poção', 'HP', 100.0)]&#10;(Background on this error at: https://sqlalche.me/e/20/gkpj)">..\.venv\Lib\site-packages\sqlalchemy\engine\base.py:1969: in _exec_single_context
+    self.dialect.do_execute(
+..\.venv\Lib\site-packages\sqlalchemy\engine\default.py:922: in do_execute
+    cursor.execute(statement, parameters)
+E   sqlite3.IntegrityError: NOT NULL constraint failed: item.tipo
+
+The above exception was the direct cause of the following exception:
+tests\integration\test_shop_integration.py:338: in test_jogador_compra_item_saldo_insuficiente_http_400
+    db_session.execute(
+..\.venv\Lib\site-packages\sqlalchemy\orm\session.py:2308: in execute
+    return self._execute_internal(
+..\.venv\Lib\site-packages\sqlalchemy\orm\session.py:2199: in _execute_internal
+    result = conn.execute(
+..\.venv\Lib\site-packages\sqlalchemy\engine\base.py:1416: in execute
+    return meth(
+..\.venv\Lib\site-packages\sqlalchemy\sql\elements.py:516: in _execute_on_connection
+    return connection._execute_clauseelement(
+..\.venv\Lib\site-packages\sqlalchemy\engine\base.py:1639: in _execute_clauseelement
+    ret = self._execute_context(
+..\.venv\Lib\site-packages\sqlalchemy\engine\base.py:1848: in _execute_context
+    return self._exec_single_context(
+..\.venv\Lib\site-packages\sqlalchemy\engine\base.py:1988: in _exec_single_context
+    self._handle_dbapi_exception(
+..\.venv\Lib\site-packages\sqlalchemy\engine\base.py:2343: in _handle_dbapi_exception
+    raise sqlalchemy_exception.with_traceback(exc_info[2]) from e
+..\.venv\Lib\site-packages\sqlalchemy\engine\base.py:1969: in _exec_single_context
+    self.dialect.do_execute(
+..\.venv\Lib\site-packages\sqlalchemy\engine\default.py:922: in do_execute
+    cursor.execute(statement, parameters)
+E   sqlalchemy.exc.IntegrityError: (sqlite3.IntegrityError) NOT NULL constraint failed: item.tipo
+E   [SQL: 
+E                   INSERT INTO item (nome, descricao, preco)
+E                   VALUES (?, ?, ?)
+E               ]
+E   [parameters: ('Poção', 'HP', 100.0)]
+E   (Background on this error at: https://sqlalche.me/e/20/gkpj)</failure></testcase><testcase classname="tests.integration.test_shop_integration.TestCompraItem" name="test_jogador_compra_item_inexistente_http_404" time="0.012" /><testcase classname="tests.integration.test_shop_integration.TestListarInventario" name="test_listar_inventario_vazio_http_200" time="0.014" /><testcase classname="tests.integration.test_shop_integration.TestListarInventario" name="test_listar_inventario_com_items_http_200" time="0.009"><failure message="sqlalchemy.exc.IntegrityError: (sqlite3.IntegrityError) NOT NULL constraint failed: item.tipo&#10;[SQL: &#10;                INSERT INTO item (nome, descricao, preco)&#10;                VALUES (?, ?, ?)&#10;            ]&#10;[parameters: ('Poção 1', 'HP', 50.0)]&#10;(Background on this error at: https://sqlalche.me/e/20/gkpj)">..\.venv\Lib\site-packages\sqlalchemy\engine\base.py:1969: in _exec_single_context
+    self.dialect.do_execute(
+..\.venv\Lib\site-packages\sqlalchemy\engine\default.py:922: in do_execute
+    cursor.execute(statement, parameters)
+E   sqlite3.IntegrityError: NOT NULL constraint failed: item.tipo
+
+The above exception was the direct cause of the following exception:
+tests\integration\test_shop_integration.py:418: in test_listar_inventario_com_items_http_200
+    db_session.execute(
+..\.venv\Lib\site-packages\sqlalchemy\orm\session.py:2308: in execute
+    return self._execute_internal(
+..\.venv\Lib\site-packages\sqlalchemy\orm\session.py:2199: in _execute_internal
+    result = conn.execute(
+..\.venv\Lib\site-packages\sqlalchemy\engine\base.py:1416: in execute
+    return meth(
+..\.venv\Lib\site-packages\sqlalchemy\sql\elements.py:516: in _execute_on_connection
+    return connection._execute_clauseelement(
+..\.venv\Lib\site-packages\sqlalchemy\engine\base.py:1639: in _execute_clauseelement
+    ret = self._execute_context(
+..\.venv\Lib\site-packages\sqlalchemy\engine\base.py:1848: in _execute_context
+    return self._exec_single_context(
+..\.venv\Lib\site-packages\sqlalchemy\engine\base.py:1988: in _exec_single_context
+    self._handle_dbapi_exception(
+..\.venv\Lib\site-packages\sqlalchemy\engine\base.py:2343: in _handle_dbapi_exception
+    raise sqlalchemy_exception.with_traceback(exc_info[2]) from e
+..\.venv\Lib\site-packages\sqlalchemy\engine\base.py:1969: in _exec_single_context
+    self.dialect.do_execute(
+..\.venv\Lib\site-packages\sqlalchemy\engine\default.py:922: in do_execute
+    cursor.execute(statement, parameters)
+E   sqlalchemy.exc.IntegrityError: (sqlite3.IntegrityError) NOT NULL constraint failed: item.tipo
+E   [SQL: 
+E                   INSERT INTO item (nome, descricao, preco)
+E                   VALUES (?, ?, ?)
+E               ]
+E   [parameters: ('Poção 1', 'HP', 50.0)]
+E   (Background on this error at: https://sqlalche.me/e/20/gkpj)</failure></testcase><testcase classname="tests.integration.test_tournament_integration.TestCriarTorneio" name="test_criar_torneio_tamanho_2_sucesso_http_201" time="0.015"><failure message="assert 400 == 201&#10; +  where 400 = &lt;Response [400 Bad Request]&gt;.status_code">tests\integration\test_tournament_integration.py:55: in test_criar_torneio_tamanho_2_sucesso_http_201
+    assert response.status_code == 201
+E   assert 400 == 201
+E    +  where 400 = &lt;Response [400 Bad Request]&gt;.status_code</failure></testcase><testcase classname="tests.integration.test_tournament_integration.TestCriarTorneio" name="test_criar_torneio_saldo_insuficiente_http_400" time="0.013" /><testcase classname="tests.integration.test_tournament_integration.TestCriarTorneio" name="test_criar_torneio_tamanho_invalido_http_400" time="0.013" /><testcase classname="tests.integration.test_tournament_integration.TestListarTorneios" name="test_listar_torneios_vazio_http_200" time="0.014"><failure message="sqlalchemy.exc.OperationalError: (sqlite3.OperationalError) no such column: t.nome&#10;[SQL: &#10;            SELECT t.id, t.nome, t.tamanho, t.status, t.criado_em, t.finalizado_em, t.vencedor_participante_id,&#10;                   tp.nome_treinador AS vencedor_nome&#10;            FROM torneio t&#10;            LEFT JOIN torneio_participante tp ON tp.id = t.vencedor_participante_id&#10;            WHERE t.jogador_id = ?&#10;            ORDER BY t.id DESC&#10;        ]&#10;[parameters: (1,)]&#10;(Background on this error at: https://sqlalche.me/e/20/e3q8)">..\.venv\Lib\site-packages\sqlalchemy\engine\base.py:1969: in _exec_single_context
+    self.dialect.do_execute(
+..\.venv\Lib\site-packages\sqlalchemy\engine\default.py:922: in do_execute
+    cursor.execute(statement, parameters)
+E   sqlite3.OperationalError: no such column: t.nome
+
+The above exception was the direct cause of the following exception:
+tests\integration\test_tournament_integration.py:121: in test_listar_torneios_vazio_http_200
+    response = client.get(f"/torneio/{jogador_id}")
+..\.venv\Lib\site-packages\starlette\testclient.py:499: in get
+    return super().get(
+..\.venv\Lib\site-packages\httpx\_client.py:1041: in get
+    return self.request(
+..\.venv\Lib\site-packages\starlette\testclient.py:465: in request
+    return super().request(
+..\.venv\Lib\site-packages\httpx\_client.py:814: in request
+    return self.send(request, auth=auth, follow_redirects=follow_redirects)
+..\.venv\Lib\site-packages\httpx\_client.py:901: in send
+    response = self._send_handling_auth(
+..\.venv\Lib\site-packages\httpx\_client.py:929: in _send_handling_auth
+    response = self._send_handling_redirects(
+..\.venv\Lib\site-packages\httpx\_client.py:966: in _send_handling_redirects
+    response = self._send_single_request(request)
+..\.venv\Lib\site-packages\httpx\_client.py:1002: in _send_single_request
+    response = transport.handle_request(request)
+..\.venv\Lib\site-packages\starlette\testclient.py:342: in handle_request
+    raise exc
+..\.venv\Lib\site-packages\starlette\testclient.py:339: in handle_request
+    portal.call(self.app, scope, receive, send)
+..\.venv\Lib\site-packages\anyio\from_thread.py:277: in call
+    return cast(T_Retval, self.start_task_soon(func, *args).result())
+..\..\..\AppData\Local\Programs\Python\Python311\Lib\concurrent\futures\_base.py:456: in result
+    return self.__get_result()
+..\..\..\AppData\Local\Programs\Python\Python311\Lib\concurrent\futures\_base.py:401: in __get_result
+    raise self._exception
+..\.venv\Lib\site-packages\anyio\from_thread.py:217: in _call_func
+    retval = await retval
+..\.venv\Lib\site-packages\fastapi\applications.py:1106: in __call__
+    await super().__call__(scope, receive, send)
+..\.venv\Lib\site-packages\starlette\applications.py:122: in __call__
+    await self.middleware_stack(scope, receive, send)
+..\.venv\Lib\site-packages\starlette\middleware\errors.py:184: in __call__
+    raise exc
+..\.venv\Lib\site-packages\starlette\middleware\errors.py:162: in __call__
+    await self.app(scope, receive, _send)
+..\.venv\Lib\site-packages\starlette\middleware\cors.py:83: in __call__
+    await self.app(scope, receive, send)
+..\.venv\Lib\site-packages\starlette\middleware\exceptions.py:79: in __call__
+    raise exc
+..\.venv\Lib\site-packages\starlette\middleware\exceptions.py:68: in __call__
+    await self.app(scope, receive, sender)
+..\.venv\Lib\site-packages\fastapi\middleware\asyncexitstack.py:20: in __call__
+    raise e
+..\.venv\Lib\site-packages\fastapi\middleware\asyncexitstack.py:17: in __call__
+    await self.app(scope, receive, send)
+..\.venv\Lib\site-packages\starlette\routing.py:718: in __call__
+    await route.handle(scope, receive, send)
+..\.venv\Lib\site-packages\starlette\routing.py:276: in handle
+    await self.app(scope, receive, send)
+..\.venv\Lib\site-packages\starlette\routing.py:66: in app
+    response = await func(request)
+..\.venv\Lib\site-packages\fastapi\routing.py:274: in app
+    raw_response = await run_endpoint_function(
+..\.venv\Lib\site-packages\fastapi\routing.py:193: in run_endpoint_function
+    return await run_in_threadpool(dependant.call, **values)
+..\.venv\Lib\site-packages\starlette\concurrency.py:41: in run_in_threadpool
+    return await anyio.to_thread.run_sync(func, *args)
+..\.venv\Lib\site-packages\anyio\to_thread.py:33: in run_sync
+    return await get_asynclib().run_sync_in_worker_thread(
+..\.venv\Lib\site-packages\anyio\_backends\_asyncio.py:877: in run_sync_in_worker_thread
+    return await future
+..\.venv\Lib\site-packages\anyio\_backends\_asyncio.py:807: in run
+    result = context.run(func, *args)
+app\routers\tournament.py:407: in listar_torneios
+    rows = db.execute(
+..\.venv\Lib\site-packages\sqlalchemy\orm\session.py:2308: in execute
+    return self._execute_internal(
+..\.venv\Lib\site-packages\sqlalchemy\orm\session.py:2199: in _execute_internal
+    result = conn.execute(
+..\.venv\Lib\site-packages\sqlalchemy\engine\base.py:1416: in execute
+    return meth(
+..\.venv\Lib\site-packages\sqlalchemy\sql\elements.py:516: in _execute_on_connection
+    return connection._execute_clauseelement(
+..\.venv\Lib\site-packages\sqlalchemy\engine\base.py:1639: in _execute_clauseelement
+    ret = self._execute_context(
+..\.venv\Lib\site-packages\sqlalchemy\engine\base.py:1848: in _execute_context
+    return self._exec_single_context(
+..\.venv\Lib\site-packages\sqlalchemy\engine\base.py:1988: in _exec_single_context
+    self._handle_dbapi_exception(
+..\.venv\Lib\site-packages\sqlalchemy\engine\base.py:2343: in _handle_dbapi_exception
+    raise sqlalchemy_exception.with_traceback(exc_info[2]) from e
+..\.venv\Lib\site-packages\sqlalchemy\engine\base.py:1969: in _exec_single_context
+    self.dialect.do_execute(
+..\.venv\Lib\site-packages\sqlalchemy\engine\default.py:922: in do_execute
+    cursor.execute(statement, parameters)
+E   sqlalchemy.exc.OperationalError: (sqlite3.OperationalError) no such column: t.nome
+E   [SQL: 
+E               SELECT t.id, t.nome, t.tamanho, t.status, t.criado_em, t.finalizado_em, t.vencedor_participante_id,
+E                      tp.nome_treinador AS vencedor_nome
+E               FROM torneio t
+E               LEFT JOIN torneio_participante tp ON tp.id = t.vencedor_participante_id
+E               WHERE t.jogador_id = ?
+E               ORDER BY t.id DESC
+E           ]
+E   [parameters: (1,)]
+E   (Background on this error at: https://sqlalche.me/e/20/e3q8)</failure></testcase><testcase classname="tests.integration.test_tournament_integration.TestListarTorneios" name="test_listar_torneios_com_dados_http_200" time="0.011"><failure message="sqlalchemy.exc.IntegrityError: (sqlite3.IntegrityError) NOT NULL constraint failed: torneio.time_id&#10;[SQL: &#10;                INSERT INTO torneio (jogador_id, tamanho, status, custo, premio)&#10;                VALUES (?, ?, ?, ?, ?)&#10;            ]&#10;[parameters: (1, 2, 'aberto', 500, 700)]&#10;(Background on this error at: https://sqlalche.me/e/20/gkpj)">..\.venv\Lib\site-packages\sqlalchemy\engine\base.py:1969: in _exec_single_context
+    self.dialect.do_execute(
+..\.venv\Lib\site-packages\sqlalchemy\engine\default.py:922: in do_execute
+    cursor.execute(statement, parameters)
+E   sqlite3.IntegrityError: NOT NULL constraint failed: torneio.time_id
+
+The above exception was the direct cause of the following exception:
+tests\integration\test_tournament_integration.py:143: in test_listar_torneios_com_dados_http_200
+    db_session.execute(
+..\.venv\Lib\site-packages\sqlalchemy\orm\session.py:2308: in execute
+    return self._execute_internal(
+..\.venv\Lib\site-packages\sqlalchemy\orm\session.py:2199: in _execute_internal
+    result = conn.execute(
+..\.venv\Lib\site-packages\sqlalchemy\engine\base.py:1416: in execute
+    return meth(
+..\.venv\Lib\site-packages\sqlalchemy\sql\elements.py:516: in _execute_on_connection
+    return connection._execute_clauseelement(
+..\.venv\Lib\site-packages\sqlalchemy\engine\base.py:1639: in _execute_clauseelement
+    ret = self._execute_context(
+..\.venv\Lib\site-packages\sqlalchemy\engine\base.py:1848: in _execute_context
+    return self._exec_single_context(
+..\.venv\Lib\site-packages\sqlalchemy\engine\base.py:1988: in _exec_single_context
+    self._handle_dbapi_exception(
+..\.venv\Lib\site-packages\sqlalchemy\engine\base.py:2343: in _handle_dbapi_exception
+    raise sqlalchemy_exception.with_traceback(exc_info[2]) from e
+..\.venv\Lib\site-packages\sqlalchemy\engine\base.py:1969: in _exec_single_context
+    self.dialect.do_execute(
+..\.venv\Lib\site-packages\sqlalchemy\engine\default.py:922: in do_execute
+    cursor.execute(statement, parameters)
+E   sqlalchemy.exc.IntegrityError: (sqlite3.IntegrityError) NOT NULL constraint failed: torneio.time_id
+E   [SQL: 
+E                   INSERT INTO torneio (jogador_id, tamanho, status, custo, premio)
+E                   VALUES (?, ?, ?, ?, ?)
+E               ]
+E   [parameters: (1, 2, 'aberto', 500, 700)]
+E   (Background on this error at: https://sqlalche.me/e/20/gkpj)</failure></testcase><testcase classname="tests.integration.test_tournament_integration.TestObterTorneio" name="test_obter_torneio_sucesso_http_200" time="0.029"><failure message="sqlalchemy.exc.IntegrityError: (sqlite3.IntegrityError) NOT NULL constraint failed: torneio.time_id&#10;[SQL: &#10;                INSERT INTO torneio (jogador_id, tamanho, status, custo, premio)&#10;                VALUES (?, ?, ?, ?, ?)&#10;            ]&#10;[parameters: (1, 2, 'aberto', 500, 700)]&#10;(Background on this error at: https://sqlalche.me/e/20/gkpj)">..\.venv\Lib\site-packages\sqlalchemy\engine\base.py:1969: in _exec_single_context
+    self.dialect.do_execute(
+..\.venv\Lib\site-packages\sqlalchemy\engine\default.py:922: in do_execute
+    cursor.execute(statement, parameters)
+E   sqlite3.IntegrityError: NOT NULL constraint failed: torneio.time_id
+
+The above exception was the direct cause of the following exception:
+tests\integration\test_tournament_integration.py:178: in test_obter_torneio_sucesso_http_200
+    db_session.execute(
+..\.venv\Lib\site-packages\sqlalchemy\orm\session.py:2308: in execute
+    return self._execute_internal(
+..\.venv\Lib\site-packages\sqlalchemy\orm\session.py:2199: in _execute_internal
+    result = conn.execute(
+..\.venv\Lib\site-packages\sqlalchemy\engine\base.py:1416: in execute
+    return meth(
+..\.venv\Lib\site-packages\sqlalchemy\sql\elements.py:516: in _execute_on_connection
+    return connection._execute_clauseelement(
+..\.venv\Lib\site-packages\sqlalchemy\engine\base.py:1639: in _execute_clauseelement
+    ret = self._execute_context(
+..\.venv\Lib\site-packages\sqlalchemy\engine\base.py:1848: in _execute_context
+    return self._exec_single_context(
+..\.venv\Lib\site-packages\sqlalchemy\engine\base.py:1988: in _exec_single_context
+    self._handle_dbapi_exception(
+..\.venv\Lib\site-packages\sqlalchemy\engine\base.py:2343: in _handle_dbapi_exception
+    raise sqlalchemy_exception.with_traceback(exc_info[2]) from e
+..\.venv\Lib\site-packages\sqlalchemy\engine\base.py:1969: in _exec_single_context
+    self.dialect.do_execute(
+..\.venv\Lib\site-packages\sqlalchemy\engine\default.py:922: in do_execute
+    cursor.execute(statement, parameters)
+E   sqlalchemy.exc.IntegrityError: (sqlite3.IntegrityError) NOT NULL constraint failed: torneio.time_id
+E   [SQL: 
+E                   INSERT INTO torneio (jogador_id, tamanho, status, custo, premio)
+E                   VALUES (?, ?, ?, ?, ?)
+E               ]
+E   [parameters: (1, 2, 'aberto', 500, 700)]
+E   (Background on this error at: https://sqlalche.me/e/20/gkpj)</failure></testcase><testcase classname="tests.integration.test_tournament_integration.TestObterTorneio" name="test_obter_torneio_inexistente_http_404" time="0.012" /><testcase classname="tests.integration.test_tournament_integration.TestResolverPartida" name="test_resolver_partida_time_vencedor_http_200" time="0.009"><failure message="sqlalchemy.exc.IntegrityError: (sqlite3.IntegrityError) NOT NULL constraint failed: torneio.time_id&#10;[SQL: &#10;                INSERT INTO torneio (jogador_id, tamanho, status, custo, premio)&#10;                VALUES (?, ?, ?, ?, ?)&#10;            ]&#10;[parameters: (1, 2, 'aberto', 500, 700)]&#10;(Background on this error at: https://sqlalche.me/e/20/gkpj)">..\.venv\Lib\site-packages\sqlalchemy\engine\base.py:1969: in _exec_single_context
+    self.dialect.do_execute(
+..\.venv\Lib\site-packages\sqlalchemy\engine\default.py:922: in do_execute
+    cursor.execute(statement, parameters)
+E   sqlite3.IntegrityError: NOT NULL constraint failed: torneio.time_id
+
+The above exception was the direct cause of the following exception:
+tests\integration\test_tournament_integration.py:234: in test_resolver_partida_time_vencedor_http_200
+    db_session.execute(
+..\.venv\Lib\site-packages\sqlalchemy\orm\session.py:2308: in execute
+    return self._execute_internal(
+..\.venv\Lib\site-packages\sqlalchemy\orm\session.py:2199: in _execute_internal
+    result = conn.execute(
+..\.venv\Lib\site-packages\sqlalchemy\engine\base.py:1416: in execute
+    return meth(
+..\.venv\Lib\site-packages\sqlalchemy\sql\elements.py:516: in _execute_on_connection
+    return connection._execute_clauseelement(
+..\.venv\Lib\site-packages\sqlalchemy\engine\base.py:1639: in _execute_clauseelement
+    ret = self._execute_context(
+..\.venv\Lib\site-packages\sqlalchemy\engine\base.py:1848: in _execute_context
+    return self._exec_single_context(
+..\.venv\Lib\site-packages\sqlalchemy\engine\base.py:1988: in _exec_single_context
+    self._handle_dbapi_exception(
+..\.venv\Lib\site-packages\sqlalchemy\engine\base.py:2343: in _handle_dbapi_exception
+    raise sqlalchemy_exception.with_traceback(exc_info[2]) from e
+..\.venv\Lib\site-packages\sqlalchemy\engine\base.py:1969: in _exec_single_context
+    self.dialect.do_execute(
+..\.venv\Lib\site-packages\sqlalchemy\engine\default.py:922: in do_execute
+    cursor.execute(statement, parameters)
+E   sqlalchemy.exc.IntegrityError: (sqlite3.IntegrityError) NOT NULL constraint failed: torneio.time_id
+E   [SQL: 
+E                   INSERT INTO torneio (jogador_id, tamanho, status, custo, premio)
+E                   VALUES (?, ?, ?, ?, ?)
+E               ]
+E   [parameters: (1, 2, 'aberto', 500, 700)]
+E   (Background on this error at: https://sqlalche.me/e/20/gkpj)</failure></testcase><testcase classname="tests.integration.test_tournament_integration.TestResolverPartida" name="test_resolver_partida_inexistente_http_404" time="0.010" /><testcase classname="tests.integration.test_tournament_integration.TestDeletarTorneio" name="test_deletar_torneio_sucesso_http_200" time="0.011"><failure message="sqlalchemy.exc.IntegrityError: (sqlite3.IntegrityError) NOT NULL constraint failed: torneio.time_id&#10;[SQL: &#10;                INSERT INTO torneio (jogador_id, tamanho, status, custo, premio)&#10;                VALUES (?, ?, ?, ?, ?)&#10;            ]&#10;[parameters: (1, 2, 'aberto', 500, 700)]&#10;(Background on this error at: https://sqlalche.me/e/20/gkpj)">..\.venv\Lib\site-packages\sqlalchemy\engine\base.py:1969: in _exec_single_context
+    self.dialect.do_execute(
+..\.venv\Lib\site-packages\sqlalchemy\engine\default.py:922: in do_execute
+    cursor.execute(statement, parameters)
+E   sqlite3.IntegrityError: NOT NULL constraint failed: torneio.time_id
+
+The above exception was the direct cause of the following exception:
+tests\integration\test_tournament_integration.py:302: in test_deletar_torneio_sucesso_http_200
+    db_session.execute(
+..\.venv\Lib\site-packages\sqlalchemy\orm\session.py:2308: in execute
+    return self._execute_internal(
+..\.venv\Lib\site-packages\sqlalchemy\orm\session.py:2199: in _execute_internal
+    result = conn.execute(
+..\.venv\Lib\site-packages\sqlalchemy\engine\base.py:1416: in execute
+    return meth(
+..\.venv\Lib\site-packages\sqlalchemy\sql\elements.py:516: in _execute_on_connection
+    return connection._execute_clauseelement(
+..\.venv\Lib\site-packages\sqlalchemy\engine\base.py:1639: in _execute_clauseelement
+    ret = self._execute_context(
+..\.venv\Lib\site-packages\sqlalchemy\engine\base.py:1848: in _execute_context
+    return self._exec_single_context(
+..\.venv\Lib\site-packages\sqlalchemy\engine\base.py:1988: in _exec_single_context
+    self._handle_dbapi_exception(
+..\.venv\Lib\site-packages\sqlalchemy\engine\base.py:2343: in _handle_dbapi_exception
+    raise sqlalchemy_exception.with_traceback(exc_info[2]) from e
+..\.venv\Lib\site-packages\sqlalchemy\engine\base.py:1969: in _exec_single_context
+    self.dialect.do_execute(
+..\.venv\Lib\site-packages\sqlalchemy\engine\default.py:922: in do_execute
+    cursor.execute(statement, parameters)
+E   sqlalchemy.exc.IntegrityError: (sqlite3.IntegrityError) NOT NULL constraint failed: torneio.time_id
+E   [SQL: 
+E                   INSERT INTO torneio (jogador_id, tamanho, status, custo, premio)
+E                   VALUES (?, ?, ?, ?, ?)
+E               ]
+E   [parameters: (1, 2, 'aberto', 500, 700)]
+E   (Background on this error at: https://sqlalche.me/e/20/gkpj)</failure></testcase><testcase classname="tests.integration.test_tournament_integration.TestDeletarTorneio" name="test_deletar_torneio_inexistente_http_404" time="0.018"><failure message="assert 422 == 404&#10; +  where 422 = &lt;Response [422 Unprocessable Entity]&gt;.status_code">tests\integration\test_tournament_integration.py:324: in test_deletar_torneio_inexistente_http_404
+    assert response.status_code == 404
+E   assert 422 == 404
+E    +  where 422 = &lt;Response [422 Unprocessable Entity]&gt;.status_code</failure></testcase><testcase classname="tests.integration.test_users_integration.TestCadastroJogador" name="test_cadastro_sucesso_http_201" time="0.025" /><testcase classname="tests.integration.test_users_integration.TestCadastroJogador" name="test_cadastro_email_duplicado_http_400" time="0.021" /><testcase classname="tests.integration.test_users_integration.TestCadastroJogador" name="test_cadastro_email_invalido_http_422" time="0.023" /><testcase classname="tests.integration.test_users_integration.TestCadastroJogador" name="test_cadastro_nome_vazio_http_422" time="0.036" /><testcase classname="tests.integration.test_users_integration.TestCadastroJogador" name="test_cadastro_nome_whitespace_http_422" time="0.025" /><testcase classname="tests.integration.test_users_integration.TestCadastroJogador" name="test_consultar_jogador_criado_http_200" time="0.041" /><testcase classname="tests.integration.test_users_integration.TestAutenticacao" name="test_login_valido_http_200" time="0.025" /><testcase classname="tests.integration.test_users_integration.TestAutenticacao" name="test_login_senha_incorreta_http_401" time="0.022" /><testcase classname="tests.integration.test_users_integration.TestAutenticacao" name="test_login_email_inexistente_http_401" time="0.017" /><testcase classname="tests.integration.test_users_integration.TestAutenticacao" name="test_login_admin_retorna_is_admin_true" time="0.024" /><testcase classname="tests.integration.test_users_integration.TestAtualizacaoPerfil" name="test_atualizar_nome_sucesso_http_200" time="0.021"><failure message="assert 400 == 200&#10; +  where 400 = &lt;Response [400 Bad Request]&gt;.status_code">tests\integration\test_users_integration.py:215: in test_atualizar_nome_sucesso_http_200
+    assert response.status_code == 200
+E   assert 400 == 200
+E    +  where 400 = &lt;Response [400 Bad Request]&gt;.status_code</failure></testcase><testcase classname="tests.integration.test_users_integration.TestAtualizacaoPerfil" name="test_atualizar_nome_invalido_http_400" time="0.018" /><testcase classname="tests.integration.test_users_integration.TestAtualizacaoPerfil" name="test_atualizar_nome_vazio_http_400" time="0.018" /><testcase classname="tests.integration.test_users_integration.TestAtualizacaoPerfil" name="test_atualizar_nome_muito_longo_http_400" time="0.018" /><testcase classname="tests.integration.test_users_integration.TestAtualizacaoPerfil" name="test_atualizar_perfil_jogador_inexistente_http_404" time="0.018" /><testcase classname="tests.integration.test_users_integration.TestDeletarConta" name="test_deletar_conta_nao_admin_http_200" time="0.025" /><testcase classname="tests.integration.test_users_integration.TestDeletarConta" name="test_deletar_conta_admin_http_403" time="0.020" /><testcase classname="tests.integration.test_users_integration.TestDeletarConta" name="test_deletar_jogador_inexistente_http_404" time="0.028" /></testsuite></testsuites>

@@ -1,0 +1,7 @@
+Traceback (most recent call last):
+  File "<frozen runpy>", line 198, in _run_module_as_main
+  File "<frozen runpy>", line 88, in _run_code
+  File "C:\Users\davi2\Documents\projeto isaac\.venv\Scripts\bandit.exe\__main__.py", line 4, in <module>
+  File "c:\Users\davi2\Documents\projeto isaac\.venv\Lib\site-packages\bandit\__init__.py", line 5, in <module>
+    import pbr.version
+ModuleNotFoundError: No module named 'pbr'

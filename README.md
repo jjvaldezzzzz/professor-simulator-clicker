@@ -199,6 +199,30 @@ pytest -v
 
 ---
 
+## SonarQube (Qualidade de Codigo)
+
+O projeto ja vem configurado com SonarQube via `sonar-project.properties` e pelo workflow do GitHub Actions.
+
+### Rodar localmente
+1. Suba o SonarQube:
+```bash
+docker-compose -f docker-compose.sonarqube.yml up -d
+```
+2. Acesse http://localhost:9000 e crie um token em **My Account > Security**.
+3. Gere os relatorios locais:
+```bash
+./run-tests.sh
+```
+4. Rode o scanner:
+```bash
+sonar-scanner -Dsonar.host.url=http://localhost:9000 -Dsonar.login=SEU_TOKEN
+```
+
+### CI (GitHub Actions)
+- Configure os secrets `SONAR_HOST_URL` e `SONAR_TOKEN` no repositorio.
+
+---
+
 ## 📝 Variáveis de Ambiente
 
 Crie um arquivo `.env` na raiz do projeto:
