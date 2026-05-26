@@ -91,7 +91,7 @@ jobs:
 
       - name: Run Flake8
         run: |
-          flake8 app --format=json > flake8-report.json || true
+          flake8 app --format=default > flake8-report.txt || true
 
       - name: Run Bandit
         run: |
@@ -115,7 +115,7 @@ jobs:
             report-*.html
             junit-*.xml
             pylint-report.txt
-            flake8-report.json
+            flake8-report.txt
             bandit-report.json
             coverage.xml
 
@@ -188,8 +188,8 @@ jobs:
             -Dsonar.tests=tests
             -Dsonar.python.coverage.reportPaths=coverage.xml
             -Dsonar.python.pylint.reportPaths=pylint-report.txt
-            -Dsonar.python.flake8.reportPath=flake8-report.json
-            -Dsonar.externalIssuesReportPaths=bandit-report.json
+            -Dsonar.python.flake8.reportPaths=flake8-report.txt
+            -Dsonar.python.bandit.reportPaths=bandit-report.json
 
   quality-gate:
     runs-on: ubuntu-latest

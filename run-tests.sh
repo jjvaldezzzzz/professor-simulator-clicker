@@ -48,7 +48,7 @@ echo -e "\n${YELLOW}5. Executando análise estática com pylint...${NC}"
 pylint app --exit-zero --output-format=parseable > pylint-report.txt 2>&1 || true
 
 echo -e "\n${YELLOW}6. Executando análise com flake8...${NC}"
-flake8 app --format=json > flake8-report.json 2>&1 || true
+flake8 app --format=default > flake8-report.txt 2>&1 || true
 
 echo -e "\n${YELLOW}7. Executando verificação de segurança com bandit...${NC}"
 bandit -r app -f json > bandit-report.json 2>&1 || true
@@ -61,6 +61,6 @@ echo "  - HTML (Cobertura): $COVERAGE_DIR/index.html"
 echo "  - HTML (Testes): $REPORT_DIR/*.html"
 echo "  - XML (JUnit): $REPORT_DIR/*.xml"
 echo "  - Pylint: pylint-report.txt"
-echo "  - Flake8: flake8-report.json"
+echo "  - Flake8: flake8-report.txt"
 echo "  - Bandit: bandit-report.json"
 echo ""
