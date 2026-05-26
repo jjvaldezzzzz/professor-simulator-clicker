@@ -7,7 +7,8 @@ from app import schemas
 
 router = APIRouter(prefix="/jogadores", tags=["Gestão de Jogadores"])
 
-DISPLAY_NAME_REGEX = re.compile(r"^[A-Za-z0-9 ]+$")
+# Aceita letras (com acentos), números e espaços
+DISPLAY_NAME_REGEX = re.compile(r"^[a-zA-Z0-9\s\u00C0-\u017F]+$")
 
 @router.post("/", status_code=status.HTTP_201_CREATED)
 def cadastrar_jogador(jogador: schemas.JogadorCreate, db: Session = Depends(get_db)):

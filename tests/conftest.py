@@ -215,3 +215,37 @@ def client(db_session):
     with TestClient(app) as test_client:
         yield test_client
     app.dependency_overrides.clear()
+
+# ==========================================
+# FIXTURES PARA TESTES E2E (Playwright)
+# ==========================================
+from playwright.sync_api import sync_playwright, Page, Browser, BrowserContext
+
+@pytest.fixture(scope="session")
+def browser():
+    """Fixture de sessão que gerencia um browser Playwright"""
+    with sync_playwright() as p:
+        browser = p.chromium.launch(headless=True)
+        yield browser
+        browser.close()
+
+@pytest.fixture
+def browser_context(browser: Browser):
+    """Fixture que cria um novo contexto de browser para cada teste"""
+    context = browser.new_context()
+    yield context
+    context.close()
+
+@pytest.fixture
+def browser_page(browser_context: BrowserContext) -> Page:
+    """Fixture que cria uma nova página Playwright para cada teste E2E"""
+    page = browser_context.new_page()
+    yield page
+    page.close()
+
+@pytest.fixture
+def page(browser_context: BrowserContext) -> Page:
+    """Fixture que cria uma nova página Playwright (alias para browser_page)"""
+    page = browser_context.new_page()
+    yield page
+    page.close()

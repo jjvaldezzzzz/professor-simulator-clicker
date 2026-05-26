@@ -15,6 +15,12 @@ def cadastrar_item(item: schemas.ItemCreate, jogador_id: int, db: Session = Depe
     
     if not jogador or not jogador.is_admin:
         raise HTTPException(status_code=403, detail="Acesso negado. Apenas o Professor/Admin pode criar itens.")
+    
+    # 2. Validações do item
+    if item.preco <= 0:
+        raise HTTPException(status_code=400, detail="Preco deve ser maior que zero.")
+    if item.multiplicador <= 0:
+        raise HTTPException(status_code=400, detail="Multiplicador deve ser maior que zero.")
 
     # 2. Se passou, cria o item normalmente
     query = text("""
